@@ -7,7 +7,7 @@ import {
 import { CreatePlanForm } from "@/components/admin/create-plan-form";
 
 function formatLimit(value: number): string {
-  return value === 0 ? "Illimite" : String(value);
+  return value === 0 ? "Illimité" : String(value);
 }
 
 export default async function AdminPlansPage() {

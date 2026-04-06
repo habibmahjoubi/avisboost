@@ -7,7 +7,7 @@ type TemplateData = { subject?: string; body: string };
 
 const VARIABLES = [
   { key: "{{clientName}}", label: "Prenom client" },
-  { key: "{{businessName}}", label: "Etablissement" },
+  { key: "{{businessName}}", label: "Établissement" },
   { key: "{{link}}", label: "Lien d'avis" },
 ];
 

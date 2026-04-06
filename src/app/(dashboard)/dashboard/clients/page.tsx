@@ -103,7 +103,7 @@ export default async function ClientsPage() {
                     <div className="flex items-center justify-end gap-1">
                       <PreviewButton
                         clientName={client.name}
-                        businessName={user.businessName || "Etablissement"}
+                        businessName={user.businessName || "Établissement"}
                         channel="EMAIL"
                         templateBody={nicheConfig.templates.EMAIL.body}
                         templateSubject={nicheConfig.templates.EMAIL.subject}

@@ -80,7 +80,7 @@ export async function createReviewRequest({
 
     const vars = {
       clientName: client.name,
-      businessName: user.businessName || "notre etablissement",
+      businessName: user.businessName || "notre établissement",
       link: absoluteUrl(`/review/${request.token}`),
     };
 
@@ -147,7 +147,7 @@ export async function processPendingRequests() {
 
       const vars = {
         clientName: client.name,
-        businessName: user.businessName || "notre etablissement",
+        businessName: user.businessName || "notre établissement",
         link: absoluteUrl(`/review/${request.token}`),
       };
 

@@ -46,7 +46,7 @@ export default async function AdminUsersPage({
   });
 
   // CSV export data
-  const csvHeader = "Email,Etablissement,Metier,Plan,Quota,Clients,Envois,Inscription";
+  const csvHeader = "Email,Établissement,Métier,Plan,Quota,Clients,Envois,Inscription";
   const csvRows = users.map(
     (u) =>
       `"${u.email}","${u.businessName || ""}","${u.niche}","${u.plan}","${u.quotaUsed}/${u.monthlyQuota}","${u._count.clients}","${u._count.reviewRequests}","${u.createdAt.toISOString().slice(0, 10)}"`
@@ -113,7 +113,7 @@ export default async function AdminUsersPage({
                 Utilisateur
               </th>
               <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">
-                Metier
+                Métier
               </th>
               <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">
                 Plan

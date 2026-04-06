@@ -87,7 +87,7 @@ export async function updatePlan(formData: FormData) {
   });
 
   // Mettre a jour le quota de tous les utilisateurs sur ce plan
-  // 0 = illimite → on met 999999 en base pour simplifier les comparaisons
+  // 0 = illimité → on met 999999 en base pour simplifier les comparaisons
   const plan = await prisma.plan.findUnique({ where: { id: planId } });
   if (plan) {
     await prisma.user.updateMany({

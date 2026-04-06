@@ -50,7 +50,7 @@ export default async function SettingsPage() {
         action={updateSettings}
         className="max-w-lg space-y-5 bg-card border border-border rounded-xl p-6"
       >
-        <h2 className="font-semibold">Etablissement</h2>
+        <h2 className="font-semibold">Établissement</h2>
         <div>
           <label className="block text-sm font-medium mb-1">
             Nom de l'établissement
@@ -64,7 +64,7 @@ export default async function SettingsPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Metier</label>
+          <label className="block text-sm font-medium mb-1">Métier</label>
           <select
             name="niche"
             defaultValue={user.niche}
