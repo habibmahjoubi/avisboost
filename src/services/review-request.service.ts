@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/resend";
+import { sendSms } from "@/lib/sms";
 import { NICHE_CONFIGS } from "@/config/niches";
 import { absoluteUrl } from "@/lib/utils";
 import type { Channel, Niche } from "@/generated/prisma/enums";
@@ -91,7 +92,10 @@ export async function createReviewRequest({
           html: resolveTemplate(template.body, vars),
         });
       } else if (channel === "SMS" && client.phone) {
-        console.log(`[SMS] To: ${client.phone}, Body: ${resolveTemplate(template.body, vars)}`);
+        await sendSms({
+          to: client.phone,
+          body: resolveTemplate(template.body, vars),
+        });
       }
 
       await prisma.reviewRequest.update({
@@ -155,9 +159,10 @@ export async function processPendingRequests() {
         });
       } else if (request.channel === "SMS" && client.phone) {
         // SMS sending would go here (Twilio integration)
-        console.log(
-          `[SMS] To: ${client.phone}, Body: ${resolveTemplate(template.body, vars)}`
-        );
+        await sendSms({
+          to: client.phone,
+          body: resolveTemplate(template.body, vars),
+        });
       }
 
       await prisma.reviewRequest.update({

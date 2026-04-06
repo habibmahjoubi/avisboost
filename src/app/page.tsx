@@ -25,71 +25,73 @@ import {
   Zap,
   Clock,
   CreditCard,
+  ArrowUpRight,
+  Sparkles,
 } from "lucide-react";
 
 const STEPS = [
   {
     icon: UserPlus,
-    title: "Inscrivez-vous",
-    description:
-      "Creez votre compte en 30 secondes. Collez votre lien Google Maps.",
+    title: "Creez votre compte",
+    description: "Inscription en 30 secondes. Configurez votre etablissement et collez votre lien Google.",
+    color: "from-indigo-500 to-violet-500",
   },
   {
     icon: Users,
     title: "Ajoutez vos clients",
-    description:
-      "Manuellement ou par import CSV. Un par un ou en masse.",
+    description: "Un par un ou importez-les en masse via CSV. Simple et rapide.",
+    color: "from-violet-500 to-purple-500",
   },
   {
     icon: Send,
     title: "Envoyez la demande",
-    description:
-      "Un clic. Votre client recoit un email professionnel personnalise.",
+    description: "Un clic suffit. Email ou SMS personnalise, automatique apres chaque prestation.",
+    color: "from-purple-500 to-fuchsia-500",
   },
   {
     icon: Star,
-    title: "L'avis est publie",
-    description:
-      "Client satisfait ? Redirige directement vers Google pour laisser un avis.",
+    title: "Recoltez les avis",
+    description: "Client satisfait ? Redirige vers Google. Insatisfait ? Feedback prive pour vous.",
+    color: "from-fuchsia-500 to-pink-500",
   },
 ];
 
 const BENEFITS = [
   {
     icon: ShieldCheck,
-    title: "Protegez votre reputation",
-    description:
-      "Les clients insatisfaits vous ecrivent en prive. Seuls les clients contents vont sur Google.",
+    title: "Protegez votre e-reputation",
+    description: "Les mecontents vous ecrivent en prive. Seuls les satisfaits publient sur Google.",
+    gradient: "from-emerald-500/20 to-teal-500/20",
   },
   {
     icon: Rocket,
-    title: "Automatisez la collecte",
-    description:
-      "Programmez l'envoi apres chaque prestation. Plus besoin d'y penser.",
+    title: "100% automatise",
+    description: "Programmez l'envoi apres chaque prestation. Zéro effort au quotidien.",
+    gradient: "from-indigo-500/20 to-violet-500/20",
   },
   {
     icon: Target,
     title: "Adapte a votre metier",
-    description:
-      "Messages pre-rediges pour votre profession. Pret a l'emploi en 2 minutes.",
+    description: "Messages pre-rediges, vocabulaire metier, delais optimises par profession.",
+    gradient: "from-amber-500/20 to-orange-500/20",
   },
   {
     icon: BarChart3,
-    title: "Suivez vos resultats",
-    description:
-      "Taux de clic, avis obtenus, evolution dans le temps. Tout en un tableau de bord.",
+    title: "Tableaux de bord complets",
+    description: "Taux de clic, avis obtenus, evolution — suivez vos resultats en temps reel.",
+    gradient: "from-sky-500/20 to-blue-500/20",
   },
   {
     icon: Smartphone,
     title: "Email et SMS",
-    description:
-      "Choisissez le canal adapte a chaque client. Maximisez le taux de reponse.",
+    description: "Choisissez le canal qui convertit le mieux pour chaque client.",
+    gradient: "from-rose-500/20 to-pink-500/20",
   },
   {
     icon: Lock,
-    title: "Sans engagement",
-    description:
-      "Plan gratuit pour commencer. Upgradez quand vous etes pret. Annulez a tout moment.",
+    title: "Zero engagement",
+    description: "Plan gratuit pour demarrer. Upgradez quand vous voulez. Annulez en un clic.",
+    gradient: "from-slate-500/20 to-gray-500/20",
   },
 ];
 
@@ -97,20 +99,26 @@ const NICHES = [
   {
     icon: Stethoscope,
     label: "Cabinets dentaires",
-    description: "Envoi 2h apres le rendez-vous",
-    stat: "+340% d'avis en moyenne",
+    description: "Envoi automatique 2h apres le rendez-vous",
+    stat: "+340%",
+    statLabel: "d'avis en plus",
+    gradient: "from-sky-500 to-indigo-500",
   },
   {
     icon: Bone,
     label: "Osteopathes",
-    description: "Envoi 3h apres la seance",
-    stat: "+280% d'avis en moyenne",
+    description: "Envoi automatique 3h apres la seance",
+    stat: "+280%",
+    statLabel: "d'avis en plus",
+    gradient: "from-violet-500 to-purple-500",
   },
   {
     icon: Wrench,
     label: "Garages auto",
-    description: "Envoi 24h apres la restitution",
-    stat: "+250% d'avis en moyenne",
+    description: "Envoi automatique 24h apres l'intervention",
+    stat: "+250%",
+    statLabel: "d'avis en plus",
+    gradient: "from-amber-500 to-orange-500",
   },
 ];
 
@@ -118,17 +126,20 @@ const TESTIMONIALS = [
   {
     name: "Dr. Martin L.",
     role: "Chirurgien-dentiste, Lyon",
-    text: "En 2 mois, on est passe de 12 a 67 avis Google. Les patients sont ravis de la simplicite.",
+    text: "En 2 mois, on est passe de 12 a 67 avis Google. Les patients adorent la simplicite du processus.",
+    avatar: "M",
   },
   {
     name: "Sophie R.",
     role: "Osteopathe, Bordeaux",
-    text: "Mes patients recoivent automatiquement un message apres chaque seance. Je n'ai plus rien a faire.",
+    text: "Tout est automatise. Mes patients recoivent un message apres chaque seance sans que j'aie rien a faire.",
+    avatar: "S",
   },
   {
     name: "Garage Central",
     role: "Garage auto, Nantes",
-    text: "On recupere 3 a 4 avis par semaine maintenant. Notre note Google est passee de 3.8 a 4.6.",
+    text: "3 a 4 nouveaux avis par semaine. Notre note est passee de 3.8 a 4.6 en trois mois.",
+    avatar: "G",
   },
 ];
 
@@ -142,47 +153,32 @@ export default async function HomePage() {
   const totalUsers = await prisma.user.count({ where: { isAdmin: false } });
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen overflow-x-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border">
+      <header className="sticky top-0 z-50 glass border-b border-border/50">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Star className="w-4 h-4 text-primary-foreground fill-primary-foreground" />
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 gradient-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/25">
+              <Star className="w-4 h-4 text-white fill-white" />
             </div>
-            <span className="text-xl font-bold">AvisBoost</span>
+            <span className="text-xl font-bold tracking-tight">AvisBoost</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-8 text-sm">
-            <a
-              href="#fonctionnement"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+            <a href="#fonctionnement" className="text-muted-foreground hover:text-foreground transition-colors">
               Fonctionnement
             </a>
-            <a
-              href="#avantages"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <a href="#avantages" className="text-muted-foreground hover:text-foreground transition-colors">
               Avantages
             </a>
-            <a
-              href="#tarifs"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <a href="#tarifs" className="text-muted-foreground hover:text-foreground transition-colors">
               Tarifs
             </a>
           </nav>
           <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <Link href="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Connexion
             </Link>
-            <Link
-              href="/register"
-              className="text-sm bg-primary text-primary-foreground px-5 py-2 rounded-full hover:opacity-90 transition-opacity font-medium"
-            >
+            <Link href="/register" className="text-sm font-semibold gradient-primary text-white px-5 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-primary/25">
               Essai gratuit
             </Link>
           </div>
@@ -190,50 +186,54 @@ export default async function HomePage() {
       </header>
 
       {/* Hero */}
-      <section className="relative py-24 md:py-32 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
+      <section className="relative py-20 md:py-32 px-4">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
+        </div>
+
         <div className="max-w-4xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-sm text-primary font-medium mb-8">
-            <Zap className="w-3.5 h-3.5" />
-            {totalUsers > 10
-              ? `Rejoint par ${totalUsers}+ professionnels`
-              : "Collectez vos avis Google en automatique"}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-8 gradient-border bg-card">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="gradient-text font-semibold">
+              {totalUsers > 10
+                ? `Rejoint par ${totalUsers}+ professionnels`
+                : "Nouveau : collecte d'avis Google automatisee"}
+            </span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
-            Transformez vos clients satisfaits en{" "}
-            <span className="text-primary">avis Google 5 etoiles</span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1]">
+            Transformez chaque client en{" "}
+            <span className="gradient-text">avis 5 etoiles</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
             Envoyez automatiquement une demande d'avis apres chaque prestation.
-            Vos clients satisfaits laissent un avis Google en un clic. Les
-            mecontents vous ecrivent en prive.
+            Un clic pour le client, un avis Google pour vous.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
             <Link
               href="/register"
-              className="flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3.5 rounded-full text-lg font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/25"
+              className="flex items-center gap-2 gradient-primary text-white px-8 py-4 rounded-xl text-lg font-semibold hover:opacity-90 transition-all shadow-xl shadow-primary/30"
             >
-              Commencer gratuitement
+              Demarrer gratuitement
               <ArrowRight className="w-5 h-5" />
             </Link>
             <a
               href="#fonctionnement"
-              className="flex items-center gap-1 text-muted-foreground hover:text-foreground px-6 py-3.5 text-lg transition-colors"
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground px-6 py-4 text-lg font-medium transition-colors"
             >
-              Voir comment ca marche
+              Decouvrir
               <ChevronDown className="w-5 h-5" />
             </a>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-success" />
-              {plans[0] && plans[0].quota > 0
-                ? `${plans[0].quota} envois offerts`
-                : "Gratuit"}
+              {plans[0] && plans[0].quota > 0 ? `${plans[0].quota} envois offerts` : "Gratuit"}
             </span>
             <span className="flex items-center gap-1.5">
               <CreditCard className="w-4 h-4 text-success" />
@@ -241,27 +241,27 @@ export default async function HomePage() {
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-success" />
-              Pret en 2 min
+              Pret en 2 minutes
             </span>
           </div>
         </div>
       </section>
 
       {/* Social proof */}
-      <section className="py-8 bg-muted border-y border-border">
-        <div className="max-w-4xl mx-auto px-4 flex flex-wrap items-center justify-center gap-4 sm:gap-8 md:gap-16">
+      <section className="py-8 border-y border-border/50 bg-card/50">
+        <div className="max-w-5xl mx-auto px-4 flex flex-wrap items-center justify-center gap-6 sm:gap-10 md:gap-16">
           {[
-            { icon: Star, value: "4.9/5", label: "Note moyenne" },
-            { icon: BarChart3, value: "+300%", label: "Avis en plus" },
-            { icon: Clock, value: "2 min", label: "Pour demarrer" },
-            { icon: CreditCard, value: "0\u20AC", label: "Pour commencer" },
+            { value: "4.9/5", label: "Satisfaction", icon: Star },
+            { value: "+300%", label: "Avis en plus", icon: BarChart3 },
+            { value: "2 min", label: "Installation", icon: Clock },
+            { value: "0\u20AC", label: "Pour commencer", icon: Zap },
           ].map((s) => (
             <div key={s.label} className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <s.icon className="w-5 h-5 text-primary" />
+              <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-md shadow-primary/20">
+                <s.icon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-xl font-bold">{s.value}</p>
+                <p className="text-xl font-bold tracking-tight">{s.value}</p>
                 <p className="text-xs text-muted-foreground">{s.label}</p>
               </div>
             </div>
@@ -270,31 +270,35 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section id="fonctionnement" className="py-20 px-4">
+      <section id="fonctionnement" className="py-20 md:py-28 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
+            <p className="text-sm font-semibold gradient-text uppercase tracking-wider mb-3">
+              Fonctionnement
+            </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-              Simple comme 1, 2, 3, 4
+              4 etapes. 2 minutes. C'est tout.
             </h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Collectez des avis Google en moins de 2 minutes, sans competence
-              technique.
+              Pas besoin de competences techniques. AvisBoost s'occupe de tout.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
             {STEPS.map((step, i) => (
-              <div key={step.title} className="relative text-center">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <step.icon className="w-7 h-7 text-primary" />
+              <div key={step.title} className="relative group">
+                <div className="bg-card rounded-2xl p-6 border border-border/50 h-full transition-all duration-300 glow-card">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-4 shadow-lg`}>
+                    <step.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="text-xs font-bold text-muted-foreground/50 uppercase tracking-wider">
+                    Etape {i + 1}
+                  </span>
+                  <h3 className="font-bold text-lg mt-1 mb-2">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-primary text-primary-foreground rounded-full text-xs font-bold flex items-center justify-center md:relative md:top-auto md:right-auto md:-mt-10 md:ml-auto md:mr-4">
-                  {i + 1}
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{step.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
               </div>
             ))}
           </div>
@@ -302,14 +306,17 @@ export default async function HomePage() {
       </section>
 
       {/* Niches */}
-      <section className="py-20 px-4 bg-muted">
+      <section className="py-20 md:py-28 px-4 bg-muted/50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
+            <p className="text-sm font-semibold gradient-text uppercase tracking-wider mb-3">
+              Votre metier
+            </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-              Concu pour votre metier
+              Configure sur mesure
             </h2>
             <p className="text-muted-foreground text-lg">
-              Messages, delais et vocabulaire adaptes a votre profession.
+              Messages, vocabulaire et delais adaptes a votre profession.
             </p>
           </div>
 
@@ -317,19 +324,19 @@ export default async function HomePage() {
             {NICHES.map((niche) => (
               <div
                 key={niche.label}
-                className="bg-card rounded-2xl p-5 md:p-8 border border-border hover:border-primary/30 hover:shadow-lg transition-all group"
+                className="bg-card rounded-2xl p-6 md:p-8 border border-border/50 transition-all duration-300 glow-card group"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
-                  <niche.icon className="w-6 h-6 text-primary" />
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${niche.gradient} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform`}>
+                  <niche.icon className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="font-bold text-xl mb-2">{niche.label}</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-5">
                   {niche.description}
                 </p>
-                <p className="text-sm font-semibold text-primary flex items-center gap-1">
-                  <BarChart3 className="w-4 h-4" />
-                  {niche.stat}
-                </p>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-3xl font-extrabold gradient-text">{niche.stat}</span>
+                  <span className="text-sm text-muted-foreground">{niche.statLabel}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -337,25 +344,27 @@ export default async function HomePage() {
       </section>
 
       {/* Benefits */}
-      <section id="avantages" className="py-20 px-4">
+      <section id="avantages" className="py-20 md:py-28 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-              Pourquoi AvisBoost ?
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Tout ce dont vous avez besoin pour booster votre reputation en
-              ligne.
+            <p className="text-sm font-semibold gradient-text uppercase tracking-wider mb-3">
+              Avantages
             </p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+              Tout pour booster votre reputation
+            </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
             {BENEFITS.map((b) => (
-              <div key={b.title} className="space-y-3">
-                <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <b.icon className="w-5 h-5 text-primary" />
+              <div
+                key={b.title}
+                className="bg-card rounded-2xl p-6 border border-border/50 transition-all duration-300 glow-card"
+              >
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${b.gradient} flex items-center justify-center mb-4`}>
+                  <b.icon className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-lg">{b.title}</h3>
+                <h3 className="font-bold text-lg mb-2">{b.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {b.description}
                 </p>
@@ -366,73 +375,64 @@ export default async function HomePage() {
       </section>
 
       {/* Satisfaction Gate */}
-      <section className="py-20 px-4 bg-muted">
+      <section className="py-20 md:py-28 px-4 bg-muted/50">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-card rounded-2xl border border-border p-8 md:p-12">
+          <div className="rounded-3xl overflow-hidden gradient-border bg-card p-8 md:p-12 glow-primary">
             <div className="text-center mb-10">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <ShieldCheck className="w-7 h-7 text-primary" />
+              <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-5 shadow-xl shadow-primary/25">
+                <ShieldCheck className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-3xl font-bold mb-3">
-                Le secret : la Satisfaction Gate
+              <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+                La Satisfaction Gate
               </h2>
-              <p className="text-muted-foreground">
-                Filtrez intelligemment les retours pour ne publier que le
-                meilleur.
+              <p className="text-muted-foreground max-w-lg mx-auto">
+                Le filtre intelligent qui protege votre reputation et maximise vos avis positifs.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-success/5 border border-success/20 rounded-xl p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <ThumbsUp className="w-5 h-5 text-success" />
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="rounded-2xl p-6 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200/50">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <ThumbsUp className="w-5 h-5 text-emerald-600" />
                   <div className="flex gap-0.5">
                     {[1, 2, 3, 4, 5].map((s) => (
-                      <Star
-                        key={s}
-                        className="w-4 h-4 text-success fill-success"
-                      />
+                      <Star key={s} className="w-4 h-4 text-emerald-500 fill-emerald-500" />
                     ))}
                   </div>
                 </div>
-                <h3 className="font-semibold text-success mb-2">
-                  Client satisfait (4-5 etoiles)
+                <h3 className="font-bold text-emerald-900 mb-2 text-lg">
+                  Client satisfait
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  Redirige automatiquement vers Google pour publier un avis
-                  positif. Un clic suffit.
+                <p className="text-sm text-emerald-700/80 mb-4">
+                  Redirige automatiquement vers Google pour publier un avis positif visible par tous.
                 </p>
-                <div className="mt-4 flex items-center gap-2 text-success text-sm font-medium">
-                  <ArrowRight className="w-4 h-4" />
-                  Avis publie sur Google
+                <div className="flex items-center gap-2 text-emerald-700 text-sm font-semibold">
+                  <ArrowUpRight className="w-4 h-4" />
+                  Publie sur Google Maps
                 </div>
               </div>
 
-              <div className="bg-warning/5 border border-warning/20 rounded-xl p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <ShieldCheck className="w-5 h-5 text-warning" />
+              <div className="rounded-2xl p-6 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/50">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <ShieldCheck className="w-5 h-5 text-amber-600" />
                   <div className="flex gap-0.5">
                     {[1, 2].map((s) => (
-                      <Star
-                        key={s}
-                        className="w-4 h-4 text-warning fill-warning"
-                      />
+                      <Star key={s} className="w-4 h-4 text-amber-500 fill-amber-500" />
                     ))}
                     {[3, 4, 5].map((s) => (
-                      <Star key={s} className="w-4 h-4 text-border" />
+                      <Star key={s} className="w-4 h-4 text-amber-200" />
                     ))}
                   </div>
                 </div>
-                <h3 className="font-semibold text-warning mb-2">
-                  Client insatisfait (1-3 etoiles)
+                <h3 className="font-bold text-amber-900 mb-2 text-lg">
+                  Client insatisfait
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  Recueille un feedback prive envoye directement a votre
-                  etablissement. Pas sur Google.
+                <p className="text-sm text-amber-700/80 mb-4">
+                  Feedback prive envoye directement a votre etablissement. Rien sur Google.
                 </p>
-                <div className="mt-4 flex items-center gap-2 text-warning text-sm font-medium">
-                  <ArrowRight className="w-4 h-4" />
-                  Feedback prive confidentiel
+                <div className="flex items-center gap-2 text-amber-700 text-sm font-semibold">
+                  <Lock className="w-4 h-4" />
+                  Confidentiel et prive
                 </div>
               </div>
             </div>
@@ -441,33 +441,33 @@ export default async function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 px-4">
+      <section className="py-20 md:py-28 px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Ils utilisent AvisBoost
-          </h2>
+          <div className="text-center mb-12">
+            <p className="text-sm font-semibold gradient-text uppercase tracking-wider mb-3">
+              Temoignages
+            </p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+              Ils ont booste leurs avis
+            </h2>
+          </div>
           <div className="grid md:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t) => (
               <div
                 key={t.name}
-                className="bg-card border border-border rounded-2xl p-6 hover:shadow-md transition-shadow"
+                className="bg-card rounded-2xl p-6 border border-border/50 transition-all duration-300 glow-card"
               >
                 <div className="flex gap-0.5 mb-4">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-4 h-4 text-primary fill-primary"
-                    />
+                    <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
                   ))}
                 </div>
-                <p className="text-sm leading-relaxed mb-5 text-foreground/80">
-                  &laquo; {t.text} &raquo;
+                <p className="text-sm leading-relaxed mb-6 text-foreground/80">
+                  "{t.text}"
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-sm font-bold text-primary">
-                      {t.name.charAt(0)}
-                    </span>
+                  <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center shadow-md shadow-primary/20">
+                    <span className="text-sm font-bold text-white">{t.avatar}</span>
                   </div>
                   <div>
                     <p className="text-sm font-semibold">{t.name}</p>
@@ -481,18 +481,21 @@ export default async function HomePage() {
       </section>
 
       {/* Pricing */}
-      <section id="tarifs" className="py-20 px-4 bg-muted">
+      <section id="tarifs" className="py-20 md:py-28 px-4 bg-muted/50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
+            <p className="text-sm font-semibold gradient-text uppercase tracking-wider mb-3">
+              Tarifs
+            </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-              Des tarifs simples et transparents
+              Simple, transparent, sans surprise
             </h2>
             <p className="text-muted-foreground text-lg">
-              Commencez gratuitement, upgradez quand vous voulez.
+              Commencez gratuitement. Evoluez a votre rythme.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6 items-start">
             {plans.map((plan, index) => {
               const isHighlighted = index === highlightedIndex;
               const isUnlimited = plan.quota === 0;
@@ -500,40 +503,31 @@ export default async function HomePage() {
               return (
                 <div
                   key={plan.id}
-                  className={`relative bg-card rounded-2xl p-5 md:p-8 border-2 transition-all ${
+                  className={`relative rounded-2xl p-6 md:p-8 transition-all duration-300 ${
                     isHighlighted
-                      ? "border-primary shadow-xl shadow-primary/10 scale-105"
-                      : "border-border hover:border-primary/30"
+                      ? "gradient-border bg-card shadow-2xl shadow-primary/10 md:scale-105 md:-my-4"
+                      : "bg-card border border-border/50 glow-card"
                   }`}
                 >
                   {isHighlighted && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-4 py-1 rounded-full">
-                      Le plus populaire
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 gradient-primary text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg shadow-primary/30">
+                      Recommande
                     </div>
                   )}
 
                   <h3 className="font-bold text-xl mb-1">{plan.name}</h3>
                   <p className="text-sm text-muted-foreground mb-6">
-                    {isUnlimited
-                      ? "Envois illimites"
-                      : `${plan.quota} envois/mois`}
+                    {isUnlimited ? "Envois illimites" : `${plan.quota} envois/mois`}
                   </p>
 
                   <div className="mb-6">
                     {plan.price === 0 ? (
-                      <div>
-                        <span className="text-4xl font-bold">
-                          0{"\u20AC"}
-                        </span>
-                        <span className="text-muted-foreground">/mois</span>
-                      </div>
+                      <span className="text-4xl font-extrabold">Gratuit</span>
                     ) : (
-                      <div>
-                        <span className="text-4xl font-bold">
-                          {formatPrice(plan.price)}
-                        </span>
-                        <span className="text-muted-foreground">/mois</span>
-                      </div>
+                      <>
+                        <span className="text-4xl font-extrabold">{formatPrice(plan.price)}</span>
+                        <span className="text-muted-foreground ml-1">/mois</span>
+                      </>
                     )}
                   </div>
 
@@ -541,13 +535,7 @@ export default async function HomePage() {
                     {plan.price === 0 && (
                       <>
                         <PricingFeature text="Email uniquement" />
-                        <PricingFeature
-                          text={
-                            plan.maxUsers === 0
-                              ? "Etablissements illimites"
-                              : `${plan.maxUsers} etablissement`
-                          }
-                        />
+                        <PricingFeature text={plan.maxUsers === 0 ? "Etablissements illimites" : `${plan.maxUsers} etablissement`} />
                         <PricingFeature text="Templates standards" />
                         <PricingFeature text="Tableau de bord" />
                       </>
@@ -555,14 +543,7 @@ export default async function HomePage() {
                     {plan.price > 0 && plan.price < 50 && (
                       <>
                         <PricingFeature text="Email + SMS" highlighted />
-                        <PricingFeature
-                          text={
-                            plan.maxUsers === 0
-                              ? "Etablissements illimites"
-                              : `${plan.maxUsers} etablissement${plan.maxUsers > 1 ? "s" : ""}`
-                          }
-                          highlighted
-                        />
+                        <PricingFeature text={plan.maxUsers === 0 ? "Etablissements illimites" : `${plan.maxUsers} etablissement${plan.maxUsers > 1 ? "s" : ""}`} highlighted />
                         <PricingFeature text="Templates personnalisables" />
                         <PricingFeature text="Statistiques detaillees" />
                         <PricingFeature text="Import CSV" />
@@ -571,14 +552,7 @@ export default async function HomePage() {
                     {plan.price >= 50 && (
                       <>
                         <PricingFeature text="Email + SMS" highlighted />
-                        <PricingFeature
-                          text={
-                            plan.maxUsers === 0
-                              ? "Etablissements illimites"
-                              : `${plan.maxUsers} etablissement${plan.maxUsers > 1 ? "s" : ""}`
-                          }
-                          highlighted
-                        />
+                        <PricingFeature text={plan.maxUsers === 0 ? "Etablissements illimites" : `${plan.maxUsers} etablissement${plan.maxUsers > 1 ? "s" : ""}`} highlighted />
                         <PricingFeature text="Envois illimites" highlighted />
                         <PricingFeature text="Templates personnalisables" />
                         <PricingFeature text="Statistiques avancees" />
@@ -589,9 +563,9 @@ export default async function HomePage() {
 
                   <Link
                     href={`/register?plan=${plan.key}`}
-                    className={`flex items-center justify-center gap-2 py-3 rounded-full text-sm font-semibold transition-all ${
+                    className={`flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold transition-all ${
                       isHighlighted
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:opacity-90"
+                        ? "gradient-primary text-white shadow-lg shadow-primary/30 hover:opacity-90"
                         : "bg-foreground/5 text-foreground hover:bg-foreground/10"
                     }`}
                   >
@@ -608,28 +582,29 @@ export default async function HomePage() {
           </div>
 
           <p className="text-center text-sm text-muted-foreground mt-8">
-            Tous les plans incluent : satisfaction gate, tableau de bord,
-            support par email. Annulation a tout moment.
+            Tous les plans incluent la Satisfaction Gate, le tableau de bord et le support email.
           </p>
         </div>
       </section>
 
-      {/* CTA final */}
-      <section className="py-20 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
-            <Rocket className="w-8 h-8 text-primary" />
+      {/* CTA */}
+      <section className="py-20 md:py-28 px-4 relative">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
+        </div>
+        <div className="max-w-3xl mx-auto text-center relative">
+          <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-6 shadow-xl shadow-primary/30 animate-float">
+            <Rocket className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">
             Pret a booster vos avis Google ?
           </h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            Rejoignez les professionnels qui collectent des avis 5 etoiles en
-            automatique.
+          <p className="text-lg text-muted-foreground mb-8 max-w-lg mx-auto">
+            Rejoignez les professionnels qui collectent des avis 5 etoiles en automatique.
           </p>
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-10 py-4 rounded-full text-lg font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/25"
+            className="inline-flex items-center gap-2 gradient-primary text-white px-10 py-4 rounded-xl text-lg font-semibold hover:opacity-90 transition-all shadow-xl shadow-primary/30"
           >
             Demarrer maintenant — c'est gratuit
             <ArrowRight className="w-5 h-5" />
@@ -641,30 +616,18 @@ export default async function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-4 border-t border-border bg-muted">
+      <footer className="py-10 px-4 border-t border-border/50 bg-card/50">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-primary rounded-md flex items-center justify-center">
-              <Star className="w-3 h-3 text-primary-foreground fill-primary-foreground" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 gradient-primary rounded-lg flex items-center justify-center">
+              <Star className="w-3 h-3 text-white fill-white" />
             </div>
             <span className="font-bold">AvisBoost</span>
-            <span className="text-sm text-muted-foreground">
-              {"\u00A9"} {new Date().getFullYear()}
-            </span>
+            <span className="text-sm text-muted-foreground">{"\u00A9"} {new Date().getFullYear()}</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <Link
-              href="/login"
-              className="hover:text-foreground transition-colors"
-            >
-              Connexion
-            </Link>
-            <Link
-              href="/register"
-              className="hover:text-foreground transition-colors"
-            >
-              Inscription
-            </Link>
+            <Link href="/login" className="hover:text-foreground transition-colors">Connexion</Link>
+            <Link href="/register" className="hover:text-foreground transition-colors">Inscription</Link>
           </div>
         </div>
       </footer>
@@ -672,18 +635,12 @@ export default async function HomePage() {
   );
 }
 
-function PricingFeature({
-  text,
-  highlighted,
-}: {
-  text: string;
-  highlighted?: boolean;
-}) {
+function PricingFeature({ text, highlighted }: { text: string; highlighted?: boolean }) {
   return (
     <li className="text-sm flex items-start gap-2.5">
-      <Check
-        className={`w-4 h-4 mt-0.5 flex-shrink-0 ${highlighted ? "text-primary" : "text-success"}`}
-      />
+      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${highlighted ? "gradient-primary" : "bg-success/10"}`}>
+        <Check className={`w-3 h-3 ${highlighted ? "text-white" : "text-success"}`} />
+      </div>
       <span className={highlighted ? "font-medium" : ""}>{text}</span>
     </li>
   );
