@@ -39,11 +39,12 @@ export default async function BillingPage() {
         customer: user.stripeCustomerId,
         limit: 1,
       });
-      const sub = subs.data[0] as Record<string, unknown> | undefined;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const sub = subs.data[0] as any;
       if (sub) {
         subscription = {
-          cancel_at_period_end: sub.cancel_at_period_end as boolean,
-          current_period_end: sub.current_period_end as number,
+          cancel_at_period_end: Boolean(sub.cancel_at_period_end),
+          current_period_end: Number(sub.current_period_end),
         };
       }
 
