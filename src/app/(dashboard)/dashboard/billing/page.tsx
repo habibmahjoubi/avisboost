@@ -56,8 +56,8 @@ export default async function BillingPage() {
         id: i.id,
         created: i.created,
         amount_paid: i.amount_paid,
-        status: i.status,
-        invoice_pdf: i.invoice_pdf,
+        status: i.status as string | null,
+        invoice_pdf: (i.invoice_pdf ?? null) as string | null,
       }));
     } catch {
       // Stripe not configured or customer not found
