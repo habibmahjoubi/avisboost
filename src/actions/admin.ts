@@ -28,12 +28,13 @@ export async function toggleSuspendUser(userId: string) {
 }
 
 export async function updateUserPlan(formData: FormData) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const userId = formData.get("userId") as string;
   const plan = formData.get("plan") as string;
   const monthlyQuota = Number(formData.get("monthlyQuota"));
 
-  if (!userId || !plan) throw new Error("Donnees manquantes");
+  if (!userId || !plan) throw new Error("Données manquantes");
+  if (userId === admin.id) throw new Error("Impossible de modifier votre propre compte");
   if (!Number.isInteger(monthlyQuota) || monthlyQuota < 0 || monthlyQuota > 999999) {
     throw new Error("Quota invalide");
   }
@@ -46,8 +47,6 @@ export async function updateUserPlan(formData: FormData) {
 }
 
 export async function deleteUser(userId: string) {
-  await requireAdmin();
-  // Prevent admin from deleting themselves
   const admin = await requireAdmin();
   if (admin.id === userId) throw new Error("Impossible de supprimer votre propre compte");
 

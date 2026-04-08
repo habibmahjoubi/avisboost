@@ -158,6 +158,7 @@ export async function sendReviewRequest(formData: FormData) {
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/campaigns");
+  return { success: true };
 }
 
 // --- Trial / Plan ---

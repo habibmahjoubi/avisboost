@@ -39,10 +39,11 @@ export default async function DashboardLayout({
   ) {
     await prisma.user.update({
       where: { id: user.id },
-      data: { plan: "free", monthlyQuota: 50 },
+      data: { plan: "free", monthlyQuota: 50, quotaUsed: 0 },
     });
     user.plan = "free";
     user.monthlyQuota = 50;
+    user.quotaUsed = 0;
   }
 
   const vocab = NICHE_CONFIGS[user.niche].vocabulary;

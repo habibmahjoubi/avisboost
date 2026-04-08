@@ -20,13 +20,17 @@ export default async function CampaignsPage({
   // Build dynamic where clause
   const where: Record<string, unknown> = { userId: session.user.id };
 
-  if (params.status) {
+  const validStatuses = ["PENDING", "SENT", "CLICKED", "REVIEWED", "FEEDBACK", "FAILED"];
+  const validChannels = ["EMAIL", "SMS"];
+  const validPeriods = ["7", "30", "90"];
+
+  if (params.status && validStatuses.includes(params.status)) {
     where.status = params.status as RequestStatus;
   }
-  if (params.channel) {
+  if (params.channel && validChannels.includes(params.channel)) {
     where.channel = params.channel as Channel;
   }
-  if (params.period) {
+  if (params.period && validPeriods.includes(params.period)) {
     const days = Number(params.period);
     where.createdAt = { gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000) };
   }

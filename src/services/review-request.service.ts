@@ -28,7 +28,7 @@ export async function createReviewRequest({
   });
 
   if (user.quotaUsed >= user.monthlyQuota) {
-    throw new Error("Quota mensuel atteint. Passez au plan superieur.");
+    throw new Error("Quota mensuel atteint. Passez au plan supérieur.");
   }
 
   // US22 - Anti-doublons : check for recent request to same client
@@ -42,7 +42,7 @@ export async function createReviewRequest({
   });
   if (recentRequest) {
     throw new Error(
-      "Une demande a deja ete envoyee a ce client il y a moins de 7 jours."
+      "Une demande a déjà été envoyée à ce client il y a moins de 7 jours."
     );
   }
 
@@ -51,19 +51,21 @@ export async function createReviewRequest({
 
   const scheduledAt = new Date(Date.now() + delay * 60 * 60 * 1000);
 
-  const request = await prisma.reviewRequest.create({
-    data: {
-      userId,
-      clientId,
-      channel,
-      scheduledAt,
-    },
-  });
-
-  await prisma.user.update({
-    where: { id: userId },
-    data: { quotaUsed: { increment: 1 } },
-  });
+  // Transaction atomique : créer la demande + incrémenter le quota
+  const [request] = await prisma.$transaction([
+    prisma.reviewRequest.create({
+      data: {
+        userId,
+        clientId,
+        channel,
+        scheduledAt,
+      },
+    }),
+    prisma.user.update({
+      where: { id: userId },
+      data: { quotaUsed: { increment: 1 } },
+    }),
+  ]);
 
   // Envoi immediat si delai = 0
   if (delay === 0) {
@@ -88,7 +90,7 @@ export async function createReviewRequest({
       if (channel === "EMAIL" && client.email) {
         await sendEmail({
           to: client.email,
-          subject: resolveTemplate(template.subject || "", vars),
+          subject: resolveTemplate(template.subject || nicheConfig.templates[channel].subject || "Votre avis compte", vars),
           html: resolveTemplate(template.body, vars),
         });
       } else if (channel === "SMS" && client.phone) {
@@ -154,7 +156,7 @@ export async function processPendingRequests() {
       if (request.channel === "EMAIL" && client.email) {
         await sendEmail({
           to: client.email,
-          subject: resolveTemplate(template.subject || "", vars),
+          subject: resolveTemplate(template.subject || nicheConfig.templates[channel].subject || "Votre avis compte", vars),
           html: resolveTemplate(template.body, vars),
         });
       } else if (request.channel === "SMS" && client.phone) {
