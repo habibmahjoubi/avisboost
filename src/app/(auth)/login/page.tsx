@@ -124,7 +124,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="flex-1 flex items-center justify-center px-5">
+    <div className="flex-1 flex items-start sm:items-center justify-center px-5 pt-8 sm:pt-0">
       <Suspense
         fallback={
           <div className="text-center text-muted-foreground">Chargement...</div>

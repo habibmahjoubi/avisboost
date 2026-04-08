@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "AvisBoost - Collectez vos avis Google automatiquement",
   description:
-    "Envoyéz automatiquement des demandes d'avis Google à vos clients après chaque prestation. Pour dentistes, osteopathes et garages.",
+    "Envoyez automatiquement des demandes d'avis Google à vos clients après chaque prestation. Pour dentistes, ostéopathes et garages.",
 };
 
 export default function RootLayout({

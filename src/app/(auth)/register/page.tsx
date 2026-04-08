@@ -185,7 +185,7 @@ function RegisterForm() {
 
 export default function RegisterPage() {
   return (
-    <div className="flex-1 flex items-center justify-center px-5 py-8">
+    <div className="flex-1 flex items-start sm:items-center justify-center px-5 pt-6 sm:pt-0 pb-8">
       <Suspense fallback={<div className="text-center text-muted-foreground">Chargement...</div>}>
         <RegisterForm />
       </Suspense>
