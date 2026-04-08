@@ -17,7 +17,7 @@ function ResetForm() {
 
   if (!token) {
     return (
-      <div className="w-full sm:max-w-sm text-center">
+      <div className="text-center">
         <div className="w-14 h-14 rounded-full bg-warning/10 flex items-center justify-center mx-auto mb-4">
           <AlertTriangle className="w-7 h-7 text-warning" />
         </div>
@@ -37,7 +37,7 @@ function ResetForm() {
 
   if (success) {
     return (
-      <div className="w-full sm:max-w-sm text-center">
+      <div className="text-center">
         <div className="w-14 h-14 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-4">
           <CheckCircle className="w-7 h-7 text-success" />
         </div>
@@ -78,7 +78,7 @@ function ResetForm() {
   }
 
   return (
-    <div className="w-full sm:max-w-sm">
+    <>
       <div className="text-center mb-8">
         <Link href="/" className="text-2xl font-bold text-primary">
           AvisBoost
@@ -147,22 +147,24 @@ function ResetForm() {
           Retour à la connexion
         </Link>
       </p>
-    </div>
+    </>
   );
 }
 
 export default function ResetPasswordPage() {
   return (
-    <div className="flex-1 flex items-start sm:items-center justify-center px-5 pt-8 sm:pt-0">
-      <Suspense
-        fallback={
-          <div className="text-center text-muted-foreground">
-            Chargement...
-          </div>
-        }
-      >
-        <ResetForm />
-      </Suspense>
+    <div className="min-h-dvh w-full flex flex-col justify-start sm:justify-center px-4 pt-10 sm:pt-0 pb-8">
+      <div className="w-full sm:max-w-sm sm:mx-auto">
+        <Suspense
+          fallback={
+            <div className="text-center text-muted-foreground">
+              Chargement...
+            </div>
+          }
+        >
+          <ResetForm />
+        </Suspense>
+      </div>
     </div>
   );
 }

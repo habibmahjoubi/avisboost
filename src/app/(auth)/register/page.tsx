@@ -55,7 +55,7 @@ function RegisterForm() {
   }
 
   return (
-    <div className="w-full sm:max-w-sm">
+    <>
       <div className="text-center mb-8">
         <Link href="/" className="text-2xl font-bold text-primary">
           AvisBoost
@@ -179,16 +179,18 @@ function RegisterForm() {
         Déjà un compte ?{" "}
         <Link href="/login" className="text-primary font-medium">Se connecter</Link>
       </p>
-    </div>
+    </>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <div className="flex-1 flex items-start sm:items-center justify-center px-5 pt-6 sm:pt-0 pb-8">
-      <Suspense fallback={<div className="text-center text-muted-foreground">Chargement...</div>}>
-        <RegisterForm />
-      </Suspense>
+    <div className="min-h-dvh w-full flex flex-col justify-start sm:justify-center px-4 pt-8 sm:pt-0 pb-8">
+      <div className="w-full sm:max-w-sm sm:mx-auto">
+        <Suspense fallback={<div className="text-center text-muted-foreground">Chargement...</div>}>
+          <RegisterForm />
+        </Suspense>
+      </div>
     </div>
   );
 }
