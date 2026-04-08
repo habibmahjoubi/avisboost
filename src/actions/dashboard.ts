@@ -241,13 +241,22 @@ export async function resetTemplate(formData: FormData) {
 export async function updateSettings(formData: FormData) {
   const userId = await getUserId();
   const niche = formData.get("niche") as Niche;
+  const customNicheInput = formData.get("customNiche") as string | null;
+
+  // Si niche OTHER : sauvegarder le customNiche saisi
+  // Si autre niche : garder l'ancien customNiche au cas où l'utilisateur reviendrait
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  const customNiche =
+    niche === "OTHER"
+      ? customNicheInput || user.customNiche
+      : null;
 
   await prisma.user.update({
     where: { id: userId },
     data: {
       businessName: formData.get("businessName") as string,
       niche,
-      customNiche: niche === "OTHER" ? (formData.get("customNiche") as string) || null : null,
+      customNiche,
       googlePlaceUrl: formData.get("googlePlaceUrl") as string,
       phone: (formData.get("phone") as string) || null,
     },

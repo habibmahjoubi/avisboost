@@ -5,13 +5,7 @@ import { updateSettings } from "@/actions/dashboard";
 import { NICHE_CONFIGS } from "@/config/niches";
 import { TemplateEditor } from "@/components/dashboard/template-editor";
 import { GooglePlaceField } from "@/components/dashboard/google-place-field";
-
-const NICHES = [
-  { value: "DENTIST", label: "Cabinet dentaire" },
-  { value: "OSTEOPATH", label: "Ostéopathie" },
-  { value: "GARAGE", label: "Garage automobile" },
-  { value: "OTHER", label: "Autre métier" },
-];
+import { NicheSelector } from "@/components/dashboard/niche-selector";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -64,20 +58,10 @@ export default async function SettingsPage() {
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">Métier</label>
-          <select
-            name="niche"
-            defaultValue={user.niche}
-            className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            {NICHES.map((n) => (
-              <option key={n.value} value={n.value}>
-                {n.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <NicheSelector
+          defaultNiche={user.niche}
+          defaultCustomNiche={user.customNiche}
+        />
 
         <GooglePlaceField defaultValue={user.googlePlaceUrl || ""} />
 
