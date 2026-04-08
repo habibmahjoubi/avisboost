@@ -4,9 +4,10 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
 import {
-  Send, Star, ShieldCheck, Rocket, Target, BarChart3, Smartphone, Lock,
-  UserPlus, Users, Check, ArrowRight, ChevronDown, Clock, CreditCard,
-  Sparkles, ThumbsUp, ArrowUpRight, Stethoscope, Bone, Wrench, Quote,
+  Send, Star, ShieldCheck, Rocket, BarChart3, Smartphone, Lock,
+  UserPlus, Users, Check, ArrowRight, ChevronRight, Clock, CreditCard,
+  ThumbsUp, ArrowUpRight, Stethoscope, Bone, Wrench, Quote, Building2,
+  Scissors, UtensilsCrossed, ShoppingBag, Heart, Car, Dumbbell, Briefcase,
 } from "lucide-react";
 
 export default async function HomePage() {
@@ -15,11 +16,10 @@ export default async function HomePage() {
     orderBy: { sortOrder: "asc" },
   });
   const highlightedIndex = plans.length >= 2 ? 1 : 0;
-  const totalUsers = await prisma.user.count({ where: { isAdmin: false } });
 
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
-      {/* HEADER */}
+      {/* ── HEADER ── */}
       <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-border/40">
         <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -30,220 +30,250 @@ export default async function HomePage() {
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-[13px] font-medium">
             <a href="#comment" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Comment ça marche</a>
-            <a href="#avantages" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Avantages</a>
+            <a href="#metiers" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Pour qui</a>
             <a href="#tarifs" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Tarifs</a>
           </nav>
           <div className="flex items-center gap-3">
-            <Link href="/login" className="text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
-              Se connecter
-            </Link>
-            <Link href="/register" className="text-[13px] font-semibold brand-gradient text-white px-5 py-2 rounded-full btn-glow transition-all">
-              Essai gratuit
-            </Link>
+            <Link href="/login" className="text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:block">Se connecter</Link>
+            <Link href="/register" className="text-[13px] font-semibold brand-gradient text-white px-5 py-2 rounded-full btn-glow transition-all">Essai gratuit</Link>
           </div>
         </div>
       </header>
 
-      {/* HERO */}
-      <section className="relative mesh-bg grain py-16 sm:py-24 md:py-36 px-5">
-        <div className="max-w-3xl mx-auto text-center relative z-10">
-          <div className="pill mx-auto mb-8 w-fit">
-            <Sparkles className="w-3.5 h-3.5" />
-            {totalUsers > 10
-              ? `${totalUsers}+ professionnels nous font confiance`
-              : "La collecte d'avis Google, simplifiée"}
-          </div>
-
-          <h1 className="text-[2.5rem] sm:text-5xl md:text-[3.5rem] font-extrabold tracking-tight leading-[1.1] mb-6">
-            Chaque client satisfait<br />
-            mérite de <span className="brand-gradient-text">le dire sur Google</span>
-          </h1>
-
-          <p className="text-base md:text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
-            Un email après la prestation, un clic pour le client, un avis 5&nbsp;étoiles pour vous. Automatique, intelligent, sans effort.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
-            <Link
-              href="/register"
-              className="flex items-center gap-2 brand-gradient text-white px-7 py-3.5 rounded-full text-[15px] font-semibold btn-glow transition-all shadow-xl shadow-primary/20"
-            >
-              Démarrer gratuitement
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <a href="#comment" className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground px-5 py-3.5 text-[15px] font-medium transition-colors">
-              Découvrir <ChevronDown className="w-4 h-4" />
-            </a>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
-            {[
-              { icon: Check, text: plans[0]?.quota > 0 ? `${plans[0].quota} envois offerts` : "Gratuit" },
-              { icon: CreditCard, text: "Sans carte bancaire" },
-              { icon: Clock, text: "Prêt en 2 min" },
-            ].map((item) => (
-              <span key={item.text} className="flex items-center gap-1.5">
-                <item.icon className="w-3.5 h-3.5 text-success" />
-                {item.text}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* METRICS */}
-      <section className="py-7 border-y border-border/40">
-        <div className="max-w-4xl mx-auto px-5 flex flex-wrap items-center justify-center gap-8 sm:gap-14">
-          {[
-            { value: "4,9/5", label: "Satisfaction" },
-            { value: "×3", label: "Plus d'avis" },
-            { value: "2 min", label: "Pour démarrer" },
-          ].map((s) => (
-            <div key={s.label} className="text-center">
-              <p className="text-2xl font-extrabold tracking-tight brand-gradient-text">{s.value}</p>
-              <p className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">{s.label}</p>
+      {/* ── HERO ── */}
+      <section className="relative mesh-bg grain py-16 sm:py-24 md:py-32 px-5">
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold text-primary mb-4 tracking-wide">Pour les professionnels de proximité</p>
+            <h1 className="text-[2.2rem] sm:text-5xl md:text-[3.4rem] font-extrabold tracking-tight leading-[1.08] mb-5">
+              Vos clients vous adorent.<br />
+              <span className="brand-gradient-text">Faites-le savoir.</span>
+            </h1>
+            <p className="text-base md:text-[17px] text-muted-foreground mb-8 leading-relaxed max-w-lg">
+              Après chaque prestation, AvisBoost envoie automatiquement une demande d'avis à votre client. S'il est satisfait, il publie directement sur Google. Sinon, il vous écrit en privé.
+            </p>
+            <div className="flex flex-col sm:flex-row items-start gap-3 mb-6">
+              <Link href="/register" className="flex items-center gap-2 brand-gradient text-white px-7 py-3.5 rounded-full text-[15px] font-semibold btn-glow transition-all shadow-xl shadow-primary/20">
+                Créer mon compte gratuitement <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
-          ))}
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" />{plans[0]?.quota > 0 ? `${plans[0].quota} envois offerts` : "Gratuit"}</span>
+              <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" />Sans carte bancaire</span>
+              <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" />2 min pour démarrer</span>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* COMMENT ÇA MARCHE */}
-      <section id="comment" className="py-24 px-5">
+      {/* ── LE PROBLÈME / LA SOLUTION ── */}
+      <section className="py-20 px-5 border-b border-border/40">
         <div className="max-w-5xl mx-auto">
-          <SectionHeader tag="Fonctionnement" title="4 étapes, 0 compétence technique" />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-14">
-            {[
-              { icon: UserPlus, title: "Inscription", desc: "30 secondes. Collez votre lien Google Maps, c'est parti." },
-              { icon: Users, title: "Contacts", desc: "Ajoutez vos clients un par un ou importez-les en CSV." },
-              { icon: Send, title: "Envoi", desc: "Email personnalisé envoyé automatiquement après la prestation." },
-              { icon: Star, title: "Avis publié", desc: "Le client satisfait est redirigé directement vers Google." },
-            ].map((step, i) => (
-              <div key={step.title} className="card-elevated rounded-2xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="step-number">{i + 1}</div>
-                  <step.icon className="w-5 h-5 text-primary" />
-                </div>
-                <h3 className="font-bold mb-1.5">{step.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* MÉTIERS */}
-      <section className="py-24 px-5 mesh-bg grain relative">
-        <div className="max-w-5xl mx-auto relative z-10">
-          <SectionHeader tag="Votre métier" title="Configuré sur mesure pour vous" />
-          <div className="grid md:grid-cols-3 gap-5 mt-14">
-            {[
-              { icon: Stethoscope, name: "Cabinets dentaires", timing: "2h après le rendez-vous", stat: "×3,4", color: "text-sky-600 bg-sky-50" },
-              { icon: Bone, name: "Ostéopathes", timing: "3h après la séance", stat: "×2,8", color: "text-violet-600 bg-violet-50" },
-              { icon: Wrench, name: "Garages auto", timing: "24h après l'intervention", stat: "×2,5", color: "text-amber-600 bg-amber-50" },
-            ].map((niche) => (
-              <div key={niche.name} className="card-elevated rounded-2xl p-7">
-                <div className={`w-12 h-12 rounded-xl ${niche.color} flex items-center justify-center mb-5`}>
-                  <niche.icon className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-lg mb-1">{niche.name}</h3>
-                <p className="text-sm text-muted-foreground mb-5">Envoi automatique {niche.timing}</p>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold brand-gradient-text">{niche.stat}</span>
-                  <span className="text-sm text-muted-foreground">d'avis en plus</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* AVANTAGES */}
-      <section id="avantages" className="py-24 px-5">
-        <div className="max-w-5xl mx-auto">
-          <SectionHeader tag="Pourquoi AvisBoost" title="Tout ce qu'il faut, rien de superflu" />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-14">
-            {[
-              { icon: ShieldCheck, title: "E-réputation protégée", desc: "Les mécontents vous écrivent en privé. Seuls les satisfaits publient sur Google." },
-              { icon: Rocket, title: "Zéro effort", desc: "Automatisé de bout en bout. Programmez une fois, oubliez." },
-              { icon: Target, title: "Adapté à votre métier", desc: "Vocabulaire, délais, templates — tout est calibré pour votre profession." },
-              { icon: BarChart3, title: "Résultats mesurables", desc: "Taux de clic, avis obtenus, évolution. Pilotez en temps réel." },
-              { icon: Smartphone, title: "Email & SMS", desc: "Choisissez le canal qui convertit le mieux pour chaque client." },
-              { icon: Lock, title: "Zéro engagement", desc: "Gratuit pour démarrer, annulation en un clic. Pas de piège." },
-            ].map((b) => (
-              <div key={b.title} className="group p-6">
-                <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
-                  <b.icon className="w-5 h-5 text-primary" />
-                </div>
-                <h3 className="font-bold mb-1.5">{b.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{b.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SATISFACTION GATE */}
-      <section className="py-24 px-5 mesh-bg grain relative">
-        <div className="max-w-3xl mx-auto relative z-10">
-          <div className="card-elevated rounded-3xl p-8 md:p-12">
-            <div className="text-center mb-10">
-              <div className="w-14 h-14 brand-gradient rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-primary/20">
-                <ShieldCheck className="w-7 h-7 text-white" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold mb-2">La Satisfaction Gate</h2>
-              <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                Le filtre qui protège votre réputation et maximise les avis positifs.
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-sm font-semibold text-destructive/70 mb-2">Le constat</p>
+              <h2 className="text-2xl font-bold mb-4">80% de vos clients satisfaits ne laissent jamais d'avis</h2>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Ils ont apprécié votre travail, mais personne ne le saura. Pendant ce temps, un seul client mécontent peut ruiner votre note Google.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Le problème n'est pas la satisfaction — c'est le passage à l'acte. Vos clients ont besoin d'un coup de pouce au bon moment.
               </p>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="rounded-2xl p-5 bg-emerald-50 border border-emerald-100">
-                <div className="flex items-center gap-2 mb-2">
-                  <ThumbsUp className="w-4 h-4 text-emerald-600" />
-                  <div className="flex gap-0.5">
-                    {[1,2,3,4,5].map(s => <Star key={s} className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500" />)}
+            <div>
+              <p className="text-sm font-semibold text-primary mb-2">La solution</p>
+              <h2 className="text-2xl font-bold mb-4">AvisBoost transforme le silence en 5 étoiles</h2>
+              <div className="space-y-4">
+                {[
+                  "Un message envoyé automatiquement après la prestation",
+                  "Le client note en un clic — s'il est content, direction Google",
+                  "S'il est mécontent, vous récupérez le feedback en privé",
+                ].map((text, i) => (
+                  <div key={i} className="flex gap-3">
+                    <div className="step-number flex-shrink-0 mt-0.5">{i + 1}</div>
+                    <p className="text-sm leading-relaxed">{text}</p>
                   </div>
-                </div>
-                <h3 className="font-bold text-emerald-900 mb-1">Satisfait</h3>
-                <p className="text-xs text-emerald-700/70 mb-3">Redirigé vers Google pour publier un avis visible par tous.</p>
-                <span className="text-xs font-semibold text-emerald-700 flex items-center gap-1"><ArrowUpRight className="w-3.5 h-3.5" /> Publié sur Google</span>
-              </div>
-              <div className="rounded-2xl p-5 bg-amber-50 border border-amber-100">
-                <div className="flex items-center gap-2 mb-2">
-                  <ShieldCheck className="w-4 h-4 text-amber-600" />
-                  <div className="flex gap-0.5">
-                    {[1,2].map(s => <Star key={s} className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />)}
-                    {[3,4,5].map(s => <Star key={s} className="w-3.5 h-3.5 text-amber-200" />)}
-                  </div>
-                </div>
-                <h3 className="font-bold text-amber-900 mb-1">Insatisfait</h3>
-                <p className="text-xs text-amber-700/70 mb-3">Feedback privé envoyé directement à votre établissement.</p>
-                <span className="text-xs font-semibold text-amber-700 flex items-center gap-1"><Lock className="w-3.5 h-3.5" /> Reste confidentiel</span>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* TÉMOIGNAGES */}
-      <section className="py-24 px-5">
+      {/* ── COMMENT ÇA MARCHE ── */}
+      <section id="comment" className="py-20 px-5">
         <div className="max-w-4xl mx-auto">
-          <SectionHeader tag="Témoignages" title="Ils ont boosté leurs avis" />
-          <div className="grid md:grid-cols-3 gap-5 mt-14">
-            {[
-              { name: "Dr. Martin L.", role: "Dentiste · Lyon", quote: "De 12 à 67 avis en 2 mois. Les patients adorent la simplicité." },
-              { name: "Sophie R.", role: "Ostéopathe · Bordeaux", quote: "Tout est automatisé. Je n'ai plus rien à faire, les avis arrivent tout seuls." },
-              { name: "Garage Central", role: "Garage · Nantes", quote: "3 à 4 avis par semaine. Note passée de 3,8 à 4,6 en trois mois." },
-            ].map((t) => (
-              <div key={t.name} className="card-elevated rounded-2xl p-6">
-                <Quote className="w-5 h-5 text-primary/30 mb-3" />
-                <p className="text-sm leading-relaxed mb-5">{t.quote}</p>
-                <div className="flex items-center gap-3 pt-4 border-t border-border/50">
-                  <div className="w-9 h-9 rounded-full brand-gradient flex items-center justify-center text-white text-xs font-bold">
-                    {t.name.charAt(0)}
+          <p className="text-sm font-semibold text-primary mb-2">En pratique</p>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-12">Ce que vit votre client</h2>
+
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="hidden md:block absolute left-6 top-8 bottom-8 w-px bg-border" />
+
+            <div className="space-y-8">
+              {[
+                { time: "J+0", title: "Votre client passe chez vous", desc: "Consultation, séance, intervention — peu importe le métier." },
+                { time: "J+0 à J+1", title: "Il reçoit un email personnalisé", desc: "Message adapté à votre profession, envoyé au moment idéal." },
+                { time: "30 sec", title: "Il clique et note son expérience", desc: "Page simple, une question, 5 étoiles à cliquer." },
+                { time: "Si 4-5★", title: "Redirigé vers Google", desc: "Il publie son avis directement. Vous gagnez en visibilité." },
+                { time: "Si 1-3★", title: "Feedback privé", desc: "Son retour reste entre vous. Votre note Google est protégée." },
+              ].map((step, i) => (
+                <div key={i} className="flex gap-5 items-start">
+                  <div className="hidden md:flex flex-col items-center">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0 relative z-10 bg-white border-2 border-primary/20">
+                      {step.time.length <= 4 ? step.time : <ChevronRight className="w-4 h-4" />}
+                    </div>
                   </div>
+                  <div className="flex-1 pb-2">
+                    <span className="md:hidden text-xs font-bold text-primary">{step.time}</span>
+                    <h3 className="font-bold text-lg">{step.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-0.5">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── POUR QUI ── */}
+      <section id="metiers" className="py-20 px-5 mesh-bg grain relative">
+        <div className="max-w-5xl mx-auto relative z-10">
+          <p className="text-sm font-semibold text-primary mb-2">Pour tous les professionnels</p>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Quel que soit votre métier, vos avis comptent</h2>
+          <p className="text-muted-foreground mb-12 max-w-lg">
+            AvisBoost s'adapte automatiquement à votre activité : vocabulaire, délais d'envoi, modèles de messages.
+          </p>
+
+          {/* Métiers principaux */}
+          <div className="grid sm:grid-cols-3 gap-4 mb-6">
+            {[
+              { icon: Stethoscope, name: "Dentistes", detail: "Envoi 2h après le RDV", stat: "×3,4 avis", color: "text-sky-600 bg-sky-50 border-sky-100" },
+              { icon: Bone, name: "Ostéopathes", detail: "Envoi 3h après la séance", stat: "×2,8 avis", color: "text-violet-600 bg-violet-50 border-violet-100" },
+              { icon: Wrench, name: "Garages auto", detail: "Envoi 24h après", stat: "×2,5 avis", color: "text-amber-600 bg-amber-50 border-amber-100" },
+            ].map((m) => (
+              <div key={m.name} className={`rounded-2xl p-5 border ${m.color}`}>
+                <m.icon className="w-6 h-6 mb-3" />
+                <h3 className="font-bold mb-0.5">{m.name}</h3>
+                <p className="text-xs opacity-70 mb-3">{m.detail}</p>
+                <p className="text-xl font-extrabold brand-gradient-text">{m.stat}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Autres métiers — grille de tags */}
+          <div className="card-elevated rounded-2xl p-6">
+            <p className="text-sm font-semibold mb-4">Et aussi pour :</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { icon: Scissors, label: "Coiffeurs & barbiers" },
+                { icon: UtensilsCrossed, label: "Restaurants" },
+                { icon: ShoppingBag, label: "Commerces" },
+                { icon: Heart, label: "Infirmiers" },
+                { icon: Car, label: "Auto-écoles" },
+                { icon: Dumbbell, label: "Coachs sportifs" },
+                { icon: Briefcase, label: "Avocats & notaires" },
+                { icon: Building2, label: "Agents immobiliers" },
+                { icon: Stethoscope, label: "Kinés" },
+                { icon: Scissors, label: "Esthéticiennes" },
+                { icon: Wrench, label: "Plombiers" },
+                { icon: Building2, label: "Architectes" },
+              ].map((tag) => (
+                <span key={tag.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-sm border border-border/50">
+                  <tag.icon className="w-3.5 h-3.5 text-muted-foreground" />
+                  {tag.label}
+                </span>
+              ))}
+              <Link href="/register?plan=free" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-sm text-primary font-medium border border-primary/20">
+                Votre métier ? <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SATISFACTION GATE ── */}
+      <section className="py-20 px-5">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-5 gap-8 items-center">
+            <div className="md:col-span-2">
+              <div className="w-12 h-12 brand-gradient rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-primary/20">
+                <ShieldCheck className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold mb-3">Le filtre intelligent</h2>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Les avis négatifs ne finissent jamais sur Google. Vous les récupérez en privé pour vous améliorer. Seuls les retours positifs sont publiés.
+              </p>
+            </div>
+            <div className="md:col-span-3 space-y-3">
+              <div className="rounded-2xl p-5 bg-emerald-50 border border-emerald-100 flex items-start gap-4">
+                <ThumbsUp className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-bold text-emerald-900">4-5 étoiles</h3>
+                    <div className="flex gap-0.5">{[1,2,3,4,5].map(s => <Star key={s} className="w-3 h-3 text-emerald-500 fill-emerald-500" />)}</div>
+                  </div>
+                  <p className="text-xs text-emerald-700/70">Redirection automatique vers Google Maps pour publier l'avis</p>
+                </div>
+                <span className="ml-auto text-emerald-600"><ArrowUpRight className="w-4 h-4" /></span>
+              </div>
+              <div className="rounded-2xl p-5 bg-amber-50 border border-amber-100 flex items-start gap-4">
+                <ShieldCheck className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-bold text-amber-900">1-3 étoiles</h3>
+                    <div className="flex gap-0.5">{[1,2].map(s => <Star key={s} className="w-3 h-3 text-amber-500 fill-amber-500" />)}{[3,4,5].map(s => <Star key={s} className="w-3 h-3 text-amber-200" />)}</div>
+                  </div>
+                  <p className="text-xs text-amber-700/70">Le client vous écrit en privé — rien ne va sur Google</p>
+                </div>
+                <span className="ml-auto text-amber-600"><Lock className="w-4 h-4" /></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── AVANTAGES (compact) ── */}
+      <section className="py-16 px-5 border-y border-border/40">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { icon: Rocket, title: "Automatisé", desc: "Programmez une fois, oubliez" },
+              { icon: BarChart3, title: "Mesurable", desc: "Taux de clic, avis obtenus" },
+              { icon: Smartphone, title: "Email & SMS", desc: "Choisissez le canal adapté" },
+              { icon: Lock, title: "Sans engagement", desc: "Annulation en un clic" },
+            ].map((b) => (
+              <div key={b.title} className="flex gap-3">
+                <b.icon className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-bold text-sm">{b.title}</h3>
+                  <p className="text-xs text-muted-foreground">{b.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TÉMOIGNAGES ── */}
+      <section className="py-20 px-5">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-sm font-semibold text-primary mb-2">Retours clients</p>
+          <h2 className="text-2xl font-bold mb-10">Ce qu'en disent nos utilisateurs</h2>
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              { name: "Dr. Martin L.", role: "Dentiste · Lyon", quote: "De 12 à 67 avis en 2 mois. Mes patients adorent la simplicité." },
+              { name: "Sophie R.", role: "Ostéopathe · Bordeaux", quote: "Tout est automatisé. Les avis arrivent tout seuls, je n'ai rien à faire." },
+              { name: "Garage Central", role: "Garage · Nantes", quote: "3 à 4 avis par semaine. Notre note est passée de 3,8 à 4,6." },
+            ].map((t) => (
+              <div key={t.name} className="card-elevated rounded-2xl p-5">
+                <Quote className="w-4 h-4 text-primary/20 mb-2" />
+                <p className="text-sm leading-relaxed mb-4">{t.quote}</p>
+                <div className="flex items-center gap-2.5 pt-3 border-t border-border/50">
+                  <div className="w-8 h-8 rounded-full brand-gradient flex items-center justify-center text-white text-[11px] font-bold">{t.name.charAt(0)}</div>
                   <div>
-                    <p className="text-sm font-semibold">{t.name}</p>
-                    <p className="text-[11px] text-muted-foreground">{t.role}</p>
+                    <p className="text-xs font-semibold">{t.name}</p>
+                    <p className="text-[10px] text-muted-foreground">{t.role}</p>
                   </div>
                 </div>
               </div>
@@ -252,11 +282,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* TARIFS */}
-      <section id="tarifs" className="py-24 px-5 mesh-bg grain relative">
+      {/* ── TARIFS ── */}
+      <section id="tarifs" className="py-20 px-5 mesh-bg grain relative">
         <div className="max-w-5xl mx-auto relative z-10">
-          <SectionHeader tag="Tarifs" title="Simple, transparent, sans piège" subtitle="Commencez gratuitement. Évoluez à votre rythme." />
-          <div className="grid md:grid-cols-3 gap-5 items-start mt-14">
+          <p className="text-sm font-semibold text-primary mb-2">Tarifs</p>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-2">Commencez gratuitement</h2>
+          <p className="text-muted-foreground mb-12">Évoluez quand vous êtes prêt. Annulation à tout moment.</p>
+
+          <div className="grid md:grid-cols-3 gap-5 items-start">
             {plans.map((plan, index) => {
               const isHL = index === highlightedIndex;
               return (
@@ -280,23 +313,26 @@ export default async function HomePage() {
               );
             })}
           </div>
-          <p className="text-center text-xs text-muted-foreground mt-8">Satisfaction Gate incluse dans tous les plans · Annulation à tout moment</p>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 px-5">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Prêt à transformer vos clients<br />en ambassadeurs ?</h2>
-          <p className="text-muted-foreground mb-8 max-w-md mx-auto">Rejoignez les professionnels qui collectent des avis 5 étoiles sans effort.</p>
+      {/* ── CTA FINAL ── */}
+      <section className="py-20 px-5">
+        <div className="max-w-xl mx-auto text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+            Vos prochains avis 5 étoiles<br />commencent ici
+          </h2>
+          <p className="text-muted-foreground mb-8">
+            Créez votre compte, ajoutez vos premiers clients, et regardez les avis arriver.
+          </p>
           <Link href="/register" className="inline-flex items-center gap-2 brand-gradient text-white px-8 py-4 rounded-full text-base font-semibold btn-glow transition-all shadow-xl shadow-primary/20">
-            Démarrer maintenant — c'est gratuit <ArrowRight className="w-4 h-4" />
+            Créer mon compte — c'est gratuit <ArrowRight className="w-4 h-4" />
           </Link>
-          <p className="text-xs text-muted-foreground mt-4">Aucune carte bancaire requise</p>
+          <p className="text-xs text-muted-foreground mt-3">Aucune carte bancaire requise</p>
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ── FOOTER ── */}
       <footer className="py-8 px-5 border-t border-border/40">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -310,16 +346,6 @@ export default async function HomePage() {
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function SectionHeader({ tag, title, subtitle }: { tag: string; title: string; subtitle?: string }) {
-  return (
-    <div className="text-center">
-      <span className="pill mb-4 inline-flex">{tag}</span>
-      <h2 className="text-2xl sm:text-3xl font-bold mt-3">{title}</h2>
-      {subtitle && <p className="text-muted-foreground mt-2">{subtitle}</p>}
     </div>
   );
 }
