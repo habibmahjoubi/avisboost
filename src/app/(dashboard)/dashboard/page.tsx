@@ -26,7 +26,8 @@ export default async function DashboardPage({
     return <OnboardingModal defaultNiche={params.niche || "DENTIST"} />;
   }
 
-  const days = Number(params.period) || 30;
+  const rawDays = Number(params.period);
+  const days = [7, 30, 90].includes(rawDays) ? rawDays : 30;
   const periodStart = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   const periodFilter = { createdAt: { gte: periodStart } };
 

@@ -9,7 +9,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { plan } = await request.json();
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+  }
+
+  const { plan } = body;
+  if (!plan || typeof plan !== "string") {
+    return NextResponse.json({ error: "Missing plan" }, { status: 400 });
+  }
+
   const planConfig = PLANS[plan as keyof typeof PLANS];
 
   if (!planConfig || !("priceId" in planConfig)) {

@@ -71,9 +71,11 @@ export function PreviewButton({
         )}
 
         {channel === "EMAIL" ? (
-          <div
-            className="border border-border rounded-lg p-4 bg-white text-sm"
-            dangerouslySetInnerHTML={{ __html: sanitizeHtml(resolve(templateBody)) }}
+          <iframe
+            srcDoc={sanitizeHtml(resolve(templateBody))}
+            sandbox=""
+            className="border border-border rounded-lg w-full h-64 bg-white"
+            title="Aperçu email"
           />
         ) : (
           <div className="border border-border rounded-lg p-4 bg-muted/30">

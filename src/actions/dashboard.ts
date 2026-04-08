@@ -93,6 +93,10 @@ export async function importClients(csvData: string) {
   const userId = await getUserId();
   const lines = csvData.split("\n").filter((l) => l.trim());
 
+  if (lines.length > 5000) {
+    return { imported: 0, skipped: 0, error: "Maximum 5000 lignes autorisées" };
+  }
+
   let imported = 0;
   let skipped = 0;
 
@@ -141,8 +145,15 @@ export async function importClients(csvData: string) {
 export async function sendReviewRequest(formData: FormData) {
   const userId = await getUserId();
   const clientId = formData.get("clientId") as string;
-  const channel = formData.get("channel") as Channel;
+  const channelRaw = formData.get("channel") as string;
+  if (!["EMAIL", "SMS"].includes(channelRaw)) {
+    return { error: "Canal invalide" };
+  }
+  const channel = channelRaw as Channel;
   const delayHours = Number(formData.get("delayHours") ?? 0);
+  if (!Number.isFinite(delayHours) || delayHours < 0 || delayHours > 720) {
+    return { error: "Délai invalide" };
+  }
 
   try {
     await createReviewRequest({

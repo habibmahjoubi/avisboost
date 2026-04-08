@@ -18,6 +18,13 @@ export function CsvImport() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+    if (file.size > MAX_SIZE) {
+      setResult({ imported: 0, skipped: 0 });
+      alert("Fichier trop volumineux (maximum 5 Mo)");
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (ev) => {
       const text = ev.target?.result as string;

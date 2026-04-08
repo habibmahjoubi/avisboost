@@ -70,7 +70,7 @@ export async function createReviewRequest({
   // Envoi immediat si delai = 0
   if (delay === 0) {
     const client = await prisma.client.findUniqueOrThrow({
-      where: { id: clientId },
+      where: { id: clientId, userId },
     });
 
     const customTemplate = await prisma.template.findFirst({
