@@ -81,7 +81,7 @@ function ResetForm() {
     <>
       <div className="text-center mb-8">
         <Link href="/" className="text-2xl font-bold text-primary">
-          AvisBoost
+          Valoravis
         </Link>
         <h1 className="text-xl font-semibold mt-4">
           Nouveau mot de passe

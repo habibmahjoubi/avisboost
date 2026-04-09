@@ -29,7 +29,7 @@ export default async function HomePage() {
             <div className="w-8 h-8 brand-gradient rounded-xl flex items-center justify-center">
               <Star className="w-4 h-4 text-white fill-white" />
             </div>
-            <span className="text-lg font-bold tracking-tight">AvisBoost</span>
+            <span className="text-lg font-bold tracking-tight">Valoravis</span>
           </Link>
           <nav className="hidden sm:flex items-center gap-6 sm:gap-8 text-[13px] font-medium">
             <a href="#comment" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Comment ça marche</a>
@@ -54,7 +54,7 @@ export default async function HomePage() {
                 <span className="brand-gradient-text">Faites-le savoir.</span>
               </h1>
               <p className="text-base md:text-[17px] text-muted-foreground mb-5 sm:mb-8 leading-relaxed max-w-lg">
-                Après chaque prestation, AvisBoost envoie automatiquement une demande d'avis. Client satisfait ? Il publie sur Google. Mécontent ? Il vous écrit en privé.
+                Après chaque prestation, Valoravis envoie automatiquement une demande d'avis. Client satisfait ? Il publie sur Google. Mécontent ? Il vous écrit en privé.
               </p>
               <div className="flex flex-col sm:flex-row items-start gap-3 mb-6">
                 <Link href="/register" className="flex items-center gap-2 brand-gradient text-white px-5 sm:px-7 py-3 sm:py-3.5 rounded-full text-sm sm:text-[15px] font-semibold btn-glow transition-all shadow-xl shadow-primary/20">
@@ -94,7 +94,7 @@ export default async function HomePage() {
             </div>
             <div>
               <p className="text-sm font-semibold text-primary mb-2">La solution</p>
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">AvisBoost transforme le silence en 5 étoiles</h2>
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Valoravis transforme le silence en 5 étoiles</h2>
               <div className="space-y-4">
                 {[
                   "Un message envoyé automatiquement après la prestation",
@@ -154,7 +154,7 @@ export default async function HomePage() {
           <p className="text-sm font-semibold text-primary mb-2">Pour tous les professionnels</p>
           <h2 className="text-2xl sm:text-3xl font-bold mb-4">Quel que soit votre métier, vos avis comptent</h2>
           <p className="text-muted-foreground mb-6 sm:mb-10 max-w-lg">
-            AvisBoost s'adapte automatiquement à votre activité : vocabulaire, délais d'envoi, modèles de messages.
+            Valoravis s'adapte automatiquement à votre activité : vocabulaire, délais d'envoi, modèles de messages.
           </p>
 
           {/* Métiers principaux */}
@@ -393,7 +393,7 @@ export default async function HomePage() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 brand-gradient rounded-md flex items-center justify-center"><Star className="w-2.5 h-2.5 text-white fill-white" /></div>
-              <span className="text-sm font-semibold">AvisBoost</span>
+              <span className="text-sm font-semibold">Valoravis</span>
               <span className="text-xs text-muted-foreground">© {new Date().getFullYear()}</span>
             </div>
             <div className="flex items-center gap-5 text-xs text-muted-foreground">

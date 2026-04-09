@@ -6,7 +6,7 @@ import { Menu, X } from "lucide-react";
 
 export function MobileSidebar({
   children,
-  title = "AvisBoost",
+  title = "Valoravis",
 }: {
   children: React.ReactNode;
   title?: string;

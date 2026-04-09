@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AvisBoost - Collectez vos avis Google automatiquement",
+  title: "Valoravis - Collectez vos avis Google automatiquement",
   description:
     "Envoyez automatiquement des demandes d'avis Google à vos clients après chaque prestation. Pour dentistes, ostéopathes et garages.",
 };

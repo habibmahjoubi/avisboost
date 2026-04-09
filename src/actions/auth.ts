@@ -71,7 +71,7 @@ export async function registerUser(formData: FormData) {
         password: hashedPassword,
         name,
         niche: niche as "DENTIST" | "OSTEOPATH" | "GARAGE" | "OTHER",
-      customNiche: niche === "OTHER" ? customNiche : null,
+        customNiche: niche === "OTHER" ? customNiche : null,
         plan: plan ? plan.key : "free",
         monthlyQuota: plan
           ? plan.quota === 0
@@ -84,6 +84,33 @@ export async function registerUser(formData: FormData) {
   } catch {
     return { error: "Erreur lors de la création du compte. Réessayez." };
   }
+
+  // Email de bienvenue (non bloquant)
+  const planLabel = plan ? plan.name : "Gratuit";
+  const dashboardUrl = absoluteUrl("/dashboard");
+  const displayName = name || email.split("@")[0];
+
+  sendEmail({
+    to: email,
+    subject: `Bienvenue sur Valoravis, ${displayName} !`,
+    html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#ffffff;color:#1a1a1a">
+  <h2>Bienvenue sur Valoravis ! 🎉</h2>
+  <p>Bonjour ${displayName},</p>
+  <p>Votre compte a été créé avec succès. Voici le récapitulatif :</p>
+  <table style="width:100%;border-collapse:collapse;margin:16px 0">
+    <tr><td style="padding:8px 0;color:#888">Plan</td><td style="padding:8px 0;font-weight:bold">${planLabel}</td></tr>
+    ${trialEndsAt ? `<tr><td style="padding:8px 0;color:#888">Essai gratuit</td><td style="padding:8px 0;font-weight:bold">Jusqu'au ${trialEndsAt.toLocaleDateString("fr-FR")}</td></tr>` : ""}
+    <tr><td style="padding:8px 0;color:#888">Email</td><td style="padding:8px 0">${email}</td></tr>
+  </table>
+  <p>Prochaine étape : configurez votre établissement pour commencer à recevoir des avis.</p>
+  <a href="${dashboardUrl}" style="display:inline-block;background:#6d28d9;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0">
+    Configurer mon établissement
+  </a>
+  <p style="color:#888;font-size:13px">Si vous n'avez pas créé ce compte, ignorez cet email.</p>
+</div>`,
+  }).catch((err) => {
+    console.error("[register] welcome email failed:", err);
+  });
 
   return { success: true };
 }
@@ -120,11 +147,11 @@ export async function requestPasswordReset(formData: FormData) {
   try {
     await sendEmail({
       to: email,
-      subject: "Réinitialisation de votre mot de passe - AvisBoost",
+      subject: "Réinitialisation de votre mot de passe - Valoravis",
       html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#ffffff;color:#1a1a1a">
   <h2>Réinitialisation du mot de passe</h2>
   <p>Bonjour,</p>
-  <p>Vous avez demandé la réinitialisation de votre mot de passe AvisBoost.</p>
+  <p>Vous avez demandé la réinitialisation de votre mot de passe Valoravis.</p>
   <p>Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe :</p>
   <a href="${resetUrl}" style="display:inline-block;background:#6d28d9;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0">
     Réinitialiser mon mot de passe

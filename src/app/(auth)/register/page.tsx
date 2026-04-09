@@ -3,16 +3,17 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { registerUser } from "@/actions/auth";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Stethoscope, Bone, Wrench, Building2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-const NICHES: { value: string; label: string; Icon: LucideIcon }[] = [
-  { value: "DENTIST", label: "Cabinet dentaire", Icon: Stethoscope },
-  { value: "OSTEOPATH", label: "Ostéopathie", Icon: Bone },
-  { value: "GARAGE", label: "Garage auto", Icon: Wrench },
-  { value: "OTHER", label: "Autre métier", Icon: Building2 },
+const NICHES: { value: string; label: string; Icon: LucideIcon; emailHint: string; nameHint: string }[] = [
+  { value: "DENTIST", label: "Cabinet dentaire", Icon: Stethoscope, emailHint: "vous@cabinet-dentaire.com", nameHint: "Dr. Jean Dupont" },
+  { value: "OSTEOPATH", label: "Ostéopathie", Icon: Bone, emailHint: "vous@cabinet-osteo.com", nameHint: "Marie Martin" },
+  { value: "GARAGE", label: "Garage auto", Icon: Wrench, emailHint: "contact@mon-garage.com", nameHint: "Garage Central" },
+  { value: "OTHER", label: "Autre métier", Icon: Building2, emailHint: "vous@mon-entreprise.com", nameHint: "Jean Dupont" },
 ];
 
 const PLAN_LABELS: Record<string, { label: string; description: string }> = {
@@ -30,6 +31,7 @@ function RegisterForm() {
   const searchParams = useSearchParams();
   const selectedPlan = searchParams.get("plan") || "free";
   const planInfo = PLAN_LABELS[selectedPlan] || PLAN_LABELS.free;
+  const currentNiche = NICHES.find((n) => n.value === selectedNiche) || NICHES[0];
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -51,14 +53,28 @@ function RegisterForm() {
       return;
     }
 
-    router.push("/login?registered=1");
+    // Auto-login après inscription
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const loginResult = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (loginResult?.error) {
+      router.push("/login?registered=1");
+      return;
+    }
+
+    router.push("/dashboard");
   }
 
   return (
     <>
       <div className="text-center mb-8">
         <Link href="/" className="text-2xl font-bold text-primary">
-          AvisBoost
+          Valoravis
         </Link>
         <h1 className="text-xl font-semibold mt-4">Créer votre compte</h1>
 
@@ -112,7 +128,7 @@ function RegisterForm() {
               type="text"
               value={customNiche}
               onChange={(e) => setCustomNiche(e.target.value)}
-              placeholder="Précisez votre métier (ex: restaurant, salon de coiffure...)"
+              placeholder="Ex: restaurant, coiffeur, coach..."
               required
               className="w-full mt-2 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
@@ -126,7 +142,7 @@ function RegisterForm() {
             name="name"
             type="text"
             className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            placeholder="Jean Dupont"
+            placeholder={currentNiche.nameHint}
           />
         </div>
 
@@ -138,7 +154,7 @@ function RegisterForm() {
             type="email"
             required
             className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            placeholder="vous@cabinet.com"
+            placeholder={currentNiche.emailHint}
           />
         </div>
 
@@ -162,7 +178,7 @@ function RegisterForm() {
           className="w-full bg-primary text-primary-foreground py-2 rounded-lg text-sm sm:text-base font-medium hover:opacity-90 disabled:opacity-50"
         >
           {loading
-            ? "Création..."
+            ? "Création du compte..."
             : selectedPlan === "free"
               ? "Commencer gratuitement"
               : `Essai gratuit ${planInfo.label}`}

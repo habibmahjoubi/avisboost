@@ -68,7 +68,7 @@ export default async function DashboardLayout({
             <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
               <Star className="w-3.5 h-3.5 text-primary-foreground fill-primary-foreground" />
             </div>
-            <span className="text-lg font-bold">AvisBoost</span>
+            <span className="text-lg font-bold">Valoravis</span>
           </Link>
           <p className="text-xs text-muted-foreground mt-1 truncate">
             {user.businessName || user.email}

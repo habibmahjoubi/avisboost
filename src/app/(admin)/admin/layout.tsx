@@ -34,13 +34,13 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-screen">
-      <MobileSidebar title="AvisBoost Admin">
+      <MobileSidebar title="Valoravis Admin">
         <div className="p-4 border-b border-border">
           <Link href="/admin" className="flex items-center gap-2">
             <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
               <Star className="w-3.5 h-3.5 text-primary-foreground fill-primary-foreground" />
             </div>
-            <span className="text-lg font-bold">AvisBoost</span>
+            <span className="text-lg font-bold">Valoravis</span>
           </Link>
           <div className="flex items-center gap-2 mt-1">
             <span className="px-2 py-0.5 bg-destructive/10 text-destructive text-xs font-medium rounded">

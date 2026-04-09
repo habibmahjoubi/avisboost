@@ -6,7 +6,7 @@ import { HelpCircle, X } from "lucide-react";
 const QUESTIONS = [
   { q: "Comment ça fonctionne ?", a: "Après chaque prestation, un email est envoyé à votre client. S'il est satisfait, il publie directement sur Google. Sinon, il vous écrit en privé." },
   { q: "Les avis vont-ils vraiment sur Google ?", a: "Oui, le client est redirigé vers votre fiche Google Maps. C'est lui qui publie — 100% conforme aux règles de Google." },
-  { q: "Quels métiers sont concernés ?", a: "Tous : dentistes, garages, coiffeurs, restaurants, kinés, avocats, commerces... AvisBoost s'adapte à votre vocabulaire métier." },
+  { q: "Quels métiers sont concernés ?", a: "Tous : dentistes, garages, coiffeurs, restaurants, kinés, avocats, commerces... Valoravis s'adapte à votre vocabulaire métier." },
   { q: "Et si un client est mécontent ?", a: "Il vous écrit en privé. Son retour n'apparaît pas sur Google. Votre note publique est protégée." },
   { q: "Puis-je annuler à tout moment ?", a: "Oui, en un clic. Plan gratuit pour démarrer, aucun engagement sur les plans payants." },
   { q: "Mes données sont-elles protégées ?", a: "Données hébergées en France, connexion chiffrée, conforme RGPD. Rien n'est partagé avec des tiers." },
