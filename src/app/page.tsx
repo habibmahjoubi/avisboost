@@ -23,7 +23,7 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-border/40">
+      <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-xl border-b border-border/40">
         <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 brand-gradient rounded-xl flex items-center justify-center">
@@ -132,7 +132,7 @@ export default async function HomePage() {
               ].map((step, i) => (
                 <div key={i} className="flex gap-5 items-start">
                   <div className="hidden md:flex flex-col items-center">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0 relative z-10 bg-white border-2 border-primary/20">
+                    <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center text-primary text-xs font-bold flex-shrink-0 relative z-10 border-2 border-primary/20">
                       {step.time.length <= 4 ? step.time : <ChevronRight className="w-4 h-4" />}
                     </div>
                   </div>
@@ -160,9 +160,9 @@ export default async function HomePage() {
           {/* Métiers principaux */}
           <div className="grid sm:grid-cols-3 gap-4 mb-6">
             {[
-              { icon: Stethoscope, name: "Dentistes", detail: "Envoi 2h après le RDV", stat: "×3,4 avis", color: "text-sky-600 bg-sky-50 border-sky-100" },
-              { icon: Bone, name: "Ostéopathes", detail: "Envoi 3h après la séance", stat: "×2,8 avis", color: "text-violet-600 bg-violet-50 border-violet-100" },
-              { icon: Wrench, name: "Garages auto", detail: "Envoi 24h après", stat: "×2,5 avis", color: "text-amber-600 bg-amber-50 border-amber-100" },
+              { icon: Stethoscope, name: "Dentistes", detail: "Envoi 2h après le RDV", stat: "×3,4 avis", color: "text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/40 border-sky-200 dark:border-sky-800" },
+              { icon: Bone, name: "Ostéopathes", detail: "Envoi 3h après la séance", stat: "×2,8 avis", color: "text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/40 border-violet-200 dark:border-violet-800" },
+              { icon: Wrench, name: "Garages auto", detail: "Envoi 24h après", stat: "×2,5 avis", color: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800" },
             ].map((m) => (
               <div key={m.name} className={`rounded-2xl p-5 border ${m.color}`}>
                 <m.icon className="w-6 h-6 mb-3" />
@@ -218,27 +218,27 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="md:col-span-3 space-y-3">
-              <div className="rounded-2xl p-5 bg-emerald-50 border border-emerald-100 flex items-start gap-4">
-                <ThumbsUp className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+              <div className="rounded-2xl p-5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-start gap-4">
+                <ThumbsUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-emerald-900">4-5 étoiles</h3>
+                    <h3 className="font-bold text-emerald-900 dark:text-emerald-300">4-5 étoiles</h3>
                     <div className="flex gap-0.5">{[1,2,3,4,5].map(s => <Star key={s} className="w-3 h-3 text-emerald-500 fill-emerald-500" />)}</div>
                   </div>
-                  <p className="text-xs text-emerald-700/70">Redirection automatique vers Google Maps pour publier l'avis</p>
+                  <p className="text-xs text-emerald-700 dark:text-emerald-400/70">Redirection automatique vers Google Maps pour publier l'avis</p>
                 </div>
-                <span className="ml-auto text-emerald-600"><ArrowUpRight className="w-4 h-4" /></span>
+                <span className="ml-auto text-emerald-600 dark:text-emerald-400"><ArrowUpRight className="w-4 h-4" /></span>
               </div>
-              <div className="rounded-2xl p-5 bg-amber-50 border border-amber-100 flex items-start gap-4">
-                <ShieldCheck className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+              <div className="rounded-2xl p-5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-start gap-4">
+                <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-amber-900">1-3 étoiles</h3>
-                    <div className="flex gap-0.5">{[1,2].map(s => <Star key={s} className="w-3 h-3 text-amber-500 fill-amber-500" />)}{[3,4,5].map(s => <Star key={s} className="w-3 h-3 text-amber-200" />)}</div>
+                    <h3 className="font-bold text-amber-900 dark:text-amber-300">1-3 étoiles</h3>
+                    <div className="flex gap-0.5">{[1,2].map(s => <Star key={s} className="w-3 h-3 text-amber-500 fill-amber-500" />)}{[3,4,5].map(s => <Star key={s} className="w-3 h-3 text-amber-200 dark:text-amber-700" />)}</div>
                   </div>
-                  <p className="text-xs text-amber-700/70">Le client vous écrit en privé — rien ne va sur Google</p>
+                  <p className="text-xs text-amber-700 dark:text-amber-400/70">Le client vous écrit en privé — rien ne va sur Google</p>
                 </div>
-                <span className="ml-auto text-amber-600"><Lock className="w-4 h-4" /></span>
+                <span className="ml-auto text-amber-600 dark:text-amber-400"><Lock className="w-4 h-4" /></span>
               </div>
             </div>
           </div>

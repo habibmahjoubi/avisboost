@@ -77,7 +77,7 @@ export function PhoneDemo() {
               <p>Bonjour Marie,</p>
               <p className="mt-1.5">Nous espérons que votre rendez-vous s'est bien passé.</p>
               <p className="mt-1.5">Votre retour nous aide beaucoup :</p>
-              <div className="mt-3 bg-primary text-white text-center py-2 rounded-lg text-[10px] font-semibold">
+              <div className="mt-3 bg-primary text-primary-foreground text-center py-2 rounded-lg text-[10px] font-semibold">
                 Donner mon avis
               </div>
             </div>

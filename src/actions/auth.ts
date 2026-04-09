@@ -121,16 +121,16 @@ export async function requestPasswordReset(formData: FormData) {
     await sendEmail({
       to: email,
       subject: "Réinitialisation de votre mot de passe - AvisBoost",
-      html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
-  <h2 style="color:#1a1a1a">Réinitialisation du mot de passe</h2>
+      html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#ffffff;color:#1a1a1a">
+  <h2>Réinitialisation du mot de passe</h2>
   <p>Bonjour,</p>
   <p>Vous avez demandé la réinitialisation de votre mot de passe AvisBoost.</p>
   <p>Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe :</p>
   <a href="${resetUrl}" style="display:inline-block;background:#6d28d9;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0">
     Réinitialiser mon mot de passe
   </a>
-  <p style="color:#666;font-size:13px">Ce lien expire dans 1 heure.</p>
-  <p style="color:#666;font-size:13px">Si vous n'avez pas fait cette demande, ignorez cet email.</p>
+  <p style="color:#888;font-size:13px">Ce lien expire dans 1 heure.</p>
+  <p style="color:#888;font-size:13px">Si vous n'avez pas fait cette demande, ignorez cet email.</p>
 </div>`,
     });
   } catch {
