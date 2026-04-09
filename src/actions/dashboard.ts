@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createReviewRequest } from "@/services/review-request.service";
+import { sanitizeHtml } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { Niche, Channel } from "@/generated/prisma/enums";
@@ -21,6 +22,11 @@ export async function completeOnboarding(formData: FormData) {
   const customNiche = (formData.get("customNiche") as string) || null;
   const googlePlaceUrl = formData.get("googlePlaceUrl") as string;
   const phone = (formData.get("phone") as string) || null;
+
+  validateLength(businessName, 200, "Nom de l'établissement");
+  validateLength(customNiche, 100, "Métier personnalisé");
+  validateLength(googlePlaceUrl, 2000, "URL Google");
+  validateLength(phone, 20, "Téléphone");
 
   await prisma.user.update({
     where: { id: userId },
@@ -106,11 +112,23 @@ export async function importClients(csvData: string) {
     const [name, email, phone, notes] = line
       .split(",")
       .map((s) => s.trim().replace(/^"|"$/g, ""));
-    if (!name) {
+    if (!name || name.length > 200) {
       skipped++;
       continue;
     }
     if (!email && !phone) {
+      skipped++;
+      continue;
+    }
+    if (email && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 255)) {
+      skipped++;
+      continue;
+    }
+    if (phone && (!/^\+?[\d\s\-().]{6,20}$/.test(phone) || phone.length > 20)) {
+      skipped++;
+      continue;
+    }
+    if (notes && notes.length > 500) {
       skipped++;
       continue;
     }
@@ -215,7 +233,7 @@ export async function saveTemplate(formData: FormData) {
   const channel = formData.get("channel") as Channel;
   const name = (formData.get("name") as string) || "Sans nom";
   const subject = (formData.get("subject") as string) || null;
-  const body = formData.get("body") as string;
+  const body = sanitizeHtml(formData.get("body") as string);
   const templateId = formData.get("templateId") as string | null;
   const isDefault = formData.get("isDefault") === "true";
 
@@ -290,14 +308,23 @@ export async function updateSettings(formData: FormData) {
       ? customNicheInput || user.customNiche
       : null;
 
+  const businessName = formData.get("businessName") as string;
+  const googlePlaceUrl = formData.get("googlePlaceUrl") as string;
+  const phone = (formData.get("phone") as string) || null;
+
+  validateLength(businessName, 200, "Nom de l'établissement");
+  validateLength(customNiche, 100, "Métier personnalisé");
+  validateLength(googlePlaceUrl, 2000, "URL Google");
+  validateLength(phone, 20, "Téléphone");
+
   await prisma.user.update({
     where: { id: userId },
     data: {
-      businessName: formData.get("businessName") as string,
+      businessName,
       niche,
       customNiche,
-      googlePlaceUrl: formData.get("googlePlaceUrl") as string,
-      phone: (formData.get("phone") as string) || null,
+      googlePlaceUrl,
+      phone,
     },
   });
 

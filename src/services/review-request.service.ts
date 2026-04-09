@@ -2,8 +2,9 @@ import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/resend";
 import { sendSms } from "@/lib/sms";
 import { NICHE_CONFIGS } from "@/config/niches";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl, escapeHtml } from "@/lib/utils";
 import type { Channel, Niche } from "@/generated/prisma/enums";
+import crypto from "crypto";
 
 function resolveTemplate(
   template: string,
@@ -59,6 +60,7 @@ export async function createReviewRequest({
         clientId,
         channel,
         scheduledAt,
+        token: crypto.randomBytes(32).toString("hex"),
       },
     }),
     prisma.user.update({
@@ -82,8 +84,8 @@ export async function createReviewRequest({
       : nicheConfig.templates[channel];
 
     const vars = {
-      clientName: client.name,
-      businessName: user.businessName || "notre établissement",
+      clientName: escapeHtml(client.name),
+      businessName: escapeHtml(user.businessName || "notre établissement"),
       link: absoluteUrl(`/review/${request.token}`),
     };
 
@@ -150,8 +152,8 @@ export async function processPendingRequests() {
         : nicheConfig.templates[request.channel];
 
       const vars = {
-        clientName: client.name,
-        businessName: user.businessName || "notre établissement",
+        clientName: escapeHtml(client.name),
+        businessName: escapeHtml(user.businessName || "notre établissement"),
         link: absoluteUrl(`/review/${request.token}`),
       };
 

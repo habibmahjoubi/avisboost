@@ -1,3 +1,25 @@
+/** Sanitize user-provided HTML templates: strip dangerous tags and attributes */
+export function sanitizeHtml(html: string): string {
+  return html
+    // Remove script/iframe/object/embed/form tags and their content
+    .replace(/<\s*(script|iframe|object|embed|form|link|meta|base)[^>]*>[\s\S]*?<\/\s*\1\s*>/gi, "")
+    .replace(/<\s*(script|iframe|object|embed|form|link|meta|base)[^>]*\/?>/gi, "")
+    // Remove event handlers (onclick, onerror, onload, etc.)
+    .replace(/\s+on\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]*)/gi, "")
+    // Remove javascript: and data: URLs in href/src
+    .replace(/(href|src)\s*=\s*["']?\s*(javascript|data):/gi, "$1=\"#");
+}
+
+/** Escape HTML special characters to prevent XSS in email templates */
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 const NICHE_LABELS: Record<string, string> = {
   DENTIST: "Dentiste",
   OSTEOPATH: "Ostéopathe",
@@ -78,6 +100,22 @@ function mapsHexToPlaceId(hex1: string, hex2: string): string {
  *
  * Sortie : "https://search.google.com/local/writereview?placeid=ChIJ..."
  */
+const ALLOWED_GOOGLE_HOSTS = [
+  "google.com", "google.fr", "google.co.uk", "google.de", "google.es",
+  "google.it", "google.nl", "google.be", "google.ch", "google.ca",
+  "maps.google.com", "search.google.com", "g.page", "maps.app.goo.gl",
+];
+
+function isGoogleUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+    return ALLOWED_GOOGLE_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
+  } catch {
+    return false;
+  }
+}
+
 export function toGoogleWriteReviewUrl(url: string): string {
   if (!url) return "";
 
@@ -87,6 +125,9 @@ export function toGoogleWriteReviewUrl(url: string): string {
   if (/^ChIJ[a-zA-Z0-9_-]+$/.test(trimmed)) {
     return `https://search.google.com/local/writereview?placeid=${trimmed}`;
   }
+
+  // Vérifier que c'est un domaine Google avant d'extraire
+  if (trimmed.startsWith("http") && !isGoogleUrl(trimmed)) return "";
 
   // Deja au format writereview
   if (trimmed.includes("search.google.com/local/writereview")) {
@@ -115,6 +156,7 @@ export function toGoogleWriteReviewUrl(url: string): string {
     return `${clean}/review`;
   }
 
-  // URL non reconnue → retourner telle quelle
+  // URL non reconnue — rejeter si ce n'est pas un domaine Google
+  if (!isGoogleUrl(trimmed)) return "";
   return trimmed;
 }

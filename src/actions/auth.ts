@@ -1,8 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 import { sendEmail } from "@/lib/resend";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl, escapeHtml } from "@/lib/utils";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
@@ -34,6 +35,11 @@ export async function registerUser(formData: FormData) {
 
   if (!email || !password) {
     return { error: "Email et mot de passe requis" };
+  }
+
+  const rl = rateLimit(`register:${email}`, { maxAttempts: 5, windowMs: 15 * 60 * 1000 });
+  if (!rl.success) {
+    return { error: `Trop de tentatives. Réessayez dans ${rl.retryAfterSeconds}s.` };
   }
 
   if (!validateEmail(email)) {
@@ -86,9 +92,10 @@ export async function registerUser(formData: FormData) {
   }
 
   // Email de bienvenue (non bloquant)
-  const planLabel = plan ? plan.name : "Gratuit";
+  const planLabel = escapeHtml(plan ? plan.name : "Gratuit");
   const dashboardUrl = absoluteUrl("/dashboard");
-  const displayName = name || email.split("@")[0];
+  const displayName = escapeHtml(name || email.split("@")[0]);
+  const safeEmail = escapeHtml(email);
 
   sendEmail({
     to: email,
@@ -100,7 +107,7 @@ export async function registerUser(formData: FormData) {
   <table style="width:100%;border-collapse:collapse;margin:16px 0">
     <tr><td style="padding:8px 0;color:#888">Plan</td><td style="padding:8px 0;font-weight:bold">${planLabel}</td></tr>
     ${trialEndsAt ? `<tr><td style="padding:8px 0;color:#888">Essai gratuit</td><td style="padding:8px 0;font-weight:bold">Jusqu'au ${trialEndsAt.toLocaleDateString("fr-FR")}</td></tr>` : ""}
-    <tr><td style="padding:8px 0;color:#888">Email</td><td style="padding:8px 0">${email}</td></tr>
+    <tr><td style="padding:8px 0;color:#888">Email</td><td style="padding:8px 0">${safeEmail}</td></tr>
   </table>
   <p>Prochaine étape : configurez votre établissement pour commencer à recevoir des avis.</p>
   <a href="${dashboardUrl}" style="display:inline-block;background:#6d28d9;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0">
@@ -123,6 +130,11 @@ export async function requestPasswordReset(formData: FormData) {
     return { error: "Adresse email invalide" };
   }
 
+  const rl = rateLimit(`reset:${email}`, { maxAttempts: 3, windowMs: 60 * 60 * 1000 });
+  if (!rl.success) {
+    return { error: `Trop de tentatives. Réessayez dans ${rl.retryAfterSeconds}s.` };
+  }
+
   const user = await prisma.user.findUnique({ where: { email } });
 
   // Toujours retourner succès pour ne pas révéler si l'email existe
@@ -133,15 +145,16 @@ export async function requestPasswordReset(formData: FormData) {
   // Supprimer les anciens tokens pour cet email
   await prisma.passwordResetToken.deleteMany({ where: { email } });
 
-  // Générer un token sécurisé
+  // Générer un token sécurisé — on stocke le hash en DB, pas le token brut
   const token = crypto.randomBytes(32).toString("hex");
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
   const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
 
   await prisma.passwordResetToken.create({
-    data: { email, token, expires },
+    data: { email, token: tokenHash, expires },
   });
 
-  // Envoyer l'email
+  // Envoyer l'email avec le token brut (le user clique dessus)
   const resetUrl = absoluteUrl(`/reset-password?token=${token}`);
 
   try {
@@ -188,9 +201,10 @@ export async function resetPassword(formData: FormData) {
     return { error: "Les mots de passe ne correspondent pas" };
   }
 
-  // Vérifier le token
+  // Vérifier le token — on hash le token reçu et on compare avec la DB
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
   const resetToken = await prisma.passwordResetToken.findUnique({
-    where: { token },
+    where: { token: tokenHash },
   });
 
   if (!resetToken) {
