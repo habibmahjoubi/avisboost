@@ -119,19 +119,40 @@ export default async function BillingPage() {
           </div>
         )}
 
-        {/* Subscription status */}
-        {subscription?.cancel_at_period_end && (
-          <p className="mt-3 text-sm text-warning">
-            Votre abonnement sera annulé le{" "}
-            {new Intl.DateTimeFormat("fr-FR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            }).format(new Date(subscription.current_period_end * 1000))}
-          </p>
+        {/* Cancellation status */}
+        {user.cancelRequestedAt && user.cancelEffectiveAt && (
+          <div className="mt-3 bg-warning/10 border border-warning/20 rounded-lg p-3">
+            <p className="text-sm text-warning font-medium flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4" /> Annulation approuvée
+            </p>
+            <p className="text-xs text-warning/80 mt-1">
+              Votre abonnement sera résilié le{" "}
+              {new Intl.DateTimeFormat("fr-FR", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }).format(user.cancelEffectiveAt)}
+              . Vous conservez l&apos;accès jusqu&apos;à cette date.
+            </p>
+          </div>
         )}
 
-        {isPaid && !subscription?.cancel_at_period_end && (
+        {user.cancelRequestedAt && !user.cancelEffectiveAt && (
+          <div className="mt-3 bg-muted border border-border rounded-lg p-3">
+            <p className="text-sm font-medium">Demande d&apos;annulation en cours</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Votre demande du{" "}
+              {new Intl.DateTimeFormat("fr-FR", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }).format(user.cancelRequestedAt)}
+              {" "}est en cours d&apos;examen. Vous serez notifié par email.
+            </p>
+          </div>
+        )}
+
+        {isPaid && !user.cancelRequestedAt && (
           <div className="mt-4">
             <CancelButton />
           </div>

@@ -76,6 +76,7 @@ export async function registerUser(formData: FormData) {
         email,
         password: hashedPassword,
         name,
+        businessName: name,
         niche: niche as "DENTIST" | "OSTEOPATH" | "GARAGE" | "OTHER",
         customNiche: niche === "OTHER" ? customNiche : null,
         plan: plan ? plan.key : "free",

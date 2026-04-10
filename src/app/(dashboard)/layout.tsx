@@ -46,6 +46,27 @@ export default async function DashboardLayout({
     user.quotaUsed = 0;
   }
 
+  // Auto-downgrade if cancellation effective date has passed
+  if (
+    user.cancelEffectiveAt &&
+    user.cancelEffectiveAt <= new Date() &&
+    user.plan !== "free"
+  ) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        plan: "free",
+        monthlyQuota: 50,
+        quotaUsed: 0,
+        cancelRequestedAt: null,
+        cancelEffectiveAt: null,
+      },
+    });
+    user.plan = "free";
+    user.monthlyQuota = 50;
+    user.quotaUsed = 0;
+  }
+
   const vocab = NICHE_CONFIGS[user.niche].vocabulary;
 
   const NAV_ITEMS: { href: string; label: string; icon: LucideIcon }[] = [

@@ -2,11 +2,15 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { NICHE_CONFIGS } from "@/config/niches";
+import { hasFeature } from "@/config/plan-features";
 import { formatDate } from "@/lib/utils";
 import { OnboardingModal } from "@/components/dashboard/onboarding-modal";
 import { PeriodSelector } from "@/components/dashboard/period-selector";
 import { Suspense } from "react";
-import { Users, Send, MousePointerClick, Star, Stethoscope, Bone, Wrench, Building2 } from "lucide-react";
+import {
+  Users, Send, MousePointerClick, Star, Stethoscope, Bone, Wrench, Building2,
+  Mail, MessageSquare, TrendingUp, MessageCircle, Lock,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { Niche } from "@/generated/prisma/enums";
 
@@ -31,13 +35,16 @@ export default async function DashboardPage({
   });
 
   if (!user.onboarded || params.onboard === "1") {
-    return <OnboardingModal defaultNiche={params.niche || "DENTIST"} />;
+    return <OnboardingModal defaultNiche={params.niche || user.niche} defaultBusinessName={user.businessName || ""} />;
   }
 
   const rawDays = Number(params.period);
   const days = [7, 30, 90].includes(rawDays) ? rawDays : 30;
   const periodStart = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   const periodFilter = { createdAt: { gte: periodStart } };
+
+  const showDetailed = hasFeature(user.plan, "detailed_stats");
+  const showAdvanced = hasFeature(user.plan, "advanced_stats");
 
   const [totalClients, totalSent, totalClicked, totalReviewed, recentRequests] =
     await Promise.all([
@@ -67,8 +74,38 @@ export default async function DashboardPage({
       }),
     ]);
 
+  // Advanced stats (Pro/Business only)
+  let emailSent = 0;
+  let smsSent = 0;
+  let avgRating: number | null = null;
+  let feedbackCount = 0;
+
+  if (showDetailed) {
+    const [emailC, smsC, ratingAgg, feedbackC] = await Promise.all([
+      prisma.reviewRequest.count({
+        where: { userId: user.id, channel: "EMAIL", status: { in: ["SENT", "CLICKED", "REVIEWED"] }, ...periodFilter },
+      }),
+      prisma.reviewRequest.count({
+        where: { userId: user.id, channel: "SMS", status: { in: ["SENT", "CLICKED", "REVIEWED"] }, ...periodFilter },
+      }),
+      prisma.reviewRequest.aggregate({
+        where: { userId: user.id, rating: { not: null }, ...periodFilter },
+        _avg: { rating: true },
+      }),
+      prisma.reviewRequest.count({
+        where: { userId: user.id, status: "FEEDBACK", ...periodFilter },
+      }),
+    ]);
+    emailSent = emailC;
+    smsSent = smsC;
+    avgRating = ratingAgg._avg.rating;
+    feedbackCount = feedbackC;
+  }
+
   const clickRate =
     totalSent > 0 ? Math.round((totalClicked / totalSent) * 100) : 0;
+  const conversionRate =
+    totalSent > 0 ? Math.round((totalReviewed / totalSent) * 100) : 0;
   const nicheConfig = NICHE_CONFIGS[user.niche];
   const vocab = nicheConfig.vocabulary;
 
@@ -77,6 +114,17 @@ export default async function DashboardPage({
     { label: "Envois", value: `${user.quotaUsed}/${user.monthlyQuota}`, Icon: Send },
     { label: "Taux de clic", value: `${clickRate}%`, Icon: MousePointerClick },
     { label: "Avis obtenus", value: totalReviewed, Icon: Star },
+  ];
+
+  const detailedStats: { label: string; value: string | number; Icon: LucideIcon }[] = [
+    { label: "Envois Email", value: emailSent, Icon: Mail },
+    { label: "Envois SMS", value: smsSent, Icon: MessageSquare },
+    { label: "Taux conversion", value: `${conversionRate}%`, Icon: TrendingUp },
+  ];
+
+  const advancedOnlyStats: { label: string; value: string | number; Icon: LucideIcon }[] = [
+    { label: "Note moyenne", value: avgRating ? avgRating.toFixed(1) + "/5" : "—", Icon: Star },
+    { label: "Feedbacks reçus", value: feedbackCount, Icon: MessageCircle },
   ];
 
   return (
@@ -96,7 +144,7 @@ export default async function DashboardPage({
         </Suspense>
       </div>
 
-      {/* Stats */}
+      {/* Basic Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {stats.map((stat) => (
           <div
@@ -114,6 +162,58 @@ export default async function DashboardPage({
         ))}
       </div>
 
+      {/* Detailed Stats (Pro) / Advanced Stats (Business) */}
+      {showDetailed ? (
+        <div className="mb-8">
+          <h2 className="font-semibold mb-4">
+            {showAdvanced ? "Statistiques avancées" : "Statistiques détaillées"}
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+            {detailedStats.map((stat) => (
+              <div
+                key={stat.label}
+                className="bg-card border border-border rounded-xl p-4"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-muted-foreground">{stat.label}</span>
+                  <stat.Icon className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <p className="text-lg font-bold">{stat.value}</p>
+              </div>
+            ))}
+            {showAdvanced ? (
+              advancedOnlyStats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="bg-card border border-border rounded-xl p-4"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-muted-foreground">{stat.label}</span>
+                    <stat.Icon className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <p className="text-lg font-bold">{stat.value}</p>
+                </div>
+              ))
+            ) : (
+              <div className="bg-card border border-dashed border-border rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center">
+                <Lock className="w-4 h-4 text-muted-foreground mb-1" />
+                <a href="/dashboard/billing" className="text-xs text-muted-foreground hover:text-primary">
+                  + Stats avancées (Business)
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="bg-card border border-border rounded-xl p-4 mb-8 flex items-center gap-3">
+          <Lock className="w-5 h-5 text-muted-foreground shrink-0" />
+          <p className="text-sm text-muted-foreground">
+            Statistiques détaillées disponibles avec le{" "}
+            <a href="/dashboard/billing" className="text-primary hover:underline font-medium">plan Pro</a>.
+          </p>
+        </div>
+      )}
+
       {/* Recent activity */}
       <div className="bg-card border border-border rounded-xl p-6">
         <h2 className="font-semibold mb-4">
@@ -122,7 +222,7 @@ export default async function DashboardPage({
         {recentRequests.length === 0 ? (
           <p className="text-muted-foreground text-sm">
             Aucune activité sur cette période. Ajoutez des {vocab.clients} et
-            envoyez votre première demande d'avis !
+            envoyez votre première demande d&apos;avis !
           </p>
         ) : (
           <div className="space-y-3">

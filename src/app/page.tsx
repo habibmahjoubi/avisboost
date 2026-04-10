@@ -317,14 +317,14 @@ export default async function HomePage() {
                       <PF text="Email uniquement" />
                       <PF text={plan.maxUsers === 0 ? "Établissements illimités" : `${plan.maxUsers} établissement`} />
                       <PF text="Templates standards" />
-                      <PF text="Tableau de bord" />
+                      <PF text="Tableau de bord basique" />
                     </>}
                     {plan.key === "pro" && <>
                       <PF text="Email + SMS" />
                       <PF text={plan.maxUsers === 0 ? "Établissements illimités" : `${plan.maxUsers} établissement${plan.maxUsers > 1 ? "s" : ""}`} />
                       <PF text="Templates personnalisés" />
                       <PF text="Statistiques détaillées" />
-                      <PF text="Import CSV" />
+                      <PF text="Import CSV (100 contacts)" />
                     </>}
                     {plan.key === "business" && <>
                       <PF text="Email + SMS" />
@@ -332,7 +332,7 @@ export default async function HomePage() {
                       <PF text={plan.quota === 0 ? "Envois illimités" : `${plan.quota} envois/mois`} />
                       <PF text="Templates personnalisés" />
                       <PF text="Statistiques avancées" />
-                      <PF text="Import CSV" />
+                      <PF text="Import CSV (5 000 contacts)" />
                       <PF text="Support prioritaire" />
                     </>}
                     {!["free", "pro", "business"].includes(plan.key) && <>

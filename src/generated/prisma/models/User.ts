@@ -58,6 +58,8 @@ export type UserMinAggregateOutputType = {
   isSuspended: boolean | null
   satisfactionThreshold: number | null
   trialEndsAt: Date | null
+  cancelRequestedAt: Date | null
+  cancelEffectiveAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -82,6 +84,8 @@ export type UserMaxAggregateOutputType = {
   isSuspended: boolean | null
   satisfactionThreshold: number | null
   trialEndsAt: Date | null
+  cancelRequestedAt: Date | null
+  cancelEffectiveAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -106,6 +110,8 @@ export type UserCountAggregateOutputType = {
   isSuspended: number
   satisfactionThreshold: number
   trialEndsAt: number
+  cancelRequestedAt: number
+  cancelEffectiveAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -144,6 +150,8 @@ export type UserMinAggregateInputType = {
   isSuspended?: true
   satisfactionThreshold?: true
   trialEndsAt?: true
+  cancelRequestedAt?: true
+  cancelEffectiveAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -168,6 +176,8 @@ export type UserMaxAggregateInputType = {
   isSuspended?: true
   satisfactionThreshold?: true
   trialEndsAt?: true
+  cancelRequestedAt?: true
+  cancelEffectiveAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -192,6 +202,8 @@ export type UserCountAggregateInputType = {
   isSuspended?: true
   satisfactionThreshold?: true
   trialEndsAt?: true
+  cancelRequestedAt?: true
+  cancelEffectiveAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -303,6 +315,8 @@ export type UserGroupByOutputType = {
   isSuspended: boolean
   satisfactionThreshold: number
   trialEndsAt: Date | null
+  cancelRequestedAt: Date | null
+  cancelEffectiveAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -350,6 +364,8 @@ export type UserWhereInput = {
   isSuspended?: Prisma.BoolFilter<"User"> | boolean
   satisfactionThreshold?: Prisma.IntFilter<"User"> | number
   trialEndsAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  cancelRequestedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  cancelEffectiveAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -379,6 +395,8 @@ export type UserOrderByWithRelationInput = {
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancelRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancelEffectiveAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
@@ -411,6 +429,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isSuspended?: Prisma.BoolFilter<"User"> | boolean
   satisfactionThreshold?: Prisma.IntFilter<"User"> | number
   trialEndsAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  cancelRequestedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  cancelEffectiveAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -440,6 +460,8 @@ export type UserOrderByWithAggregationInput = {
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancelRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancelEffectiveAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -472,6 +494,8 @@ export type UserScalarWhereWithAggregatesInput = {
   isSuspended?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   satisfactionThreshold?: Prisma.IntWithAggregatesFilter<"User"> | number
   trialEndsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  cancelRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  cancelEffectiveAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -496,6 +520,8 @@ export type UserCreateInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -525,6 +551,8 @@ export type UserUncheckedCreateInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -554,6 +582,8 @@ export type UserUpdateInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -583,6 +613,8 @@ export type UserUncheckedUpdateInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -612,6 +644,8 @@ export type UserCreateManyInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -636,6 +670,8 @@ export type UserUpdateManyMutationInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -660,6 +696,8 @@ export type UserUncheckedUpdateManyInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -684,6 +722,8 @@ export type UserCountOrderByAggregateInput = {
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrder
+  cancelRequestedAt?: Prisma.SortOrder
+  cancelEffectiveAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -714,6 +754,8 @@ export type UserMaxOrderByAggregateInput = {
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrder
+  cancelRequestedAt?: Prisma.SortOrder
+  cancelEffectiveAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -738,6 +780,8 @@ export type UserMinOrderByAggregateInput = {
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrder
+  cancelRequestedAt?: Prisma.SortOrder
+  cancelEffectiveAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -875,6 +919,8 @@ export type UserCreateWithoutAccountsInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -903,6 +949,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -947,6 +995,8 @@ export type UserUpdateWithoutAccountsInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -975,6 +1025,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1003,6 +1055,8 @@ export type UserCreateWithoutSessionsInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1031,6 +1085,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1075,6 +1131,8 @@ export type UserUpdateWithoutSessionsInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1103,6 +1161,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1131,6 +1191,8 @@ export type UserCreateWithoutClientsInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1159,6 +1221,8 @@ export type UserUncheckedCreateWithoutClientsInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1203,6 +1267,8 @@ export type UserUpdateWithoutClientsInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1231,6 +1297,8 @@ export type UserUncheckedUpdateWithoutClientsInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1259,6 +1327,8 @@ export type UserCreateWithoutReviewRequestsInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1287,6 +1357,8 @@ export type UserUncheckedCreateWithoutReviewRequestsInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1331,6 +1403,8 @@ export type UserUpdateWithoutReviewRequestsInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1359,6 +1433,8 @@ export type UserUncheckedUpdateWithoutReviewRequestsInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1387,6 +1463,8 @@ export type UserCreateWithoutTemplatesInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1415,6 +1493,8 @@ export type UserUncheckedCreateWithoutTemplatesInput = {
   isSuspended?: boolean
   satisfactionThreshold?: number
   trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1459,6 +1539,8 @@ export type UserUpdateWithoutTemplatesInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1487,6 +1569,8 @@ export type UserUncheckedUpdateWithoutTemplatesInput = {
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1582,6 +1666,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isSuspended?: boolean
   satisfactionThreshold?: boolean
   trialEndsAt?: boolean
+  cancelRequestedAt?: boolean
+  cancelEffectiveAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1612,6 +1698,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isSuspended?: boolean
   satisfactionThreshold?: boolean
   trialEndsAt?: boolean
+  cancelRequestedAt?: boolean
+  cancelEffectiveAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1636,6 +1724,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isSuspended?: boolean
   satisfactionThreshold?: boolean
   trialEndsAt?: boolean
+  cancelRequestedAt?: boolean
+  cancelEffectiveAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1660,11 +1750,13 @@ export type UserSelectScalar = {
   isSuspended?: boolean
   satisfactionThreshold?: boolean
   trialEndsAt?: boolean
+  cancelRequestedAt?: boolean
+  cancelEffectiveAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerified" | "password" | "name" | "businessName" | "niche" | "customNiche" | "googlePlaceUrl" | "phone" | "stripeCustomerId" | "plan" | "monthlyQuota" | "quotaUsed" | "onboarded" | "isAdmin" | "isSuspended" | "satisfactionThreshold" | "trialEndsAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerified" | "password" | "name" | "businessName" | "niche" | "customNiche" | "googlePlaceUrl" | "phone" | "stripeCustomerId" | "plan" | "monthlyQuota" | "quotaUsed" | "onboarded" | "isAdmin" | "isSuspended" | "satisfactionThreshold" | "trialEndsAt" | "cancelRequestedAt" | "cancelEffectiveAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -1705,6 +1797,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     isSuspended: boolean
     satisfactionThreshold: number
     trialEndsAt: Date | null
+    cancelRequestedAt: Date | null
+    cancelEffectiveAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2154,6 +2248,8 @@ export interface UserFieldRefs {
   readonly isSuspended: Prisma.FieldRef<"User", 'Boolean'>
   readonly satisfactionThreshold: Prisma.FieldRef<"User", 'Int'>
   readonly trialEndsAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly cancelRequestedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly cancelEffectiveAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

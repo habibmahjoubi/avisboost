@@ -2,18 +2,24 @@
 
 import { useState } from "react";
 import { sendReviewRequest } from "@/actions/dashboard";
+import { Lock } from "lucide-react";
+import Link from "next/link";
+import { hasFeature } from "@/config/plan-features";
 
 export function SendReviewButton({
   clientId,
   hasEmail,
   hasPhone,
+  userPlan,
 }: {
   clientId: string;
   hasEmail: boolean;
   hasPhone: boolean;
+  userPlan: string;
 }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const canSms = hasFeature(userPlan, "sms");
 
   async function handleSend(formData: FormData) {
     setError("");
@@ -47,7 +53,7 @@ export function SendReviewButton({
             Email
           </button>
         )}
-        {hasPhone && (
+        {hasPhone && canSms && (
           <button
             type="submit"
             name="channel"
@@ -57,6 +63,16 @@ export function SendReviewButton({
           >
             SMS
           </button>
+        )}
+        {hasPhone && !canSms && (
+          <Link
+            href="/dashboard/billing"
+            className="px-3 py-1.5 text-xs bg-muted text-muted-foreground rounded inline-flex items-center gap-1"
+            title="SMS disponible avec le plan Pro"
+          >
+            <Lock className="w-3 h-3" />
+            SMS
+          </Link>
         )}
         {!hasEmail && !hasPhone && (
           <span className="text-xs text-muted-foreground">Pas de contact</span>

@@ -350,7 +350,7 @@ export function CsvImport() {
                         className="border-b border-border last:border-0"
                       >
                         {[0, 1, 2, 3].map((j) => (
-                          <td key={j} className="px-3 py-2 truncate max-w-[150px]">
+                          <td key={j} className="px-3 py-2 truncate max-w-[100px] sm:max-w-[150px]">
                             {row[j] || ""}
                           </td>
                         ))}

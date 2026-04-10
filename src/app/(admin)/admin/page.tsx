@@ -15,8 +15,10 @@ import {
   Bone,
   Wrench,
   Building2,
+  XCircle,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { CancelActions } from "@/components/admin/cancel-actions";
 
 export default async function AdminDashboard() {
   const now = new Date();
@@ -43,6 +45,7 @@ export default async function AdminDashboard() {
     expiringTrials,
     expiredTrials,
     plans,
+    pendingCancellations,
   ] = await Promise.all([
     prisma.user.count({ where: { isAdmin: false } }),
     prisma.user.count({ where: { isAdmin: false, isSuspended: false } }),
@@ -96,6 +99,13 @@ export default async function AdminDashboard() {
       orderBy: { trialEndsAt: "desc" },
     }),
     prisma.plan.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
+    prisma.user.findMany({
+      where: {
+        isAdmin: false,
+        cancelRequestedAt: { not: null },
+      },
+      orderBy: { cancelRequestedAt: "asc" },
+    }),
   ]);
 
   // Compute MRR from DB plans
@@ -155,6 +165,44 @@ export default async function AdminDashboard() {
       <h1 className="text-xl sm:text-2xl font-bold mb-8">Tableau de bord</h1>
 
       {/* Alerts */}
+      {pendingCancellations.length > 0 && (
+        <div className="mb-4">
+          <div className="bg-destructive/10 border border-destructive/20 rounded-xl p-4">
+            <h3 className="text-sm font-medium text-destructive mb-2 flex items-center gap-2">
+              <XCircle className="w-4 h-4" /> Demandes d&apos;annulation ({pendingCancellations.length})
+            </h3>
+            <div className="space-y-2">
+              {pendingCancellations.map((u) => (
+                <div
+                  key={u.id}
+                  className="flex flex-wrap items-center justify-between gap-2 text-sm hover:bg-destructive/5 rounded px-2 py-1.5"
+                >
+                  <Link
+                    href={`/admin/users/${u.id}`}
+                    className="font-medium hover:text-primary"
+                  >
+                    {u.businessName || u.email} <span className="text-muted-foreground">({u.plan})</span>
+                  </Link>
+                  <div className="flex items-center gap-3">
+                    {u.cancelEffectiveAt ? (
+                      <span className="text-xs text-warning font-medium">
+                        Approuvé — effectif le {formatDate(u.cancelEffectiveAt)}
+                      </span>
+                    ) : (
+                      <>
+                        <span className="text-xs text-muted-foreground">
+                          Demandé le {formatDate(u.cancelRequestedAt!)}
+                        </span>
+                        <CancelActions userId={u.id} />
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
       {(expiringTrials.length > 0 || expiredTrials.length > 0) && (
         <div className="space-y-3 mb-8">
           {expiringTrials.length > 0 && (

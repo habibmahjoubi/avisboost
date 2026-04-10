@@ -7,6 +7,7 @@ import { sanitizeHtml } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { Niche, Channel } from "@/generated/prisma/enums";
+import { hasFeature, getImportLimit } from "@/config/plan-features";
 
 async function getUserId(): Promise<string> {
   const session = await auth();
@@ -99,10 +100,15 @@ export async function deleteClient(clientId: string) {
 
 export async function importClients(csvData: string) {
   const userId = await getUserId();
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  if (!hasFeature(user.plan, "csv_import")) {
+    return { imported: 0, skipped: 0, errors: [{ row: 0, name: "", reason: "L'import CSV nécessite le plan Pro ou supérieur." }] };
+  }
+  const limit = getImportLimit(user.plan);
   const lines = csvData.split("\n").filter((l) => l.trim());
 
-  if (lines.length > 5000) {
-    return { imported: 0, skipped: 0, errors: [{ row: 0, name: "", reason: "Maximum 5000 lignes autorisées" }] };
+  if (lines.length > limit) {
+    return { imported: 0, skipped: 0, errors: [{ row: 0, name: "", reason: `Maximum ${limit} lignes pour le plan ${user.plan} (${lines.length} fournies).` }] };
   }
 
   let imported = 0;
@@ -192,6 +198,14 @@ export async function sendReviewRequest(formData: FormData) {
     return { error: "Canal invalide" };
   }
   const channel = channelRaw as Channel;
+
+  if (channel === "SMS") {
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    if (!hasFeature(user.plan, "sms")) {
+      return { error: "L'envoi par SMS nécessite le plan Pro ou supérieur." };
+    }
+  }
+
   const delayHours = Number(formData.get("delayHours") ?? 0);
   if (!Number.isFinite(delayHours) || delayHours < 0 || delayHours > 720) {
     return { error: "Délai invalide" };
@@ -251,6 +265,10 @@ export async function startTrial(planKey: string) {
 // --- Templates ---
 export async function saveTemplate(formData: FormData) {
   const userId = await getUserId();
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  if (!hasFeature(user.plan, "custom_templates")) {
+    throw new Error("Les templates personnalisés nécessitent le plan Pro ou supérieur.");
+  }
   const niche = formData.get("niche") as Niche;
   const channel = formData.get("channel") as Channel;
   const name = (formData.get("name") as string) || "Sans nom";
@@ -291,6 +309,10 @@ export async function saveTemplate(formData: FormData) {
 
 export async function deleteTemplate(formData: FormData) {
   const userId = await getUserId();
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  if (!hasFeature(user.plan, "custom_templates")) {
+    throw new Error("Les templates personnalisés nécessitent le plan Pro ou supérieur.");
+  }
   const templateId = formData.get("templateId") as string;
 
   await prisma.template.delete({

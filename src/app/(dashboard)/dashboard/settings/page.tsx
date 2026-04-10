@@ -7,6 +7,8 @@ import { TemplateEditor } from "@/components/dashboard/template-editor";
 import { GooglePlaceField } from "@/components/dashboard/google-place-field";
 import { NicheSelector } from "@/components/dashboard/niche-selector";
 import { ThresholdSelector } from "@/components/dashboard/threshold-selector";
+import { hasFeature } from "@/config/plan-features";
+import { Lock } from "lucide-react";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -42,7 +44,7 @@ export default async function SettingsPage() {
       {/* Business settings */}
       <form
         action={updateSettings}
-        className="max-w-lg space-y-5 bg-card border border-border rounded-xl p-4 sm:p-6"
+        className="max-w-2xl space-y-5 bg-card border border-border rounded-xl p-4 sm:p-6"
       >
         <h2 className="font-semibold">Établissement</h2>
         <div>
@@ -88,12 +90,27 @@ export default async function SettingsPage() {
       <ThresholdSelector defaultValue={user.satisfactionThreshold} />
 
       {/* Template Editor */}
-      <TemplateEditor
-        niche={user.niche}
-        userTemplates={userTemplates}
-        defaultTemplates={defaultTemplates}
-        presets={nicheConfig.presets}
-      />
+      {hasFeature(user.plan, "custom_templates") ? (
+        <TemplateEditor
+          niche={user.niche}
+          userTemplates={userTemplates}
+          defaultTemplates={defaultTemplates}
+          presets={nicheConfig.presets}
+        />
+      ) : (
+        <div className="bg-card border border-border rounded-xl p-4 sm:p-6">
+          <h2 className="font-semibold mb-4">Templates de messages</h2>
+          <div className="text-center py-8">
+            <Lock className="w-8 h-8 mx-auto mb-3 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground mb-3">
+              Les templates personnalisés sont disponibles à partir du plan Pro.
+            </p>
+            <a href="/dashboard/billing" className="text-sm text-primary hover:underline font-medium">
+              Passer au plan Pro
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

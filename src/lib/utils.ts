@@ -51,6 +51,18 @@ export function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
+/** Add N business days (Mon-Fri) to a date */
+export function addBusinessDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  let added = 0;
+  while (added < days) {
+    result.setDate(result.getDate() + 1);
+    const day = result.getDay();
+    if (day !== 0 && day !== 6) added++;
+  }
+  return result;
+}
+
 /**
  * Formate un prix en euros : 29 → "29\u20AC", 9.99 → "9,99\u20AC", 0 → "Gratuit"
  */

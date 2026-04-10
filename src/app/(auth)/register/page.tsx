@@ -28,7 +28,7 @@ export default async function RegisterPage() {
 
   return (
     <div className="min-h-dvh w-full flex flex-col justify-start sm:justify-center px-4 pt-8 sm:pt-0 pb-8">
-      <div className="w-full sm:max-w-md lg:max-w-lg sm:mx-auto sm:bg-card sm:border sm:border-border sm:rounded-2xl sm:shadow-sm sm:p-8 lg:p-10">
+      <div className="w-full max-w-2xl mx-auto sm:bg-card sm:border sm:border-border sm:rounded-2xl sm:shadow-sm sm:p-8 lg:p-10">
         <Suspense fallback={<div className="text-center text-muted-foreground">Chargement...</div>}>
           <RegisterForm plans={planOptions} />
         </Suspense>

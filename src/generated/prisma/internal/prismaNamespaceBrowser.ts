@@ -98,6 +98,8 @@ export const UserScalarFieldEnum = {
   isSuspended: 'isSuspended',
   satisfactionThreshold: 'satisfactionThreshold',
   trialEndsAt: 'trialEndsAt',
+  cancelRequestedAt: 'cancelRequestedAt',
+  cancelEffectiveAt: 'cancelEffectiveAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

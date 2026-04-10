@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
+import { sendEmail } from "@/lib/resend";
+import { absoluteUrl, escapeHtml } from "@/lib/utils";
 
 export async function POST() {
   const session = await auth();
@@ -13,26 +14,49 @@ export async function POST() {
     where: { id: session.user.id },
   });
 
-  if (!user.stripeCustomerId) {
-    return NextResponse.json({ error: "No subscription" }, { status: 400 });
+  if (user.plan === "free") {
+    return NextResponse.json({ error: "Pas d'abonnement actif" }, { status: 400 });
   }
 
-  const subscriptions = await stripe.subscriptions.list({
-    customer: user.stripeCustomerId,
-    status: "active",
-    limit: 1,
-  });
-
-  if (subscriptions.data.length === 0) {
-    return NextResponse.json(
-      { error: "No active subscription" },
-      { status: 400 }
-    );
+  if (user.cancelRequestedAt) {
+    return NextResponse.json({ error: "Demande déjà en cours" }, { status: 400 });
   }
 
-  await stripe.subscriptions.update(subscriptions.data[0].id, {
-    cancel_at_period_end: true,
+  // Save cancellation request
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { cancelRequestedAt: new Date() },
   });
+
+  // Notify all admins by email
+  const admins = await prisma.user.findMany({
+    where: { isAdmin: true },
+    select: { email: true },
+  });
+
+  const adminUrl = absoluteUrl(`/admin/users/${user.id}`);
+  const displayName = escapeHtml(user.businessName || user.email);
+
+  for (const admin of admins) {
+    sendEmail({
+      to: admin.email,
+      subject: `[Valoravis] Demande d'annulation — ${user.businessName || user.email}`,
+      html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#ffffff;color:#1a1a1a">
+  <h2>Demande d'annulation</h2>
+  <p><strong>${displayName}</strong> (${escapeHtml(user.email)}) a demandé l'annulation de son abonnement <strong>${escapeHtml(user.plan)}</strong>.</p>
+  <table style="width:100%;border-collapse:collapse;margin:16px 0">
+    <tr><td style="padding:8px 0;color:#888">Plan actuel</td><td style="padding:8px 0;font-weight:bold">${escapeHtml(user.plan)}</td></tr>
+    <tr><td style="padding:8px 0;color:#888">Date de la demande</td><td style="padding:8px 0">${new Date().toLocaleDateString("fr-FR")}</td></tr>
+  </table>
+  <p>Connectez-vous au panneau d'administration pour approuver ou rejeter cette demande.</p>
+  <a href="${adminUrl}" style="display:inline-block;background:#6d28d9;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0">
+    Voir le profil
+  </a>
+</div>`,
+    }).catch((err) => {
+      console.error("[cancel] admin notification failed:", err);
+    });
+  }
 
   return NextResponse.json({ ok: true });
 }

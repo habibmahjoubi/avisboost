@@ -6,18 +6,19 @@ import { GooglePlaceField } from "./google-place-field";
 import { Stethoscope, Bone, Wrench, Building2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-const NICHES: { value: string; label: string; Icon: LucideIcon }[] = [
-  { value: "DENTIST", label: "Cabinet dentaire", Icon: Stethoscope },
-  { value: "OSTEOPATH", label: "Ostéopathie", Icon: Bone },
-  { value: "GARAGE", label: "Garage auto", Icon: Wrench },
-  { value: "OTHER", label: "Autre métier", Icon: Building2 },
+const NICHES: { value: string; label: string; Icon: LucideIcon; placeholder: string }[] = [
+  { value: "DENTIST", label: "Cabinet dentaire", Icon: Stethoscope, placeholder: "Cabinet Dentaire du Parc" },
+  { value: "OSTEOPATH", label: "Ostéopathie", Icon: Bone, placeholder: "Cabinet d'Ostéopathie Martin" },
+  { value: "GARAGE", label: "Garage auto", Icon: Wrench, placeholder: "Garage Central Auto" },
+  { value: "OTHER", label: "Autre métier", Icon: Building2, placeholder: "Mon Établissement" },
 ];
 
-export function OnboardingModal({ defaultNiche }: { defaultNiche: string }) {
+export function OnboardingModal({ defaultNiche, defaultBusinessName = "" }: { defaultNiche: string; defaultBusinessName?: string }) {
   const [selectedNiche, setSelectedNiche] = useState(defaultNiche);
+  const currentNiche = NICHES.find((n) => n.value === selectedNiche) || NICHES[0];
 
   return (
-    <div className="w-full sm:max-w-md mx-auto mt-8 sm:mt-12 px-4">
+    <div className="w-full max-w-2xl mx-auto mt-8 sm:mt-12 px-4">
       <h1 className="text-xl sm:text-2xl font-bold mb-2">Bienvenue sur Valoravis !</h1>
       <p className="text-muted-foreground mb-6">
         Configurez votre établissement en 30 secondes.
@@ -31,8 +32,9 @@ export function OnboardingModal({ defaultNiche }: { defaultNiche: string }) {
           <input
             name="businessName"
             required
+            defaultValue={defaultBusinessName}
             className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            placeholder="Cabinet Dentaire du Parc"
+            placeholder={currentNiche.placeholder}
           />
         </div>
 
@@ -40,7 +42,7 @@ export function OnboardingModal({ defaultNiche }: { defaultNiche: string }) {
           <label className="block text-sm font-medium mb-2">
             Votre métier
           </label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {NICHES.map((niche) => (
               <label key={niche.value} className="cursor-pointer">
                 <input

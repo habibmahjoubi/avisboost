@@ -8,7 +8,9 @@ import { SendReviewButton } from "@/components/dashboard/send-review-button";
 import { DeleteClientButton } from "@/components/dashboard/delete-client-button";
 import { EditClientForm } from "@/components/dashboard/edit-client-form";
 import { CsvImport } from "@/components/dashboard/csv-import";
+import { UpgradeBadge } from "@/components/dashboard/upgrade-badge";
 import { PreviewButton } from "@/components/dashboard/preview-modal";
+import { hasFeature } from "@/config/plan-features";
 
 export default async function ClientsPage() {
   const session = await auth();
@@ -45,7 +47,11 @@ export default async function ClientsPage() {
       {/* Actions */}
       <div className="flex flex-wrap gap-2">
         <AddClientForm />
-        <CsvImport />
+        {hasFeature(user.plan, "csv_import") ? (
+          <CsvImport />
+        ) : (
+          <UpgradeBadge feature="csv_import" variant="button" label="Importer (Pro)" />
+        )}
       </div>
 
       {/* Client list */}
@@ -112,6 +118,7 @@ export default async function ClientsPage() {
                         clientId={client.id}
                         hasEmail={!!client.email}
                         hasPhone={!!client.phone}
+                        userPlan={user.plan}
                       />
                       <EditClientForm
                         clientId={client.id}
