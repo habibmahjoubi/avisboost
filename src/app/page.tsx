@@ -13,6 +13,8 @@ import {
 import { PhoneDemo } from "@/components/landing/phone-demo";
 import { FaqButton } from "@/components/landing/faq-modal";
 import { MobileNav } from "@/components/landing/mobile-nav";
+import { GrowthChart } from "@/components/landing/growth-chart";
+import { ScrollSpy } from "@/components/landing/scroll-spy";
 
 export default async function HomePage() {
   const [plans, stats] = await Promise.all([
@@ -30,6 +32,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
+      <ScrollSpy />
       {/* ── HEADER ── */}
       <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-xl border-b border-border/40">
         <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
@@ -39,14 +42,17 @@ export default async function HomePage() {
             </div>
             <span className="text-lg font-bold tracking-tight">Valoravis</span>
           </Link>
-          <nav className="hidden sm:flex items-center gap-6 sm:gap-8 text-[13px] font-medium">
-            <a href="#comment" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Comment ça marche</a>
-            <a href="#metiers" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Pour qui</a>
+          <nav className="hidden md:flex items-center gap-5 lg:gap-7 text-[13px] font-medium">
+            <a href="#probleme" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Pourquoi</a>
+            <a href="#comment" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Comment</a>
+            <a href="#metiers" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Métiers</a>
+            <a href="#resultats" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Résultats</a>
+            <a href="#temoignages" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Avis</a>
             <a href="#tarifs" className="link-underline text-muted-foreground hover:text-foreground transition-colors">Tarifs</a>
           </nav>
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link href="/login" className="hidden sm:inline text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap">Connexion</Link>
-            <Link href="/register" className="hidden sm:inline text-[13px] font-semibold brand-gradient text-white px-5 py-2.5 rounded-full btn-glow transition-all whitespace-nowrap">Essai gratuit</Link>
+            <Link href="/login" className="hidden md:inline text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap">Connexion</Link>
+            <Link href="/register" className="hidden md:inline text-[13px] font-semibold brand-gradient text-white px-5 py-2.5 rounded-full btn-glow transition-all whitespace-nowrap">Essai gratuit</Link>
             <MobileNav />
           </div>
         </div>
@@ -108,7 +114,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── LE PROBLÈME / LA SOLUTION ── */}
-      <section className="py-10 sm:py-20 px-5 border-b border-border/40">
+      <section id="probleme" className="py-10 sm:py-20 px-5 border-b border-border/40">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
@@ -234,7 +240,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── SATISFACTION GATE ── */}
-      <section className="py-10 sm:py-20 px-5">
+      <section id="filtre" className="py-10 sm:py-20 px-5">
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-5 gap-8 items-center">
             <div className="md:col-span-2">
@@ -275,7 +281,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── AVANT / APRÈS ── */}
-      <section className="py-10 sm:py-20 px-5 bg-muted/30">
+      <section id="resultats" className="py-10 sm:py-20 px-5 bg-muted/30">
         <div className="max-w-4xl mx-auto">
           <p className="text-sm font-semibold text-primary mb-2">Résultats concrets</p>
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-10">Ce qui change avec Valoravis</h2>
@@ -344,6 +350,20 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── COURBE DE CROISSANCE ── */}
+      <section className="py-10 sm:py-20 px-5">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-sm font-semibold text-primary mb-2">Performance en temps réel</p>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Vos avis Google augmentent dès le premier mois</h2>
+          <p className="text-muted-foreground mb-6 sm:mb-8 max-w-lg">
+            Exemple d'évolution sur 30 jours pour un professionnel utilisant Valoravis. La tendance est claire : plus vous envoyez, plus vous récoltez.
+          </p>
+          <div className="card-elevated rounded-2xl p-4 sm:p-6">
+            <GrowthChart />
+          </div>
+        </div>
+      </section>
+
       {/* ── AVANTAGES (compact) ── */}
       <section className="py-10 sm:py-20 px-5 border-y border-border/40">
         <div className="max-w-5xl mx-auto">
@@ -367,7 +387,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── TÉMOIGNAGES ── */}
-      <section className="py-10 sm:py-20 px-5">
+      <section id="temoignages" className="py-10 sm:py-20 px-5">
         <div className="max-w-4xl mx-auto">
           <p className="text-sm font-semibold text-primary mb-2">Retours clients</p>
           <h2 className="text-2xl font-bold mb-5 sm:mb-8">Ce qu'en disent nos utilisateurs</h2>

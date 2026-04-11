@@ -6,6 +6,7 @@ import { hasFeature } from "@/config/plan-features";
 import { formatDate } from "@/lib/utils";
 import { OnboardingModal } from "@/components/dashboard/onboarding-modal";
 import { PeriodSelector } from "@/components/dashboard/period-selector";
+import { StatsChart } from "@/components/dashboard/stats-chart";
 import { Suspense } from "react";
 import {
   Users, Send, MousePointerClick, Star, Stethoscope, Bone, Wrench, Building2,
@@ -79,6 +80,47 @@ export default async function DashboardPage({
   let smsSent = 0;
   let avgRating: number | null = null;
   let feedbackCount = 0;
+
+  // Chart data: group review requests by day (Business plan only)
+  let chartData: { label: string; fullDate: string; monthLabel: string | null; sent: number; clicked: number; reviewed: number }[] = [];
+
+  if (showAdvanced) {
+    const allRequestsForChart = await prisma.reviewRequest.findMany({
+      where: { userId: user.id, ...periodFilter },
+      select: { createdAt: true, status: true },
+      orderBy: { createdAt: "asc" },
+    });
+
+    const dailyMap = new Map<string, { sent: number; clicked: number; reviewed: number }>();
+    for (let d = 0; d < days; d++) {
+      const date = new Date(periodStart.getTime() + d * 24 * 60 * 60 * 1000);
+      const key = date.toISOString().slice(0, 10);
+      dailyMap.set(key, { sent: 0, clicked: 0, reviewed: 0 });
+    }
+    for (const req of allRequestsForChart) {
+      const key = req.createdAt.toISOString().slice(0, 10);
+      const entry = dailyMap.get(key);
+      if (!entry) continue;
+      if (["SENT", "CLICKED", "REVIEWED"].includes(req.status)) entry.sent++;
+      if (["CLICKED", "REVIEWED"].includes(req.status)) entry.clicked++;
+      if (req.status === "REVIEWED") entry.reviewed++;
+    }
+    const MONTHS_SHORT = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+    let prevMonth = -1;
+    chartData = Array.from(dailyMap.entries()).map(([dateStr, vals]) => {
+      const d = new Date(dateStr);
+      const day = d.getDate();
+      const month = d.getMonth();
+      const monthLabel = month !== prevMonth ? MONTHS_SHORT[month] : null;
+      prevMonth = month;
+      return {
+        label: String(day),
+        fullDate: `${day} ${MONTHS_SHORT[month]}`,
+        monthLabel,
+        ...vals,
+      };
+    });
+  }
 
   if (showDetailed) {
     const [emailC, smsC, ratingAgg, feedbackC] = await Promise.all([
@@ -210,6 +252,24 @@ export default async function DashboardPage({
           <p className="text-sm text-muted-foreground">
             Statistiques détaillées disponibles avec le{" "}
             <a href="/dashboard/billing" className="text-primary hover:underline font-medium">plan Pro</a>.
+          </p>
+        </div>
+      )}
+
+      {/* Evolution chart (Business only) */}
+      {showAdvanced ? (
+        <div className="bg-card border border-border rounded-xl p-4 sm:p-6 mb-8">
+          <h2 className="font-semibold mb-4">
+            Évolution ({days} derniers jours)
+          </h2>
+          <StatsChart data={chartData} />
+        </div>
+      ) : (
+        <div className="bg-card border border-border rounded-xl p-4 mb-8 flex items-center gap-3">
+          <Lock className="w-5 h-5 text-muted-foreground shrink-0" />
+          <p className="text-sm text-muted-foreground">
+            Graphique d'évolution disponible avec le{" "}
+            <a href="/dashboard/billing" className="text-primary hover:underline font-medium">plan Business</a>.
           </p>
         </div>
       )}
