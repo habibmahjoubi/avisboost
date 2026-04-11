@@ -601,10 +601,6 @@ export type ReviewRequestUncheckedUpdateManyWithoutClientNestedInput = {
   deleteMany?: Prisma.ReviewRequestScalarWhereInput | Prisma.ReviewRequestScalarWhereInput[]
 }
 
-export type EnumChannelFieldUpdateOperationsInput = {
-  set?: $Enums.Channel
-}
-
 export type EnumRequestStatusFieldUpdateOperationsInput = {
   set?: $Enums.RequestStatus
 }

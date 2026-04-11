@@ -19,7 +19,7 @@ export const NICHE_CONFIGS: NicheConfigs = {
         body: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#ffffff;color:#1a1a1a">
   <h2>Merci pour votre visite !</h2>
   <p>Bonjour {{clientName}},</p>
-  <p>Nous espérons que votre rendez-vous au cabinet <strong>{{businessName}}</strong> s'est bien passe.</p>
+  <p>Nous espérons que votre rendez-vous au cabinet <strong>{{businessName}}</strong> s'est bien passé.</p>
   <p>Votre retour nous aide à améliorer nos soins. Cela ne prend que 30 secondes :</p>
   <a href="{{link}}" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0">Donner mon avis</a>
   <p style="color:#888;font-size:13px">Merci pour votre confiance.<br>L'équipe {{businessName}}</p>
@@ -98,10 +98,10 @@ export const NICHE_CONFIGS: NicheConfigs = {
         body: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#ffffff;color:#1a1a1a">
   <h2>Comment allez-vous ?</h2>
   <p>Bonjour {{clientName}},</p>
-  <p>Nous espérons que votre séance chez <strong>{{businessName}}</strong> vous à fait du bien.</p>
+  <p>Nous espérons que votre séance chez <strong>{{businessName}}</strong> vous a fait du bien.</p>
   <p>Un retour rapide nous aide à mieux vous accompagner :</p>
   <a href="{{link}}" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0">Donner mon avis</a>
-  <p style="color:#888;font-size:13px">A bientôt !<br>{{businessName}}</p>
+  <p style="color:#888;font-size:13px">À bientôt !<br>{{businessName}}</p>
 </div>`,
       },
     },
@@ -171,7 +171,7 @@ export const NICHE_CONFIGS: NicheConfigs = {
     },
     templates: {
       SMS: {
-        body: "Bonjour {{clientName}}, votre véhicule est passe chez {{businessName}}. Satisfait ? Dites-le nous : {{link}}",
+        body: "Bonjour {{clientName}}, votre véhicule est passé chez {{businessName}}. Satisfait ? Dites-le nous : {{link}}",
       },
       EMAIL: {
         subject: "Tout roule après votre passage chez {{businessName}} ?",

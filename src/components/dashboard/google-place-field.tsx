@@ -101,7 +101,7 @@ export function GooglePlaceField({
             <p className="text-success font-medium">
               <CheckCircle className="w-3.5 h-3.5 inline mr-1" /> Lien d'avis détecté et converti automatiquement
             </p>
-            <p className="text-success/70 mt-1 break-all">
+            <p className="text-success/70 mt-1 break-words">
               {writeReviewUrl}
             </p>
             <a

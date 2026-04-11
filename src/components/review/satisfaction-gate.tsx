@@ -82,7 +82,7 @@ export function SatisfactionGate({
             Que pouvons-nous améliorer ?
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Votre retour est confidentiel et sera envoyé directement a{" "}
+            Votre retour est confidentiel et sera envoyé directement à{" "}
             {businessName}.
           </p>
         </div>
@@ -129,7 +129,7 @@ export function SatisfactionGate({
             aria-label={`${star} étoile${star > 1 ? "s" : ""}`}
           >
             <Star
-              className={`w-10 h-10 ${
+              className={`w-11 h-11 ${
                 star <= (hovering || rating)
                   ? "text-primary fill-primary"
                   : "text-border"
@@ -145,7 +145,7 @@ export function SatisfactionGate({
         </p>
       ) : (
         <p className="text-xs text-muted-foreground">
-          Cliquez sur une étoile pour evaluer
+          Cliquez sur une étoile pour évaluer
         </p>
       )}
     </div>

@@ -47,6 +47,10 @@ model User {
   isAdmin          Boolean  @default(false)
   isSuspended      Boolean  @default(false)
   satisfactionThreshold Int  @default(4)
+  defaultChannel   Channel  @default(EMAIL)
+  defaultDelay     Int?     // null = use niche default
+  senderName       String?  // custom "From" name in emails
+  replyToEmail     String?  // custom reply-to address
   trialEndsAt      DateTime?
   cancelRequestedAt DateTime?
   cancelEffectiveAt DateTime?
@@ -112,6 +116,16 @@ model Plan {
 }
 
 model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model EmailVerificationToken {
   id        String   @id @default(cuid())
   email     String
   token     String   @unique

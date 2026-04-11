@@ -11,11 +11,13 @@ export function SendReviewButton({
   hasEmail,
   hasPhone,
   userPlan,
+  defaultDelay = 0,
 }: {
   clientId: string;
   hasEmail: boolean;
   hasPhone: boolean;
   userPlan: string;
+  defaultDelay?: number;
 }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -39,15 +41,15 @@ export function SendReviewButton({
 
   return (
     <div className="inline-flex flex-col items-end gap-1">
-      <form action={handleSend} className="inline-flex gap-1">
+      <form action={handleSend} className="inline-flex flex-wrap gap-1.5">
         <input type="hidden" name="clientId" value={clientId} />
-        <input type="hidden" name="delayHours" value="0" />
+        <input type="hidden" name="delayHours" value={defaultDelay} />
         {hasEmail && (
           <button
             type="submit"
             name="channel"
             value="EMAIL"
-            className="px-3 py-1.5 text-xs bg-primary/10 text-primary rounded hover:bg-primary/20"
+            className="px-3 py-2 text-xs bg-primary/10 text-primary rounded hover:bg-primary/20"
             title="Envoyer par email"
           >
             Email
@@ -58,7 +60,7 @@ export function SendReviewButton({
             type="submit"
             name="channel"
             value="SMS"
-            className="px-3 py-1.5 text-xs bg-success/10 text-success rounded hover:bg-success/20"
+            className="px-3 py-2 text-xs bg-success/10 text-success rounded hover:bg-success/20"
             title="Envoyer par SMS"
           >
             SMS
@@ -67,7 +69,7 @@ export function SendReviewButton({
         {hasPhone && !canSms && (
           <Link
             href="/dashboard/billing"
-            className="px-3 py-1.5 text-xs bg-muted text-muted-foreground rounded inline-flex items-center gap-1"
+            className="px-3 py-2 text-xs bg-muted text-muted-foreground rounded inline-flex items-center gap-1"
             title="SMS disponible avec le plan Pro"
           >
             <Lock className="w-3 h-3" />
@@ -79,7 +81,7 @@ export function SendReviewButton({
         )}
       </form>
       {error && (
-        <span className="text-[11px] text-destructive max-w-[200px] text-right">
+        <span className="text-[11px] text-destructive max-w-[180px] sm:max-w-[200px] text-right break-words">
           {error}
         </span>
       )}

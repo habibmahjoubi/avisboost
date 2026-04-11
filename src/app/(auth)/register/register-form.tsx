@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
 import { registerUser } from "@/actions/auth";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Stethoscope, Bone, Wrench, Building2 } from "lucide-react";
@@ -57,21 +56,9 @@ export function RegisterForm({ plans }: { plans: PlanOption[] }) {
       return;
     }
 
-    // Auto-login après inscription
+    // Rediriger vers la page de vérification email
     const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const loginResult = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
-    if (loginResult?.error) {
-      router.push("/login?registered=1");
-      return;
-    }
-
-    router.push("/dashboard");
+    router.push(`/check-email?email=${encodeURIComponent(email)}`);
   }
 
   return (
@@ -96,7 +83,7 @@ export function RegisterForm({ plans }: { plans: PlanOption[] }) {
             <Link
               key={plan.key}
               href={`/register?plan=${plan.key}`}
-              className={`px-2.5 py-1 rounded-full transition-colors ${
+              className={`px-3 py-1.5 rounded-full transition-colors ${
                 selectedPlan === plan.key
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -190,7 +177,7 @@ export function RegisterForm({ plans }: { plans: PlanOption[] }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-primary text-primary-foreground py-2.5 sm:py-3 rounded-lg text-sm sm:text-base font-medium hover:opacity-90 disabled:opacity-50"
+          className="w-full bg-primary text-primary-foreground py-3 rounded-lg text-sm sm:text-base font-medium hover:opacity-90 disabled:opacity-50"
         >
           {loading
             ? "Création du compte..."

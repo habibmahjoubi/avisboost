@@ -30,12 +30,14 @@ export type UserAvgAggregateOutputType = {
   monthlyQuota: number | null
   quotaUsed: number | null
   satisfactionThreshold: number | null
+  defaultDelay: number | null
 }
 
 export type UserSumAggregateOutputType = {
   monthlyQuota: number | null
   quotaUsed: number | null
   satisfactionThreshold: number | null
+  defaultDelay: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -57,6 +59,10 @@ export type UserMinAggregateOutputType = {
   isAdmin: boolean | null
   isSuspended: boolean | null
   satisfactionThreshold: number | null
+  defaultChannel: $Enums.Channel | null
+  defaultDelay: number | null
+  senderName: string | null
+  replyToEmail: string | null
   trialEndsAt: Date | null
   cancelRequestedAt: Date | null
   cancelEffectiveAt: Date | null
@@ -83,6 +89,10 @@ export type UserMaxAggregateOutputType = {
   isAdmin: boolean | null
   isSuspended: boolean | null
   satisfactionThreshold: number | null
+  defaultChannel: $Enums.Channel | null
+  defaultDelay: number | null
+  senderName: string | null
+  replyToEmail: string | null
   trialEndsAt: Date | null
   cancelRequestedAt: Date | null
   cancelEffectiveAt: Date | null
@@ -109,6 +119,10 @@ export type UserCountAggregateOutputType = {
   isAdmin: number
   isSuspended: number
   satisfactionThreshold: number
+  defaultChannel: number
+  defaultDelay: number
+  senderName: number
+  replyToEmail: number
   trialEndsAt: number
   cancelRequestedAt: number
   cancelEffectiveAt: number
@@ -122,12 +136,14 @@ export type UserAvgAggregateInputType = {
   monthlyQuota?: true
   quotaUsed?: true
   satisfactionThreshold?: true
+  defaultDelay?: true
 }
 
 export type UserSumAggregateInputType = {
   monthlyQuota?: true
   quotaUsed?: true
   satisfactionThreshold?: true
+  defaultDelay?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -149,6 +165,10 @@ export type UserMinAggregateInputType = {
   isAdmin?: true
   isSuspended?: true
   satisfactionThreshold?: true
+  defaultChannel?: true
+  defaultDelay?: true
+  senderName?: true
+  replyToEmail?: true
   trialEndsAt?: true
   cancelRequestedAt?: true
   cancelEffectiveAt?: true
@@ -175,6 +195,10 @@ export type UserMaxAggregateInputType = {
   isAdmin?: true
   isSuspended?: true
   satisfactionThreshold?: true
+  defaultChannel?: true
+  defaultDelay?: true
+  senderName?: true
+  replyToEmail?: true
   trialEndsAt?: true
   cancelRequestedAt?: true
   cancelEffectiveAt?: true
@@ -201,6 +225,10 @@ export type UserCountAggregateInputType = {
   isAdmin?: true
   isSuspended?: true
   satisfactionThreshold?: true
+  defaultChannel?: true
+  defaultDelay?: true
+  senderName?: true
+  replyToEmail?: true
   trialEndsAt?: true
   cancelRequestedAt?: true
   cancelEffectiveAt?: true
@@ -314,6 +342,10 @@ export type UserGroupByOutputType = {
   isAdmin: boolean
   isSuspended: boolean
   satisfactionThreshold: number
+  defaultChannel: $Enums.Channel
+  defaultDelay: number | null
+  senderName: string | null
+  replyToEmail: string | null
   trialEndsAt: Date | null
   cancelRequestedAt: Date | null
   cancelEffectiveAt: Date | null
@@ -363,6 +395,10 @@ export type UserWhereInput = {
   isAdmin?: Prisma.BoolFilter<"User"> | boolean
   isSuspended?: Prisma.BoolFilter<"User"> | boolean
   satisfactionThreshold?: Prisma.IntFilter<"User"> | number
+  defaultChannel?: Prisma.EnumChannelFilter<"User"> | $Enums.Channel
+  defaultDelay?: Prisma.IntNullableFilter<"User"> | number | null
+  senderName?: Prisma.StringNullableFilter<"User"> | string | null
+  replyToEmail?: Prisma.StringNullableFilter<"User"> | string | null
   trialEndsAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   cancelRequestedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   cancelEffectiveAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -394,6 +430,10 @@ export type UserOrderByWithRelationInput = {
   isAdmin?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
+  defaultChannel?: Prisma.SortOrder
+  defaultDelay?: Prisma.SortOrderInput | Prisma.SortOrder
+  senderName?: Prisma.SortOrderInput | Prisma.SortOrder
+  replyToEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelEffectiveAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -428,6 +468,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isAdmin?: Prisma.BoolFilter<"User"> | boolean
   isSuspended?: Prisma.BoolFilter<"User"> | boolean
   satisfactionThreshold?: Prisma.IntFilter<"User"> | number
+  defaultChannel?: Prisma.EnumChannelFilter<"User"> | $Enums.Channel
+  defaultDelay?: Prisma.IntNullableFilter<"User"> | number | null
+  senderName?: Prisma.StringNullableFilter<"User"> | string | null
+  replyToEmail?: Prisma.StringNullableFilter<"User"> | string | null
   trialEndsAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   cancelRequestedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   cancelEffectiveAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -459,6 +503,10 @@ export type UserOrderByWithAggregationInput = {
   isAdmin?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
+  defaultChannel?: Prisma.SortOrder
+  defaultDelay?: Prisma.SortOrderInput | Prisma.SortOrder
+  senderName?: Prisma.SortOrderInput | Prisma.SortOrder
+  replyToEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelEffectiveAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -493,6 +541,10 @@ export type UserScalarWhereWithAggregatesInput = {
   isAdmin?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isSuspended?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   satisfactionThreshold?: Prisma.IntWithAggregatesFilter<"User"> | number
+  defaultChannel?: Prisma.EnumChannelWithAggregatesFilter<"User"> | $Enums.Channel
+  defaultDelay?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  senderName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  replyToEmail?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   trialEndsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   cancelRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   cancelEffectiveAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -519,6 +571,10 @@ export type UserCreateInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -550,6 +606,10 @@ export type UserUncheckedCreateInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -581,6 +641,10 @@ export type UserUpdateInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -612,6 +676,10 @@ export type UserUncheckedUpdateInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -643,6 +711,10 @@ export type UserCreateManyInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -669,6 +741,10 @@ export type UserUpdateManyMutationInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -695,6 +771,10 @@ export type UserUncheckedUpdateManyInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -721,6 +801,10 @@ export type UserCountOrderByAggregateInput = {
   isAdmin?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
+  defaultChannel?: Prisma.SortOrder
+  defaultDelay?: Prisma.SortOrder
+  senderName?: Prisma.SortOrder
+  replyToEmail?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrder
   cancelRequestedAt?: Prisma.SortOrder
   cancelEffectiveAt?: Prisma.SortOrder
@@ -732,6 +816,7 @@ export type UserAvgOrderByAggregateInput = {
   monthlyQuota?: Prisma.SortOrder
   quotaUsed?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
+  defaultDelay?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -753,6 +838,10 @@ export type UserMaxOrderByAggregateInput = {
   isAdmin?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
+  defaultChannel?: Prisma.SortOrder
+  defaultDelay?: Prisma.SortOrder
+  senderName?: Prisma.SortOrder
+  replyToEmail?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrder
   cancelRequestedAt?: Prisma.SortOrder
   cancelEffectiveAt?: Prisma.SortOrder
@@ -779,6 +868,10 @@ export type UserMinOrderByAggregateInput = {
   isAdmin?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
+  defaultChannel?: Prisma.SortOrder
+  defaultDelay?: Prisma.SortOrder
+  senderName?: Prisma.SortOrder
+  replyToEmail?: Prisma.SortOrder
   trialEndsAt?: Prisma.SortOrder
   cancelRequestedAt?: Prisma.SortOrder
   cancelEffectiveAt?: Prisma.SortOrder
@@ -790,6 +883,7 @@ export type UserSumOrderByAggregateInput = {
   monthlyQuota?: Prisma.SortOrder
   quotaUsed?: Prisma.SortOrder
   satisfactionThreshold?: Prisma.SortOrder
+  defaultDelay?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -823,6 +917,18 @@ export type IntFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type EnumChannelFieldUpdateOperationsInput = {
+  set?: $Enums.Channel
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -918,6 +1024,10 @@ export type UserCreateWithoutAccountsInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -948,6 +1058,10 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -994,6 +1108,10 @@ export type UserUpdateWithoutAccountsInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1024,6 +1142,10 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1054,6 +1176,10 @@ export type UserCreateWithoutSessionsInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -1084,6 +1210,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -1130,6 +1260,10 @@ export type UserUpdateWithoutSessionsInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1160,6 +1294,10 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1190,6 +1328,10 @@ export type UserCreateWithoutClientsInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -1220,6 +1362,10 @@ export type UserUncheckedCreateWithoutClientsInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -1266,6 +1412,10 @@ export type UserUpdateWithoutClientsInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1296,6 +1446,10 @@ export type UserUncheckedUpdateWithoutClientsInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1326,6 +1480,10 @@ export type UserCreateWithoutReviewRequestsInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -1356,6 +1514,10 @@ export type UserUncheckedCreateWithoutReviewRequestsInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -1402,6 +1564,10 @@ export type UserUpdateWithoutReviewRequestsInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1432,6 +1598,10 @@ export type UserUncheckedUpdateWithoutReviewRequestsInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1462,6 +1632,10 @@ export type UserCreateWithoutTemplatesInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -1492,6 +1666,10 @@ export type UserUncheckedCreateWithoutTemplatesInput = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
   trialEndsAt?: Date | string | null
   cancelRequestedAt?: Date | string | null
   cancelEffectiveAt?: Date | string | null
@@ -1538,6 +1716,10 @@ export type UserUpdateWithoutTemplatesInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1568,6 +1750,10 @@ export type UserUncheckedUpdateWithoutTemplatesInput = {
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1665,6 +1851,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: boolean
+  defaultChannel?: boolean
+  defaultDelay?: boolean
+  senderName?: boolean
+  replyToEmail?: boolean
   trialEndsAt?: boolean
   cancelRequestedAt?: boolean
   cancelEffectiveAt?: boolean
@@ -1697,6 +1887,10 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: boolean
+  defaultChannel?: boolean
+  defaultDelay?: boolean
+  senderName?: boolean
+  replyToEmail?: boolean
   trialEndsAt?: boolean
   cancelRequestedAt?: boolean
   cancelEffectiveAt?: boolean
@@ -1723,6 +1917,10 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: boolean
+  defaultChannel?: boolean
+  defaultDelay?: boolean
+  senderName?: boolean
+  replyToEmail?: boolean
   trialEndsAt?: boolean
   cancelRequestedAt?: boolean
   cancelEffectiveAt?: boolean
@@ -1749,6 +1947,10 @@ export type UserSelectScalar = {
   isAdmin?: boolean
   isSuspended?: boolean
   satisfactionThreshold?: boolean
+  defaultChannel?: boolean
+  defaultDelay?: boolean
+  senderName?: boolean
+  replyToEmail?: boolean
   trialEndsAt?: boolean
   cancelRequestedAt?: boolean
   cancelEffectiveAt?: boolean
@@ -1756,7 +1958,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerified" | "password" | "name" | "businessName" | "niche" | "customNiche" | "googlePlaceUrl" | "phone" | "stripeCustomerId" | "plan" | "monthlyQuota" | "quotaUsed" | "onboarded" | "isAdmin" | "isSuspended" | "satisfactionThreshold" | "trialEndsAt" | "cancelRequestedAt" | "cancelEffectiveAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerified" | "password" | "name" | "businessName" | "niche" | "customNiche" | "googlePlaceUrl" | "phone" | "stripeCustomerId" | "plan" | "monthlyQuota" | "quotaUsed" | "onboarded" | "isAdmin" | "isSuspended" | "satisfactionThreshold" | "defaultChannel" | "defaultDelay" | "senderName" | "replyToEmail" | "trialEndsAt" | "cancelRequestedAt" | "cancelEffectiveAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -1796,6 +1998,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     isAdmin: boolean
     isSuspended: boolean
     satisfactionThreshold: number
+    defaultChannel: $Enums.Channel
+    defaultDelay: number | null
+    senderName: string | null
+    replyToEmail: string | null
     trialEndsAt: Date | null
     cancelRequestedAt: Date | null
     cancelEffectiveAt: Date | null
@@ -2247,6 +2453,10 @@ export interface UserFieldRefs {
   readonly isAdmin: Prisma.FieldRef<"User", 'Boolean'>
   readonly isSuspended: Prisma.FieldRef<"User", 'Boolean'>
   readonly satisfactionThreshold: Prisma.FieldRef<"User", 'Int'>
+  readonly defaultChannel: Prisma.FieldRef<"User", 'Channel'>
+  readonly defaultDelay: Prisma.FieldRef<"User", 'Int'>
+  readonly senderName: Prisma.FieldRef<"User", 'String'>
+  readonly replyToEmail: Prisma.FieldRef<"User", 'String'>
   readonly trialEndsAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly cancelRequestedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly cancelEffectiveAt: Prisma.FieldRef<"User", 'DateTime'>

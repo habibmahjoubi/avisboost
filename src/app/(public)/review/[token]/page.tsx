@@ -37,7 +37,7 @@ export default async function ReviewPage({
           </div>
           <h1 className="text-xl font-bold mb-2">Merci !</h1>
           <p className="text-muted-foreground mb-4">
-            Votre retour à bien ete enregistré.
+            Votre retour a bien été enregistré.
           </p>
           {googleUrl && request.rating >= request.user.satisfactionThreshold && (
             <a

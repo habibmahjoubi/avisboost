@@ -29,6 +29,7 @@ export default async function DashboardLayout({
   });
 
   if (!user) redirect("/login");
+  if (!user.emailVerified) redirect(`/check-email?email=${encodeURIComponent(user.email)}`);
   if (user.isAdmin) redirect("/admin");
   if (user.isSuspended) redirect("/suspended");
 

@@ -106,7 +106,7 @@ export default async function ClientsPage() {
                     {formatDate(client.createdAt)}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex flex-wrap items-center justify-end gap-1">
+                    <div className="flex flex-wrap items-center justify-end gap-1.5">
                       <PreviewButton
                         clientName={client.name}
                         businessName={user.businessName || "Établissement"}
@@ -119,6 +119,7 @@ export default async function ClientsPage() {
                         hasEmail={!!client.email}
                         hasPhone={!!client.phone}
                         userPlan={user.plan}
+                        defaultDelay={user.defaultDelay ?? nicheConfig.defaultDelay}
                       />
                       <EditClientForm
                         clientId={client.id}

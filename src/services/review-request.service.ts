@@ -48,7 +48,12 @@ export async function createReviewRequest({
   }
 
   const nicheConfig = NICHE_CONFIGS[user.niche];
-  const delay = delayHours !== undefined ? delayHours : nicheConfig.defaultDelay;
+  const delay =
+    delayHours !== undefined
+      ? delayHours
+      : user.defaultDelay !== null
+        ? user.defaultDelay
+        : nicheConfig.defaultDelay;
 
   const scheduledAt = new Date(Date.now() + delay * 60 * 60 * 1000);
 
@@ -95,6 +100,8 @@ export async function createReviewRequest({
           to: client.email,
           subject: resolveTemplate(template.subject || nicheConfig.templates[channel].subject || "Votre avis compte", vars),
           html: resolveTemplate(template.body, vars),
+          fromName: user.senderName || undefined,
+          replyTo: user.replyToEmail || undefined,
         });
       } else if (channel === "SMS" && client.phone) {
         await sendSms({
@@ -162,9 +169,10 @@ export async function processPendingRequests() {
           to: client.email,
           subject: resolveTemplate(template.subject || nicheConfig.templates[request.channel].subject || "Votre avis compte", vars),
           html: resolveTemplate(template.body, vars),
+          fromName: user.senderName || undefined,
+          replyTo: user.replyToEmail || undefined,
         });
       } else if (request.channel === "SMS" && client.phone) {
-        // SMS sending would go here (Twilio integration)
         await sendSms({
           to: client.phone,
           body: resolveTemplate(template.body, vars),

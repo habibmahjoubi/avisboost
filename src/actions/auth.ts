@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
 import { sendEmail } from "@/lib/resend";
 import { absoluteUrl, escapeHtml } from "@/lib/utils";
+import { headers } from "next/headers";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
@@ -25,6 +26,64 @@ function validatePassword(password: string): string | null {
   return null;
 }
 
+async function getClientIp(): Promise<string> {
+  const h = await headers();
+  return (
+    h.get("x-forwarded-for")?.split(",")[0].trim() ||
+    h.get("x-real-ip") ||
+    "unknown"
+  );
+}
+
+async function generateVerificationToken(email: string): Promise<string> {
+  // Supprimer les anciens tokens pour cet email
+  await prisma.emailVerificationToken.deleteMany({ where: { email } });
+
+  const token = crypto.randomBytes(32).toString("hex");
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 heures
+
+  await prisma.emailVerificationToken.create({
+    data: { email, token: tokenHash, expires },
+  });
+
+  return token;
+}
+
+async function sendVerificationEmail(email: string, name: string | null, token: string) {
+  const verifyUrl = absoluteUrl(`/verify-email?token=${token}`);
+  const displayName = escapeHtml(name || email.split("@")[0]);
+
+  await sendEmail({
+    to: email,
+    subject: `Vérifiez votre email - Valoravis`,
+    html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#ffffff;color:#1a1a1a">
+  <h2>Bienvenue sur Valoravis !</h2>
+  <p>Bonjour ${displayName},</p>
+  <p>Merci pour votre inscription. Pour activer votre compte, veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous :</p>
+  <a href="${verifyUrl}" style="display:inline-block;background:#6d28d9;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0">
+    Vérifier mon email
+  </a>
+  <p style="color:#888;font-size:13px">Ce lien expire dans 24 heures.</p>
+  <p style="color:#888;font-size:13px">Si vous n'avez pas créé ce compte, ignorez cet email.</p>
+</div>`,
+  });
+}
+
+// --- Vérifier si un email non vérifié bloque le login ---
+export async function checkEmailVerificationStatus(email: string) {
+  if (!email || !validateEmail(email)) return { status: "unknown" as const };
+
+  const user = await prisma.user.findUnique({
+    where: { email: email.trim().toLowerCase() },
+    select: { emailVerified: true },
+  });
+
+  if (!user) return { status: "unknown" as const };
+  if (!user.emailVerified) return { status: "unverified" as const };
+  return { status: "verified" as const };
+}
+
 // --- Inscription ---
 export async function registerUser(formData: FormData) {
   const email = (formData.get("email") as string).trim().toLowerCase();
@@ -37,9 +96,17 @@ export async function registerUser(formData: FormData) {
     return { error: "Email et mot de passe requis" };
   }
 
-  const rl = rateLimit(`register:${email}`, { maxAttempts: 5, windowMs: 15 * 60 * 1000 });
-  if (!rl.success) {
-    return { error: `Trop de tentatives. Réessayez dans ${rl.retryAfterSeconds}s.` };
+  // Rate limit par email
+  const rlEmail = rateLimit(`register:${email}`, { maxAttempts: 5, windowMs: 15 * 60 * 1000 });
+  if (!rlEmail.success) {
+    return { error: `Trop de tentatives. Réessayez dans ${rlEmail.retryAfterSeconds}s.` };
+  }
+
+  // Rate limit par IP (3 inscriptions / 5 minutes)
+  const ip = await getClientIp();
+  const rlIp = rateLimit(`register-ip:${ip}`, { maxAttempts: 3, windowMs: 5 * 60 * 1000 });
+  if (!rlIp.success) {
+    return { error: `Trop de tentatives depuis cette adresse. Réessayez dans ${rlIp.retryAfterSeconds}s.` };
   }
 
   if (!validateEmail(email)) {
@@ -92,33 +159,89 @@ export async function registerUser(formData: FormData) {
     return { error: "Erreur lors de la création du compte. Réessayez." };
   }
 
-  // Email de bienvenue (non bloquant)
-  const planLabel = escapeHtml(plan ? plan.name : "Gratuit");
-  const dashboardUrl = absoluteUrl("/dashboard");
-  const displayName = escapeHtml(name || email.split("@")[0]);
-  const safeEmail = escapeHtml(email);
+  // Envoyer l'email de vérification
+  try {
+    const token = await generateVerificationToken(email);
+    await sendVerificationEmail(email, name, token);
+  } catch (err) {
+    console.error("[register] verification email failed:", err);
+    // Le compte est créé, l'utilisateur pourra renvoyer l'email depuis /check-email
+  }
 
-  sendEmail({
-    to: email,
-    subject: `Bienvenue sur Valoravis, ${displayName} !`,
-    html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#ffffff;color:#1a1a1a">
-  <h2>Bienvenue sur Valoravis ! 🎉</h2>
-  <p>Bonjour ${displayName},</p>
-  <p>Votre compte a été créé avec succès. Voici le récapitulatif :</p>
-  <table style="width:100%;border-collapse:collapse;margin:16px 0">
-    <tr><td style="padding:8px 0;color:#888">Plan</td><td style="padding:8px 0;font-weight:bold">${planLabel}</td></tr>
-    ${trialEndsAt ? `<tr><td style="padding:8px 0;color:#888">Essai gratuit</td><td style="padding:8px 0;font-weight:bold">Jusqu'au ${trialEndsAt.toLocaleDateString("fr-FR")}</td></tr>` : ""}
-    <tr><td style="padding:8px 0;color:#888">Email</td><td style="padding:8px 0">${safeEmail}</td></tr>
-  </table>
-  <p>Prochaine étape : configurez votre établissement pour commencer à recevoir des avis.</p>
-  <a href="${dashboardUrl}" style="display:inline-block;background:#6d28d9;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0">
-    Configurer mon établissement
-  </a>
-  <p style="color:#888;font-size:13px">Si vous n'avez pas créé ce compte, ignorez cet email.</p>
-</div>`,
-  }).catch((err) => {
-    console.error("[register] welcome email failed:", err);
+  return { success: true, email };
+}
+
+// --- Vérifier l'email ---
+export async function verifyEmail(token: string) {
+  if (!token) {
+    return { error: "Token manquant" };
+  }
+
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+  const verificationToken = await prisma.emailVerificationToken.findUnique({
+    where: { token: tokenHash },
   });
+
+  if (!verificationToken) {
+    return { error: "Lien invalide ou déjà utilisé" };
+  }
+
+  if (verificationToken.expires < new Date()) {
+    await prisma.emailVerificationToken.delete({ where: { id: verificationToken.id } });
+    return { error: "Ce lien a expiré. Demandez un nouveau lien de vérification." };
+  }
+
+  // Activer le compte
+  try {
+    await prisma.user.update({
+      where: { email: verificationToken.email },
+      data: { emailVerified: new Date() },
+    });
+  } catch {
+    return { error: "Erreur lors de la vérification. Réessayez." };
+  }
+
+  // Supprimer le token utilisé
+  await prisma.emailVerificationToken.delete({ where: { id: verificationToken.id } });
+
+  return { success: true };
+}
+
+// --- Renvoyer l'email de vérification ---
+export async function resendVerificationEmail(email: string) {
+  if (!email || !validateEmail(email)) {
+    return { error: "Adresse email invalide" };
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  // Rate limit par email (3 renvois / 15 minutes)
+  const rl = rateLimit(`resend-verify:${normalizedEmail}`, { maxAttempts: 3, windowMs: 15 * 60 * 1000 });
+  if (!rl.success) {
+    return { error: `Trop de tentatives. Réessayez dans ${rl.retryAfterSeconds}s.` };
+  }
+
+  // Rate limit par IP
+  const ip = await getClientIp();
+  const rlIp = rateLimit(`resend-verify-ip:${ip}`, { maxAttempts: 5, windowMs: 15 * 60 * 1000 });
+  if (!rlIp.success) {
+    return { error: `Trop de tentatives. Réessayez dans ${rlIp.retryAfterSeconds}s.` };
+  }
+
+  const user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+
+  // Ne pas révéler si l'email existe — toujours retourner succès
+  if (!user || user.emailVerified) {
+    return { success: true };
+  }
+
+  try {
+    const token = await generateVerificationToken(normalizedEmail);
+    await sendVerificationEmail(normalizedEmail, user.name, token);
+  } catch (err) {
+    console.error("[resend-verify] email failed:", err);
+    return { error: "Erreur lors de l'envoi. Réessayez dans quelques instants." };
+  }
 
   return { success: true };
 }

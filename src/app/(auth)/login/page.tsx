@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { checkEmailVerificationStatus } from "@/actions/auth";
 import { PasswordInput } from "@/components/ui/password-input";
 
 function LoginForm() {
@@ -32,6 +33,12 @@ function LoginForm() {
     });
 
     if (result?.error) {
+      // Vérifier si l'échec est dû à un email non vérifié
+      const verif = await checkEmailVerificationStatus(email);
+      if (verif.status === "unverified") {
+        router.push(`/check-email?email=${encodeURIComponent(email)}`);
+        return;
+      }
       setError("Email ou mot de passe incorrect. Vérifiez vos identifiants ou créez un compte.");
       setLoading(false);
       return;
@@ -98,7 +105,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-primary text-primary-foreground py-2.5 sm:py-3 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+          className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
         >
           {loading ? "Connexion en cours..." : "Se connecter"}
         </button>

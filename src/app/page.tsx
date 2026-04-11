@@ -38,7 +38,7 @@ export default async function HomePage() {
           </nav>
           <div className="flex items-center gap-2 sm:gap-3">
             <Link href="/login" className="text-xs sm:text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap">Connexion</Link>
-            <Link href="/register" className="text-xs sm:text-[13px] font-semibold brand-gradient text-white px-3 sm:px-5 py-1.5 sm:py-2 rounded-full btn-glow transition-all whitespace-nowrap">Essai gratuit</Link>
+            <Link href="/register" className="text-xs sm:text-[13px] font-semibold brand-gradient text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-full btn-glow transition-all whitespace-nowrap">Essai gratuit</Link>
           </div>
         </div>
       </header>

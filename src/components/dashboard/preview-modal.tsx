@@ -38,7 +38,7 @@ export function PreviewButton({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
+        className="px-3 py-2 text-xs text-muted-foreground hover:bg-muted rounded"
         title="Apercu du message"
       >
         Apercu
@@ -47,8 +47,8 @@ export function PreviewButton({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-start sm:items-center justify-center z-50 px-4 pt-16 sm:pt-0">
-      <div className="bg-card border border-border rounded-xl p-6 w-full max-w-lg">
+    <div className="fixed inset-0 bg-black/50 flex items-start sm:items-center justify-center z-50 px-3 sm:px-4 pt-12 sm:pt-0 overflow-y-auto">
+      <div className="bg-card border border-border rounded-xl p-4 sm:p-6 w-full max-w-lg my-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold">
             Apercu {channel === "EMAIL" ? "Email" : "SMS"}

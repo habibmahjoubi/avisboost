@@ -338,6 +338,133 @@ export async function updateThreshold(formData: FormData) {
   revalidatePath("/dashboard/settings");
 }
 
+// --- Sending Preferences ---
+export async function updateSendingSettings(formData: FormData) {
+  const userId = await getUserId();
+  const defaultChannel = formData.get("defaultChannel") as string;
+  const defaultDelayRaw = formData.get("defaultDelay") as string;
+  const senderName = (formData.get("senderName") as string) || null;
+  const replyToEmail = (formData.get("replyToEmail") as string) || null;
+  const phone = (formData.get("phone") as string) || null;
+
+  if (!["EMAIL", "SMS"].includes(defaultChannel)) {
+    return { error: "Canal invalide" };
+  }
+
+  if (defaultChannel === "SMS") {
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    if (!hasFeature(user.plan, "sms")) {
+      return { error: "Le SMS nécessite le plan Pro ou supérieur." };
+    }
+    if (!phone) {
+      return { error: "Un numéro de téléphone est requis pour utiliser les SMS." };
+    }
+  }
+
+  const defaultDelay = defaultDelayRaw !== "" ? Number(defaultDelayRaw) : null;
+  if (defaultDelay !== null && (!Number.isFinite(defaultDelay) || defaultDelay < 0 || defaultDelay > 720)) {
+    return { error: "Délai invalide (0 à 720 heures)" };
+  }
+
+  validateLength(senderName, 100, "Nom de l'expéditeur");
+  validateLength(phone, 20, "Téléphone");
+  if (replyToEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyToEmail)) {
+    return { error: "Adresse de réponse invalide" };
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      defaultChannel: defaultChannel as Channel,
+      defaultDelay,
+      senderName,
+      replyToEmail,
+      ...(phone !== null ? { phone } : {}),
+    },
+  });
+
+  revalidatePath("/dashboard/settings");
+  return { success: true };
+}
+
+export async function sendTestEmail() {
+  const userId = await getUserId();
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+
+  if (!user.email) return { error: "Aucun email configuré sur votre compte." };
+
+  const { sendEmail } = await import("@/lib/resend");
+  const { NICHE_CONFIGS } = await import("@/config/niches");
+  const nicheConfig = NICHE_CONFIGS[user.niche];
+
+  const vars: Record<string, string> = {
+    clientName: "Marie Dupont",
+    businessName: user.businessName || "Mon établissement",
+    link: "#",
+  };
+
+  const template = nicheConfig.templates.EMAIL;
+  const subject = (template.subject || "Votre avis compte").replace(
+    /\{\{(\w+)\}\}/g,
+    (_, key) => vars[key] || ""
+  );
+  const html = template.body.replace(
+    /\{\{(\w+)\}\}/g,
+    (_, key) => vars[key] || ""
+  );
+
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: `[TEST] ${subject}`,
+      html,
+      fromName: user.senderName || undefined,
+      replyTo: user.replyToEmail || undefined,
+    });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Erreur inconnue";
+    return { error: message };
+  }
+
+  return { success: true };
+}
+
+export async function sendTestSms() {
+  const userId = await getUserId();
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+
+  if (!hasFeature(user.plan, "sms")) {
+    return { error: "Le SMS nécessite le plan Pro ou supérieur." };
+  }
+
+  if (!user.phone) return { error: "Ajoutez votre numéro de téléphone dans les paramètres d'établissement." };
+
+  const { sendSms } = await import("@/lib/sms");
+  const { NICHE_CONFIGS } = await import("@/config/niches");
+  const nicheConfig = NICHE_CONFIGS[user.niche];
+
+  const vars: Record<string, string> = {
+    clientName: "Marie Dupont",
+    businessName: user.businessName || "Mon établissement",
+    link: "https://example.com",
+  };
+
+  const template = nicheConfig.templates.SMS;
+  const body = `[TEST] ${template.body.replace(
+    /\{\{(\w+)\}\}/g,
+    (_, key) => vars[key] || ""
+  )}`;
+
+  try {
+    await sendSms({ to: user.phone, body });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Erreur inconnue";
+    return { error: message };
+  }
+
+  return { success: true };
+}
+
 // --- Settings ---
 export async function updateSettings(formData: FormData) {
   const userId = await getUserId();

@@ -36,6 +36,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if (!user || !user.password || !isValid) return null;
 
+        // Bloquer le login si l'email n'est pas vérifié
+        if (!user.emailVerified) return null;
+
         return {
           id: user.id,
           email: user.email,

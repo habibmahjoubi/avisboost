@@ -7,6 +7,7 @@ import { TemplateEditor } from "@/components/dashboard/template-editor";
 import { GooglePlaceField } from "@/components/dashboard/google-place-field";
 import { NicheSelector } from "@/components/dashboard/niche-selector";
 import { ThresholdSelector } from "@/components/dashboard/threshold-selector";
+import { SendingSettings } from "@/components/dashboard/sending-settings";
 import { hasFeature } from "@/config/plan-features";
 import { Lock } from "lucide-react";
 
@@ -85,6 +86,17 @@ export default async function SettingsPage() {
           Enregistrer
         </button>
       </form>
+
+      {/* Sending Preferences */}
+      <SendingSettings
+        defaultChannel={user.defaultChannel as "EMAIL" | "SMS"}
+        defaultDelay={user.defaultDelay}
+        senderName={user.senderName}
+        replyToEmail={user.replyToEmail}
+        phone={user.phone}
+        nicheDefaultDelay={nicheConfig.defaultDelay}
+        hasSms={hasFeature(user.plan, "sms")}
+      />
 
       {/* Satisfaction Threshold */}
       <ThresholdSelector defaultValue={user.satisfactionThreshold} />

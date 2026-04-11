@@ -57,6 +57,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   Plan: 'Plan',
   PasswordResetToken: 'PasswordResetToken',
+  EmailVerificationToken: 'EmailVerificationToken',
   Client: 'Client',
   ReviewRequest: 'ReviewRequest',
   Template: 'Template'
@@ -97,6 +98,10 @@ export const UserScalarFieldEnum = {
   isAdmin: 'isAdmin',
   isSuspended: 'isSuspended',
   satisfactionThreshold: 'satisfactionThreshold',
+  defaultChannel: 'defaultChannel',
+  defaultDelay: 'defaultDelay',
+  senderName: 'senderName',
+  replyToEmail: 'replyToEmail',
   trialEndsAt: 'trialEndsAt',
   cancelRequestedAt: 'cancelRequestedAt',
   cancelEffectiveAt: 'cancelEffectiveAt',
@@ -171,6 +176,17 @@ export const PasswordResetTokenScalarFieldEnum = {
 } as const
 
 export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
+export const EmailVerificationTokenScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  token: 'token',
+  expires: 'expires',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailVerificationTokenScalarFieldEnum = (typeof EmailVerificationTokenScalarFieldEnum)[keyof typeof EmailVerificationTokenScalarFieldEnum]
 
 
 export const ClientScalarFieldEnum = {
