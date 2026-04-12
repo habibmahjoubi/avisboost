@@ -4,115 +4,115 @@
 
 1. [Premiers pas](#1-premiers-pas)
 2. [Tableau de bord](#2-tableau-de-bord)
-3. [Etablissements et equipe](#3-etablissements-et-equipe)
+3. [Établissements et équipe](#3-établissements-et-équipe)
 4. [Gestion des clients](#4-gestion-des-clients)
 5. [Envoyer une demande d'avis](#5-envoyer-une-demande-davis)
 6. [Suivi des campagnes](#6-suivi-des-campagnes)
-7. [Parametres](#7-parametres)
-8. [Templates personnalises](#8-templates-personnalises)
+7. [Paramètres](#7-paramètres)
+8. [Templates personnalisés](#8-templates-personnalisés)
 9. [Abonnement et facturation](#9-abonnement-et-facturation)
-10. [Comment ca marche cote client](#10-comment-ca-marche-cote-client)
+10. [Comment ça marche côté client](#10-comment-ça-marche-côté-client)
 11. [FAQ](#11-faq)
 
 ---
 
 ## 1. Premiers pas
 
-### Creer un compte
+### Créer un compte
 
 1. Rendez-vous sur la page d'inscription
-2. Selectionnez votre metier (dentiste, osteopathe, garage ou autre)
+2. Sélectionnez votre métier (dentiste, ostéopathe, garage ou autre)
 3. Renseignez votre email professionnel et un mot de passe
-   - Minimum 8 caracteres, 1 majuscule, 1 chiffre
+   - Minimum 8 caractères, 1 majuscule, 1 chiffre
 4. Choisissez votre plan (Gratuit, Pro ou Business)
-5. Un email de verification vous est envoye — cliquez sur le lien pour activer votre compte
+5. Un email de vérification vous est envoyé — cliquez sur le lien pour activer votre compte
 
 ### Onboarding
 
-A la premiere connexion, un assistant vous guide :
+À la première connexion, un assistant vous guide :
 
-1. **Nom de l'etablissement** — le nom affiche dans les messages envoyes a vos clients
-2. **Metier** — permet d'adapter le vocabulaire et les delais d'envoi
+1. **Nom de l'établissement** — le nom affiché dans les messages envoyés à vos clients
+2. **Métier** — permet d'adapter le vocabulaire et les délais d'envoi
 3. **Lien Google Maps** — collez l'URL de votre fiche Google pour que les clients satisfaits y laissent leur avis
-4. **Telephone** — utilise si vous activez les SMS (plan Pro+)
+4. **Téléphone** — utilisé si vous activez les SMS (plan Pro+)
 
-> **Astuce** : Vous pouvez modifier toutes ces informations plus tard dans les parametres.
+> **Astuce** : Vous pouvez modifier toutes ces informations plus tard dans les paramètres.
 
 ---
 
 ## 2. Tableau de bord
 
-Le tableau de bord affiche un resume de l'activite de l'etablissement selectionne :
+Le tableau de bord affiche un résumé de l'activité de l'établissement sélectionné :
 
-- **Nom de l'etablissement** et metier en en-tete
-- **Quota utilise** : nombre d'envois ce mois / quota total (herite du proprietaire)
-- **Statut des demandes** : en attente, envoyees, cliquees, avis obtenus
-- **Statistiques detaillees** (Pro) : envois email/SMS, taux de conversion
-- **Graphique d'evolution** (Business) : courbe sur 7/30/90 jours
-- Acces rapide aux clients et aux parametres
+- **Nom de l'établissement** et métier en en-tête
+- **Quota utilisé** : nombre d'envois ce mois / quota total (hérité du propriétaire)
+- **Statut des demandes** : en attente, envoyées, cliquées, avis obtenus
+- **Statistiques détaillées** (Pro) : envois email/SMS, taux de conversion
+- **Graphique d'évolution** (Business) : courbe sur 7/30/90 jours
+- Accès rapide aux clients et aux paramètres
 
-> Les donnees affichees correspondent a l'etablissement actif. Changez d'etablissement via le selecteur dans la barre laterale.
+> Les données affichées correspondent à l'établissement actif. Changez d'établissement via le sélecteur dans la barre latérale.
 
 ---
 
-## 3. Etablissements et equipe
+## 3. Établissements et équipe
 
 ### Concept
 
-Un etablissement represente un lieu physique (cabinet, garage, salon...). Chaque etablissement a ses propres clients, campagnes, templates et parametres.
+Un établissement représente un lieu physique (cabinet, garage, salon...). Chaque établissement a ses propres clients, campagnes, templates et paramètres.
 
 ### Limites par plan
 
-| Plan | Etablissements | Membres par etablissement |
+| Plan | Établissements | Membres par établissement |
 |------|---------------|--------------------------|
 | Gratuit | 1 | 1 (solo) |
 | Pro | 5 | 3 |
-| Business | 50 | Illimite |
+| Business | 50 | Illimité |
 
-### Gerer vos etablissements
+### Gérer vos établissements
 
-Depuis **Etablissements** dans le menu :
+Depuis **Établissements** dans le menu :
 
-1. **Ajouter** un etablissement (nom, metier, URL Google, telephone)
-2. **Selectionner** l'etablissement actif (toutes les pages s'adaptent)
-3. **Supprimer** un etablissement (sauf le dernier)
+1. **Ajouter** un établissement (nom, métier, URL Google, téléphone)
+2. **Sélectionner** l'établissement actif (toutes les pages s'adaptent)
+3. **Supprimer** un établissement (sauf le dernier)
 
-### Roles et permissions
+### Rôles et permissions
 
-Chaque membre d'un etablissement a un role :
+Chaque membre d'un établissement a un rôle :
 
-| Action | Proprietaire | Admin | Membre |
+| Action | Propriétaire | Admin | Membre |
 |--------|-------------|-------|--------|
 | Voir le tableau de bord et les stats | Oui | Oui | Oui |
 | Voir et ajouter des clients | Oui | Oui | Oui |
 | Envoyer des demandes d'avis | Oui | Oui | Oui |
 | Modifier/supprimer des clients | Oui | Oui | Non |
 | Import CSV | Oui | Oui | Non |
-| Parametres de l'etablissement | Oui | Oui | Non |
-| Gerer les templates | Oui | Oui | Non |
-| Inviter des membres | Oui | Oui (role Membre uniquement) | Non |
-| Changer le role d'un membre | Oui | Non | Non |
-| Supprimer un etablissement | Oui | Non | Non |
+| Paramètres de l'établissement | Oui | Oui | Non |
+| Gérer les templates | Oui | Oui | Non |
+| Inviter des membres | Oui | Oui (rôle Membre uniquement) | Non |
+| Changer le rôle d'un membre | Oui | Non | Non |
+| Supprimer un établissement | Oui | Non | Non |
 | Abonnement et facturation | Oui | Non | Non |
 
 ### Inviter un membre
 
-1. Allez sur **Etablissements**
-2. Cliquez sur le compteur de membres d'un etablissement
+1. Allez sur **Établissements**
+2. Cliquez sur le compteur de membres d'un établissement
 3. Cliquez **Inviter un membre**
-4. Saisissez l'email et choisissez le role
+4. Saisissez l'email et choisissez le rôle
 
-**Si la personne n'a pas de compte** : elle recoit un email avec un lien pour creer son compte. Son email est pre-rempli, elle n'a qu'a choisir un nom et un mot de passe. Son compte est automatiquement active et rattache a l'etablissement.
+**Si la personne n'a pas de compte** : elle reçoit un email avec un lien pour créer son compte. Son email est prérempli, elle n'a qu'à choisir un nom et un mot de passe. Son compte est automatiquement activé et rattaché à l'établissement.
 
-**Si la personne a deja un compte** : elle est ajoutee directement et recoit une notification par email.
+**Si la personne a déjà un compte** : elle est ajoutée directement et reçoit une notification par email.
 
-### Heritage du plan
+### Héritage du plan
 
-Les membres invites heritent automatiquement du plan du proprietaire. Un membre avec un compte gratuit aura acces aux fonctionnalites Pro ou Business de l'etablissement s'il appartient a un proprietaire qui a ce plan.
+Les membres invités héritent automatiquement du plan du propriétaire. Un membre avec un compte gratuit aura accès aux fonctionnalités Pro ou Business de l'établissement s'il appartient à un propriétaire qui a ce plan.
 
-### Changer d'etablissement
+### Changer d'établissement
 
-Utilisez le selecteur en haut de la barre laterale pour basculer entre vos etablissements. Toutes les pages (clients, campagnes, stats, parametres) s'adaptent automatiquement.
+Utilisez le sélecteur en haut de la barre latérale pour basculer entre vos établissements. Toutes les pages (clients, campagnes, stats, paramètres) s'adaptent automatiquement.
 
 ---
 
@@ -123,18 +123,18 @@ Utilisez le selecteur en haut de la barre laterale pour basculer entre vos etabl
 Depuis la page **Clients**, cliquez sur le formulaire d'ajout et renseignez :
 
 - **Nom** (obligatoire)
-- **Email** — necessaire pour l'envoi par email
-- **Telephone** — necessaire pour l'envoi par SMS
+- **Email** — nécessaire pour l'envoi par email
+- **Téléphone** — nécessaire pour l'envoi par SMS
 - **Notes** (optionnel) — pour vous, non visible par le client
 
 ### Importer des clients en masse (CSV)
 
-> Disponible a partir du plan **Pro**.
+> Disponible à partir du plan **Pro**.
 
 1. Cliquez sur **Importer**
-2. Glissez-deposez un fichier CSV ou Excel (.xlsx)
-3. Les colonnes sont detectees automatiquement : nom, email, telephone, notes
-4. Verifiez l'apercu et corrigez les eventuelles erreurs
+2. Glissez-déposez un fichier CSV ou Excel (.xlsx)
+3. Les colonnes sont détectées automatiquement : nom, email, téléphone, notes
+4. Vérifiez l'aperçu et corrigez les éventuelles erreurs
 5. Confirmez l'import
 
 **Limites d'import** :
@@ -145,7 +145,7 @@ Depuis la page **Clients**, cliquez sur le formulaire d'ajout et renseignez :
 
 ### Modifier ou supprimer un client
 
-Depuis la liste des clients, utilisez les boutons d'action a droite de chaque ligne pour modifier les informations ou supprimer un client.
+Depuis la liste des clients, utilisez les boutons d'action à droite de chaque ligne pour modifier les informations ou supprimer un client.
 
 ---
 
@@ -153,27 +153,27 @@ Depuis la liste des clients, utilisez les boutons d'action a droite de chaque li
 
 ### Envoi individuel
 
-1. Depuis la page **Clients**, repérez le client souhaite
+1. Depuis la page **Clients**, repérez le client souhaité
 2. Cliquez sur **Email** ou **SMS** (si disponible dans votre plan)
-3. La demande est envoyee avec le delai configure dans vos parametres
+3. La demande est envoyée avec le délai configuré dans vos paramètres
 
-### Delai d'envoi
+### Délai d'envoi
 
-Le delai represente le temps entre le moment ou vous cliquez et l'envoi effectif du message. Par defaut, il est adapte a votre metier :
+Le délai représente le temps entre le moment où vous cliquez et l'envoi effectif du message. Par défaut, il est adapté à votre métier :
 
-| Metier | Delai recommande |
+| Métier | Délai recommandé |
 |--------|-----------------|
 | Dentiste | 2 heures |
-| Osteopathe | 3 heures |
+| Ostéopathe | 3 heures |
 | Garage | 24 heures |
 | Autre | 4 heures |
 
-Vous pouvez le personnaliser dans **Parametres > Preferences d'envoi** (0 a 720 heures).
+Vous pouvez le personnaliser dans **Paramètres > Préférences d'envoi** (0 à 720 heures).
 
 ### Protections anti-spam
 
-- Un meme client ne peut pas recevoir plus d'une demande sur une periode de 7 jours
-- Votre quota mensuel est verifie avant chaque envoi
+- Un même client ne peut pas recevoir plus d'une demande sur une période de 7 jours
+- Votre quota mensuel est vérifié avant chaque envoi
 
 ---
 
@@ -185,62 +185,62 @@ La page **Campagnes** vous permet de suivre toutes vos demandes d'avis :
 
 | Statut | Signification |
 |--------|--------------|
-| En attente | Programmee, pas encore envoyee |
-| Envoyee | Le message a ete envoye |
-| Cliquee | Le client a ouvert le lien |
-| Avis obtenu | Le client a note >= seuil et a ete redirige vers Google |
-| Feedback | Le client a note < seuil et a laisse un retour prive |
-| Echouee | L'envoi a echoue (email invalide, etc.) |
+| En attente | Programmée, pas encore envoyée |
+| Envoyée | Le message a été envoyé |
+| Cliquée | Le client a ouvert le lien |
+| Avis obtenu | Le client a noté >= seuil et a été redirigé vers Google |
+| Feedback | Le client a noté < seuil et a laissé un retour privé |
+| Échouée | L'envoi a échoué (email invalide, etc.) |
 
 ### Filtres disponibles
 
 - **Canal** : Email ou SMS
 - **Statut** : tous les statuts ci-dessus
-- **Periode** : 7, 30 ou 90 derniers jours
+- **Période** : 7, 30 ou 90 derniers jours
 
 ---
 
-## 7. Parametres
+## 7. Paramètres
 
-### Etablissement
+### Établissement
 
-- Nom de l'etablissement
-- Metier (adapte les templates et le vocabulaire)
+- Nom de l'établissement
+- Métier (adapte les templates et le vocabulaire)
 - URL Google Maps (lien vers votre fiche d'avis)
-- Telephone
+- Téléphone
 
-### Preferences d'envoi
+### Préférences d'envoi
 
 **Mode Email** :
-- Nom de l'expediteur — affiche dans la boite de reception du client
-- Adresse de reponse — si le client repond a l'email
+- Nom de l'expéditeur — affiché dans la boîte de réception du client
+- Adresse de réponse — si le client répond à l'email
 
 **Mode SMS** :
-- Numero de telephone de l'etablissement
+- Numéro de téléphone de l'établissement
 
 **Commun** :
-- Delai avant envoi (en heures)
+- Délai avant envoi (en heures)
 
 ### Seuil de satisfaction
 
-Le seuil determine a partir de quelle note un client est redirige vers Google :
+Le seuil détermine à partir de quelle note un client est redirigé vers Google :
 
-- **4 etoiles** (par defaut) : seuls les 4 et 5 etoiles vont sur Google
-- **3 etoiles** : les 3, 4 et 5 etoiles vont sur Google
-- Les notes en dessous du seuil affichent un formulaire de feedback prive
+- **4 étoiles** (par défaut) : seuls les 4 et 5 étoiles vont sur Google
+- **3 étoiles** : les 3, 4 et 5 étoiles vont sur Google
+- Les notes en dessous du seuil affichent un formulaire de feedback privé
 
 ---
 
-## 8. Templates personnalises
+## 8. Templates personnalisés
 
-> Disponible a partir du plan **Pro**.
+> Disponible à partir du plan **Pro**.
 
 ### Variables disponibles
 
-| Variable | Remplacee par |
+| Variable | Remplacée par |
 |----------|--------------|
-| `{{clientName}}` | Le prenom/nom du client |
-| `{{businessName}}` | Le nom de votre etablissement |
+| `{{clientName}}` | Le prénom/nom du client |
+| `{{businessName}}` | Le nom de votre établissement |
 | `{{link}}` | Le lien de notation unique |
 
 ### Templates email
@@ -251,14 +251,14 @@ Le seuil determine a partir de quelle note un client est redirige vers Google :
 
 ### Templates SMS
 
-- **Corps** : texte brut (160 caracteres recommandes)
-- Indicateur de longueur en temps reel
+- **Corps** : texte brut (160 caractères recommandés)
+- Indicateur de longueur en temps réel
 - Presets disponibles : Formel, Amical, Relance
 
 ### Gestion
 
-- Creez plusieurs templates par canal
-- Definissez un template par defaut (utilise pour les envois automatiques)
+- Créez plusieurs templates par canal
+- Définissez un template par défaut (utilisé pour les envois automatiques)
 - Testez vos templates en vous envoyant un message de test
 
 ---
@@ -270,70 +270,70 @@ Le seuil determine a partir de quelle note un client est redirige vers Google :
 | | Gratuit | Pro | Business |
 |--|---------|-----|----------|
 | Envois/mois | 50 | 200 | 500 |
-| Etablissements | 1 | 5 | 50 |
-| Membres/etablissement | 1 | 3 | Illimite |
+| Établissements | 1 | 5 | 50 |
+| Membres/établissement | 1 | 3 | Illimité |
 | Email | Oui | Oui | Oui |
 | SMS | Non | Oui | Oui |
-| Templates personnalises | Non | Oui | Oui |
+| Templates personnalisés | Non | Oui | Oui |
 | Import CSV | Non | 100 lignes | 5 000 lignes |
-| Statistiques detaillees | Non | Oui | Oui |
-| Statistiques avancees | Non | Non | Oui |
+| Statistiques détaillées | Non | Oui | Oui |
+| Statistiques avancées | Non | Non | Oui |
 | Support prioritaire | Non | Non | Oui |
 
 ### Essai gratuit
 
-Les plans payants proposent un essai gratuit (duree variable selon le plan). Aucune carte bancaire n'est requise pour demarrer.
+Les plans payants proposent un essai gratuit (durée variable selon le plan). Aucune carte bancaire n'est requise pour démarrer.
 
 ### Annulation
 
-Vous pouvez annuler votre abonnement a tout moment depuis **Facturation > Annuler**. L'annulation prend effet a la fin de la periode en cours.
+Vous pouvez annuler votre abonnement à tout moment depuis **Facturation > Annuler**. L'annulation prend effet à la fin de la période en cours.
 
 ### Factures
 
-Vos 10 dernieres factures sont disponibles en telechargement PDF depuis la page **Facturation**.
+Vos 10 dernières factures sont disponibles en téléchargement PDF depuis la page **Facturation**.
 
 ---
 
-## 10. Comment ca marche cote client
+## 10. Comment ça marche côté client
 
-Voici ce que vit votre client apres l'envoi d'une demande :
+Voici ce que vit votre client après l'envoi d'une demande :
 
-1. **Il recoit un email ou SMS** avec un message personnalise et un lien
+1. **Il reçoit un email ou SMS** avec un message personnalisé et un lien
 2. **Il clique sur le lien** et arrive sur une page de notation simple
-3. **Il note son experience** de 1 a 5 etoiles
-4. **Si la note est >= votre seuil** (ex: 4 ou 5 etoiles) :
-   - Il est redirige vers votre fiche Google Maps pour publier son avis
-5. **Si la note est < votre seuil** (ex: 1, 2 ou 3 etoiles) :
+3. **Il note son expérience** de 1 à 5 étoiles
+4. **Si la note est >= votre seuil** (ex: 4 ou 5 étoiles) :
+   - Il est redirigé vers votre fiche Google Maps pour publier son avis
+5. **Si la note est < votre seuil** (ex: 1, 2 ou 3 étoiles) :
    - Un formulaire de feedback s'affiche
-   - Son retour vous est envoye en prive
-   - Rien n'est publie sur Google
+   - Son retour vous est envoyé en privé
+   - Rien n'est publié sur Google
 
-> C'est le "filtre intelligent" de Valoravis : les avis positifs vont sur Google, les retours negatifs restent entre vous et votre client.
+> C'est le "filtre intelligent" de Valoravis : les avis positifs vont sur Google, les retours négatifs restent entre vous et votre client.
 
 ---
 
 ## 11. FAQ
 
-### Est-ce conforme aux regles Google ?
+### Est-ce conforme aux règles Google ?
 Oui. Valoravis envoie un lien vers la page Google standard. Le client choisit librement de laisser un avis ou non.
 
 ### Mes clients recevront-ils du spam ?
-Non. Un meme client ne peut recevoir qu'une seule demande tous les 7 jours. De plus, votre quota mensuel limite le nombre total d'envois.
+Non. Un même client ne peut recevoir qu'une seule demande tous les 7 jours. De plus, votre quota mensuel limite le nombre total d'envois.
 
-### Puis-je utiliser Valoravis avec plusieurs etablissements ?
-Oui. Le plan Gratuit inclut 1 etablissement, le plan Pro jusqu'a 5, et le plan Business jusqu'a 50. Chaque etablissement a ses propres clients, campagnes et parametres. Vous pouvez basculer entre vos etablissements via le selecteur dans la barre laterale.
+### Puis-je utiliser Valoravis avec plusieurs établissements ?
+Oui. Le plan Gratuit inclut 1 établissement, le plan Pro jusqu'à 5, et le plan Business jusqu'à 50. Chaque établissement a ses propres clients, campagnes et paramètres. Vous pouvez basculer entre vos établissements via le sélecteur dans la barre latérale.
 
 ### Puis-je inviter des collaborateurs ?
-Oui. Depuis la page Etablissements, invitez des membres par email. Ils recevront un lien pour creer leur compte (ou sont ajoutes directement s'ils ont deja un compte). Vous choisissez leur role : Admin (gestion complete) ou Membre (consultation et envoi).
+Oui. Depuis la page Établissements, invitez des membres par email. Ils recevront un lien pour créer leur compte (ou sont ajoutés directement s'ils ont déjà un compte). Vous choisissez leur rôle : Admin (gestion complète) ou Membre (consultation et envoi).
 
-### Les membres invites doivent-ils payer ?
-Non. Les membres heritent du plan du proprietaire de l'etablissement. Ils n'ont pas besoin de leur propre abonnement.
+### Les membres invités doivent-ils payer ?
+Non. Les membres héritent du plan du propriétaire de l'établissement. Ils n'ont pas besoin de leur propre abonnement.
 
-### Que se passe-t-il si je depasse mon quota ?
-Les envois sont bloques jusqu'au renouvellement mensuel. Passez au plan superieur pour augmenter votre quota.
+### Que se passe-t-il si je dépasse mon quota ?
+Les envois sont bloqués jusqu'au renouvellement mensuel. Passez au plan supérieur pour augmenter votre quota.
 
-### Comment recuperer mon mot de passe ?
-Cliquez sur "Mot de passe oublie" sur la page de connexion. Un lien de reinitialisation vous sera envoye par email (valide 1 heure).
+### Comment récupérer mon mot de passe ?
+Cliquez sur "Mot de passe oublié" sur la page de connexion. Un lien de réinitialisation vous sera envoyé par email (valide 1 heure).
 
-### Mes donnees sont-elles securisees ?
-Oui. Les mots de passe sont chiffres (bcrypt), les connexions sont en HTTPS, et les donnees sont hebergees en Europe (Supabase, region EU).
+### Mes données sont-elles sécurisées ?
+Oui. Les mots de passe sont chiffrés (bcrypt), les connexions sont en HTTPS, et les données sont hébergées en Europe (Supabase, région EU).

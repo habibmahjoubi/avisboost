@@ -10,7 +10,7 @@ export default function SuspendedPage() {
         </div>
         <h1 className="text-xl font-bold mb-2">Compte suspendu</h1>
         <p className="text-muted-foreground text-sm mb-6">
-          Votre compte à ete suspendu. Si vous pensez qu'il s'agit d'une erreur,
+          Votre compte a été suspendu. Si vous pensez qu&apos;il s&apos;agit d&apos;une erreur,
           veuillez contacter le support.
         </p>
         <Link

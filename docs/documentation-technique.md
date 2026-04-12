@@ -6,17 +6,17 @@
 2. [Stack technique](#2-stack-technique)
 3. [Installation](#3-installation)
 4. [Variables d'environnement](#4-variables-denvironnement)
-5. [Base de donnees](#5-base-de-donnees)
+5. [Base de données](#5-base-de-données)
 6. [Authentification](#6-authentification)
-7. [Etablissements et roles](#7-etablissements-et-roles)
+7. [Établissements et rôles](#7-établissements-et-rôles)
 8. [Routes API](#8-routes-api)
 9. [Server Actions](#9-server-actions)
 10. [Services](#10-services)
-11. [Configuration metiers](#11-configuration-metiers)
+11. [Configuration métiers](#11-configuration-métiers)
 12. [Plans et features](#12-plans-et-features)
-13. [Securite](#13-securite)
+13. [Sécurité](#13-sécurité)
 14. [Tests](#14-tests)
-15. [Deploiement](#15-deploiement)
+15. [Déploiement](#15-déploiement)
 16. [Cron jobs](#16-cron-jobs)
 
 ---
@@ -45,7 +45,7 @@ src/
 │   └── ui/                 # Composants UI reutilisables
 ├── config/                 # Configuration (niches, plans, limites)
 ├── generated/prisma/       # Client Prisma genere
-├── lib/                    # Bibliotheques utilitaires
+├── lib/                    # Bibliothèques utilitaires
 │   ├── auth.ts             # Configuration NextAuth
 │   ├── establishment.ts    # Helpers etablissement (current, role, owner)
 │   ├── prisma.ts           # Client Prisma singleton
@@ -59,14 +59,14 @@ src/
 └── types/                  # Types TypeScript
 ```
 
-### Flux de donnees
+### Flux de données
 
 ```
 Client (navigateur)
   → Server Components (rendu serveur)
   → Server Actions (mutations)
   → Services (logique metier)
-  → Prisma (base de donnees)
+  → Prisma (base de données)
   → Services externes (Resend, Twilio, Stripe)
 ```
 
@@ -74,7 +74,7 @@ Client (navigateur)
 
 ## 2. Stack technique
 
-| Categorie | Technologie | Version |
+| Catégorie | Technologie | Version |
 |-----------|-------------|---------|
 | Framework | Next.js (Turbopack) | 16.2.2 |
 | Runtime | React | 19.2.4 |
@@ -93,7 +93,7 @@ Client (navigateur)
 
 ## 3. Installation
 
-### Prerequis
+### Prérequis
 
 - Node.js 20+
 - npm
@@ -113,10 +113,10 @@ npm install
 cp .env.example .env
 # Editer .env avec vos valeurs
 
-# Generer le client Prisma
+# Générer le client Prisma
 npx prisma generate
 
-# Synchroniser le schema avec la BDD
+# Synchroniser le schéma avec la BDD
 npx prisma db push
 
 # Lancer en dev
@@ -136,7 +136,7 @@ npm start
 
 ## 4. Variables d'environnement
 
-### Base de donnees
+### Base de données
 
 | Variable | Description | Exemple |
 |----------|-------------|---------|
@@ -175,9 +175,9 @@ npm start
 
 ---
 
-## 5. Base de donnees
+## 5. Base de données
 
-### Schema principal
+### Schéma principal
 
 #### User
 Compte utilisateur du SaaS.
@@ -323,7 +323,7 @@ sortOrder     Int     @default(0)
 
 ### Configuration NextAuth v5
 
-- **Strategie** : JWT (7 jours d'expiration)
+- **Stratégie** : JWT (7 jours d'expiration)
 - **Provider** : Credentials (email + mot de passe)
 - **Adaptateur** : PrismaAdapter
 
@@ -342,7 +342,7 @@ Les pages sous `(dashboard)/` verifient la session via `auth()` et redirigent ve
 
 ---
 
-## 7. Etablissements et roles
+## 7. Établissements et rôles
 
 ### Architecture
 
@@ -411,7 +411,7 @@ Cela affecte : les features disponibles (SMS, CSV, templates, stats), le quota a
 3. Si l'email n'a pas de compte : creation d'un `EstablishmentInvitation` (token 256 bits, expire 7j) + email avec lien `/invite/TOKEN`
 4. La page `/invite/TOKEN` affiche un formulaire simplifie (nom + mot de passe, email verrouille)
 5. L'action `acceptInvitation` cree le compte auto-verifie + rattache a l'etablissement
-6. Reponse identique dans les deux cas pour eviter l'enumeration d'emails
+6. Réponse identique dans les deux cas pour éviter l'énumération d'emails
 
 ### Limites par plan
 
@@ -431,17 +431,17 @@ La verification s'effectue au moment de la creation d'etablissement et de l'invi
 
 Traite les demandes d'avis en attente.
 
-- **Methodes** : GET (Vercel Cron) et POST (appels externes)
+- **Méthodes** : GET (Vercel Cron) et POST (appels externes)
 - **Auth** : Bearer token (`CRON_SECRET`), comparaison timing-safe
-- **Reponse** : `{ ok: boolean, sent: number, failed: number, timestamp: string }`
+- **Réponse** : `{ ok: boolean, sent: number, failed: number, timestamp: string }`
 - **Logique** : Trouve les `ReviewRequest` avec `status=PENDING` et `scheduledAt <= now`, envoie par lot de 50
 
 ### `POST /api/webhooks/stripe`
 
-Recoit les evenements Stripe.
+Reçoit les événements Stripe.
 
 - **Auth** : Signature webhook Stripe
-- **Evenements geres** :
+- **Événements gérés** :
   - `checkout.session.completed` — Active le plan et le quota
   - `invoice.paid` — Reinitialise le quota mensuel
   - `customer.subscription.deleted` — Retour au plan gratuit
@@ -451,7 +451,7 @@ Recoit les evenements Stripe.
 Demande d'annulation d'abonnement.
 
 - **Auth** : Session NextAuth
-- **Reponse** : `{ success: boolean }`
+- **Réponse** : `{ success: boolean }`
 - **Effet** : Enregistre `cancelRequestedAt`, notifie les admins par email
 
 ### `POST /api/auth/[...nextauth]`
@@ -538,7 +538,7 @@ Routes NextAuth standard (signin, signout, session, csrf, providers).
 
 ---
 
-## 11. Configuration metiers
+## 11. Configuration métiers
 
 Fichier : `src/config/niches.ts`
 
@@ -617,7 +617,7 @@ if (hasFeature(user.plan, "sms")) {
 
 ---
 
-## 13. Securite
+## 13. Sécurité
 
 ### Mots de passe
 
@@ -635,7 +635,7 @@ if (hasFeature(user.plan, "sms")) {
 - `Content-Security-Policy` restrictive avec `frame-src` Stripe
 - `Permissions-Policy: camera=(), microphone=(), geolocation=()`
 
-### Protection des donnees
+### Protection des données
 
 - Tokens de verification hashes (SHA-256) en BDD
 - Verification email obligatoire avant connexion
@@ -706,21 +706,21 @@ npm run test:watch # Watch mode
 
 ---
 
-## 15. Deploiement
+## 15. Déploiement
 
 ### Vercel (recommande)
 
 1. Connectez le repo GitHub a Vercel
 2. Configurez les variables d'environnement (voir section 4)
 3. Le build command par defaut fonctionne : `prisma generate && next build`
-4. Deploiement automatique a chaque push sur `main`
+4. Déploiement automatique à chaque push sur `main`
 
 ### Variables Vercel requises
 
 Toutes les variables de la section 4, plus :
 - `AUTH_TRUST_HOST=true` (obligatoire derriere le proxy Vercel)
 
-### Base de donnees
+### Base de données
 
 - Supabase (PostgreSQL) recommande
 - Utiliser le port 6543 (PgBouncer) pour `DATABASE_URL`

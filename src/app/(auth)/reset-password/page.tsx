@@ -23,7 +23,7 @@ function ResetForm() {
         </div>
         <h1 className="text-xl font-bold mb-2">Lien invalide</h1>
         <p className="text-muted-foreground text-sm mb-6">
-          Ce lien de réinitialisation est invalide ou à expire.
+          Ce lien de réinitialisation est invalide ou a expiré.
         </p>
         <Link
           href="/forgot-password"

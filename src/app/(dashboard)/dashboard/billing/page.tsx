@@ -104,7 +104,7 @@ export default async function BillingPage() {
               <Sparkles className="w-4 h-4" /> Essai gratuit en cours
             </p>
             <p className="text-xs text-primary/80 mt-1">
-              Votre essai se terminé le{" "}
+              Votre essai se termine le{" "}
               {new Intl.DateTimeFormat("fr-FR", {
                 day: "numeric",
                 month: "long",
