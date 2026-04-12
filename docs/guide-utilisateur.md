@@ -4,14 +4,15 @@
 
 1. [Premiers pas](#1-premiers-pas)
 2. [Tableau de bord](#2-tableau-de-bord)
-3. [Gestion des clients](#3-gestion-des-clients)
-4. [Envoyer une demande d'avis](#4-envoyer-une-demande-davis)
-5. [Suivi des campagnes](#5-suivi-des-campagnes)
-6. [Parametres](#6-parametres)
-7. [Templates personnalises](#7-templates-personnalises)
-8. [Abonnement et facturation](#8-abonnement-et-facturation)
-9. [Comment ca marche cote client](#9-comment-ca-marche-cote-client)
-10. [FAQ](#10-faq)
+3. [Etablissements et equipe](#3-etablissements-et-equipe)
+4. [Gestion des clients](#4-gestion-des-clients)
+5. [Envoyer une demande d'avis](#5-envoyer-une-demande-davis)
+6. [Suivi des campagnes](#6-suivi-des-campagnes)
+7. [Parametres](#7-parametres)
+8. [Templates personnalises](#8-templates-personnalises)
+9. [Abonnement et facturation](#9-abonnement-et-facturation)
+10. [Comment ca marche cote client](#10-comment-ca-marche-cote-client)
+11. [FAQ](#11-faq)
 
 ---
 
@@ -41,15 +42,81 @@ A la premiere connexion, un assistant vous guide :
 
 ## 2. Tableau de bord
 
-Le tableau de bord affiche un resume de votre activite :
+Le tableau de bord affiche un resume de l'activite de l'etablissement selectionne :
 
-- **Quota utilise** : nombre d'envois ce mois / quota total
+- **Nom de l'etablissement** et metier en en-tete
+- **Quota utilise** : nombre d'envois ce mois / quota total (herite du proprietaire)
 - **Statut des demandes** : en attente, envoyees, cliquees, avis obtenus
+- **Statistiques detaillees** (Pro) : envois email/SMS, taux de conversion
+- **Graphique d'evolution** (Business) : courbe sur 7/30/90 jours
 - Acces rapide aux clients et aux parametres
+
+> Les donnees affichees correspondent a l'etablissement actif. Changez d'etablissement via le selecteur dans la barre laterale.
 
 ---
 
-## 3. Gestion des clients
+## 3. Etablissements et equipe
+
+### Concept
+
+Un etablissement represente un lieu physique (cabinet, garage, salon...). Chaque etablissement a ses propres clients, campagnes, templates et parametres.
+
+### Limites par plan
+
+| Plan | Etablissements | Membres par etablissement |
+|------|---------------|--------------------------|
+| Gratuit | 1 | 1 (solo) |
+| Pro | 5 | 3 |
+| Business | 50 | Illimite |
+
+### Gerer vos etablissements
+
+Depuis **Etablissements** dans le menu :
+
+1. **Ajouter** un etablissement (nom, metier, URL Google, telephone)
+2. **Selectionner** l'etablissement actif (toutes les pages s'adaptent)
+3. **Supprimer** un etablissement (sauf le dernier)
+
+### Roles et permissions
+
+Chaque membre d'un etablissement a un role :
+
+| Action | Proprietaire | Admin | Membre |
+|--------|-------------|-------|--------|
+| Voir le tableau de bord et les stats | Oui | Oui | Oui |
+| Voir et ajouter des clients | Oui | Oui | Oui |
+| Envoyer des demandes d'avis | Oui | Oui | Oui |
+| Modifier/supprimer des clients | Oui | Oui | Non |
+| Import CSV | Oui | Oui | Non |
+| Parametres de l'etablissement | Oui | Oui | Non |
+| Gerer les templates | Oui | Oui | Non |
+| Inviter des membres | Oui | Oui (role Membre uniquement) | Non |
+| Changer le role d'un membre | Oui | Non | Non |
+| Supprimer un etablissement | Oui | Non | Non |
+| Abonnement et facturation | Oui | Non | Non |
+
+### Inviter un membre
+
+1. Allez sur **Etablissements**
+2. Cliquez sur le compteur de membres d'un etablissement
+3. Cliquez **Inviter un membre**
+4. Saisissez l'email et choisissez le role
+
+**Si la personne n'a pas de compte** : elle recoit un email avec un lien pour creer son compte. Son email est pre-rempli, elle n'a qu'a choisir un nom et un mot de passe. Son compte est automatiquement active et rattache a l'etablissement.
+
+**Si la personne a deja un compte** : elle est ajoutee directement et recoit une notification par email.
+
+### Heritage du plan
+
+Les membres invites heritent automatiquement du plan du proprietaire. Un membre avec un compte gratuit aura acces aux fonctionnalites Pro ou Business de l'etablissement s'il appartient a un proprietaire qui a ce plan.
+
+### Changer d'etablissement
+
+Utilisez le selecteur en haut de la barre laterale pour basculer entre vos etablissements. Toutes les pages (clients, campagnes, stats, parametres) s'adaptent automatiquement.
+
+---
+
+## 4. Gestion des clients
 
 ### Ajouter un client manuellement
 
@@ -82,7 +149,7 @@ Depuis la liste des clients, utilisez les boutons d'action a droite de chaque li
 
 ---
 
-## 4. Envoyer une demande d'avis
+## 5. Envoyer une demande d'avis
 
 ### Envoi individuel
 
@@ -110,7 +177,7 @@ Vous pouvez le personnaliser dans **Parametres > Preferences d'envoi** (0 a 720 
 
 ---
 
-## 5. Suivi des campagnes
+## 6. Suivi des campagnes
 
 La page **Campagnes** vous permet de suivre toutes vos demandes d'avis :
 
@@ -133,7 +200,7 @@ La page **Campagnes** vous permet de suivre toutes vos demandes d'avis :
 
 ---
 
-## 6. Parametres
+## 7. Parametres
 
 ### Etablissement
 
@@ -164,7 +231,7 @@ Le seuil determine a partir de quelle note un client est redirige vers Google :
 
 ---
 
-## 7. Templates personnalises
+## 8. Templates personnalises
 
 > Disponible a partir du plan **Pro**.
 
@@ -196,17 +263,21 @@ Le seuil determine a partir de quelle note un client est redirige vers Google :
 
 ---
 
-## 8. Abonnement et facturation
+## 9. Abonnement et facturation
 
 ### Plans disponibles
 
 | | Gratuit | Pro | Business |
 |--|---------|-----|----------|
 | Envois/mois | 50 | 200 | 500 |
+| Etablissements | 1 | 5 | 50 |
+| Membres/etablissement | 1 | 3 | Illimite |
 | Email | Oui | Oui | Oui |
 | SMS | Non | Oui | Oui |
 | Templates personnalises | Non | Oui | Oui |
 | Import CSV | Non | 100 lignes | 5 000 lignes |
+| Statistiques detaillees | Non | Oui | Oui |
+| Statistiques avancees | Non | Non | Oui |
 | Support prioritaire | Non | Non | Oui |
 
 ### Essai gratuit
@@ -223,7 +294,7 @@ Vos 10 dernieres factures sont disponibles en telechargement PDF depuis la page 
 
 ---
 
-## 9. Comment ca marche cote client
+## 10. Comment ca marche cote client
 
 Voici ce que vit votre client apres l'envoi d'une demande :
 
@@ -241,7 +312,7 @@ Voici ce que vit votre client apres l'envoi d'une demande :
 
 ---
 
-## 10. FAQ
+## 11. FAQ
 
 ### Est-ce conforme aux regles Google ?
 Oui. Valoravis envoie un lien vers la page Google standard. Le client choisit librement de laisser un avis ou non.
@@ -250,7 +321,13 @@ Oui. Valoravis envoie un lien vers la page Google standard. Le client choisit li
 Non. Un meme client ne peut recevoir qu'une seule demande tous les 7 jours. De plus, votre quota mensuel limite le nombre total d'envois.
 
 ### Puis-je utiliser Valoravis avec plusieurs etablissements ?
-Selon votre plan, vous pouvez gerer un ou plusieurs etablissements depuis le meme compte.
+Oui. Le plan Gratuit inclut 1 etablissement, le plan Pro jusqu'a 5, et le plan Business jusqu'a 50. Chaque etablissement a ses propres clients, campagnes et parametres. Vous pouvez basculer entre vos etablissements via le selecteur dans la barre laterale.
+
+### Puis-je inviter des collaborateurs ?
+Oui. Depuis la page Etablissements, invitez des membres par email. Ils recevront un lien pour creer leur compte (ou sont ajoutes directement s'ils ont deja un compte). Vous choisissez leur role : Admin (gestion complete) ou Membre (consultation et envoi).
+
+### Les membres invites doivent-ils payer ?
+Non. Les membres heritent du plan du proprietaire de l'etablissement. Ils n'ont pas besoin de leur propre abonnement.
 
 ### Que se passe-t-il si je depasse mon quota ?
 Les envois sont bloques jusqu'au renouvellement mensuel. Passez au plan superieur pour augmenter votre quota.

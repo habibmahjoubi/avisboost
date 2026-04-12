@@ -8,14 +8,16 @@
 4. [Variables d'environnement](#4-variables-denvironnement)
 5. [Base de donnees](#5-base-de-donnees)
 6. [Authentification](#6-authentification)
-7. [Routes API](#7-routes-api)
-8. [Server Actions](#8-server-actions)
-9. [Services](#9-services)
-10. [Configuration metiers](#10-configuration-metiers)
-11. [Plans et features](#11-plans-et-features)
-12. [Securite](#12-securite)
-13. [Deploiement](#13-deploiement)
-14. [Cron jobs](#14-cron-jobs)
+7. [Etablissements et roles](#7-etablissements-et-roles)
+8. [Routes API](#8-routes-api)
+9. [Server Actions](#9-server-actions)
+10. [Services](#10-services)
+11. [Configuration metiers](#11-configuration-metiers)
+12. [Plans et features](#12-plans-et-features)
+13. [Securite](#13-securite)
+14. [Tests](#14-tests)
+15. [Deploiement](#15-deploiement)
+16. [Cron jobs](#16-cron-jobs)
 
 ---
 
@@ -24,21 +26,28 @@
 ```
 src/
 ├── app/                    # Next.js App Router
-│   ├── (auth)/             # Pages authentification (login, register, verify-email...)
-│   ├── (dashboard)/        # Pages protegees (dashboard, clients, settings, billing)
+│   ├── (auth)/             # Pages authentification (login, register, invite/[token])
+│   ├── (admin)/            # Pages admin (dashboard, users/etablissements, plans)
+│   ├── (dashboard)/        # Pages protegees (dashboard, clients, establishments, settings, billing)
 │   ├── (public)/           # Pages publiques (review/[token])
 │   ├── api/                # Routes API (auth, cron, webhooks)
 │   └── page.tsx            # Landing page
-├── actions/                # Server Actions (auth.ts, dashboard.ts, review.ts)
+├── actions/                # Server Actions
+│   ├── auth.ts             # Inscription, login, verification, invitation
+│   ├── dashboard.ts        # Clients, campagnes, templates, parametres
+│   ├── establishments.ts   # CRUD etablissements, membres, invitations
+│   ├── admin.ts            # Actions admin
+│   └── review.ts           # Soumission avis client
 ├── components/             # Composants React
-│   ├── dashboard/          # Composants du dashboard
+│   ├── dashboard/          # Composants du dashboard + etablissements
 │   ├── landing/            # Composants de la page vitrine
 │   ├── review/             # Composants du parcours client (notation)
 │   └── ui/                 # Composants UI reutilisables
-├── config/                 # Configuration (niches, plans)
+├── config/                 # Configuration (niches, plans, limites)
 ├── generated/prisma/       # Client Prisma genere
 ├── lib/                    # Bibliotheques utilitaires
 │   ├── auth.ts             # Configuration NextAuth
+│   ├── establishment.ts    # Helpers etablissement (current, role, owner)
 │   ├── prisma.ts           # Client Prisma singleton
 │   ├── resend.ts           # Service email (Resend)
 │   ├── sms.ts              # Service SMS (Twilio)
@@ -199,47 +208,97 @@ cancelRequestedAt DateTime?
 cancelEffectiveAt DateTime?
 ```
 
-#### Client
-Contact/client d'un utilisateur.
+#### Establishment
+Etablissement (cabinet, garage, salon...).
 
 ```
-id        String   @id @default(cuid())
-userId    String   # FK → User
-name      String
-email     String?
-phone     String?
-notes     String?
+id                    String   @id @default(cuid())
+name                  String
+niche                 Niche    @default(DENTIST)
+customNiche           String?
+googlePlaceUrl        String?
+phone                 String?
+satisfactionThreshold Int      @default(4)
+defaultChannel        Channel  @default(EMAIL)
+defaultDelay          Int?
+senderName            String?
+replyToEmail          String?
+isActive              Boolean  @default(true)
+```
+
+Relations : `members[]`, `clients[]`, `reviewRequests[]`, `templates[]`, `invitations[]`
+
+#### EstablishmentMember
+Liaison User ↔ Establishment avec role.
+
+```
+id              String     @id @default(cuid())
+userId          String     # FK → User
+establishmentId String     # FK → Establishment
+role            MemberRole # OWNER | ADMIN | MEMBER
+```
+
+Contrainte unique : `@@unique([userId, establishmentId])`
+
+#### EstablishmentInvitation
+Invitation en attente (utilisateur sans compte).
+
+```
+id              String     @id @default(cuid())
+establishmentId String     # FK → Establishment
+email           String
+role            MemberRole
+token           String     @unique  # 256 bits hex
+invitedBy       String     # FK → User
+expires         DateTime   # 7 jours
+```
+
+Contrainte unique : `@@unique([establishmentId, email])`
+
+#### Client
+Contact/client d'un etablissement.
+
+```
+id              String   @id @default(cuid())
+userId          String   # FK → User
+establishmentId String?  # FK → Establishment
+name            String
+email           String?
+phone           String?
+notes           String?
 ```
 
 #### ReviewRequest
 Demande d'avis individuelle.
 
 ```
-id          String   @id @default(cuid())
-userId      String   # FK → User
-clientId    String   # FK → Client
-channel     Channel  # EMAIL | SMS
-status      Status   # PENDING | SENT | CLICKED | REVIEWED | FEEDBACK | FAILED
-token       String   @unique  # Identifiant unique dans le lien
-scheduledAt DateTime?
-sentAt      DateTime?
-clickedAt   DateTime?
-rating      Int?     # 1-5
-feedback    String?
+id              String   @id @default(cuid())
+userId          String   # FK → User
+clientId        String   # FK → Client
+establishmentId String?  # FK → Establishment
+channel         Channel  # EMAIL | SMS
+status          Status   # PENDING | SENT | CLICKED | REVIEWED | FEEDBACK | FAILED
+token           String   @unique  # Identifiant unique dans le lien
+scheduledAt     DateTime?
+sentAt          DateTime?
+clickedAt       DateTime?
+rating          Int?     # 1-5
+feedback        String?
 ```
 
 #### Template
 Templates de messages personnalises.
 
 ```
-id        String  @id @default(cuid())
-userId    String  # FK → User
-name      String
-niche     Niche
-channel   Channel
-subject   String? # Email uniquement
-body      String
-isDefault Boolean @default(false)
+id              String  @id @default(cuid())
+userId          String  # FK → User
+establishmentId String? # FK → Establishment
+name            String
+niche           Niche
+channel         Channel
+subject         String? # Email uniquement
+body            String
+isDefault       Boolean @default(false)
 ```
 
 #### Plan
@@ -283,7 +342,90 @@ Les pages sous `(dashboard)/` verifient la session via `auth()` et redirigent ve
 
 ---
 
-## 7. Routes API
+## 7. Etablissements et roles
+
+### Architecture
+
+```
+User (compte/login)
+  └── EstablishmentMember (role: OWNER | ADMIN | MEMBER)
+        └── Establishment (cabinet, garage...)
+              ├── Clients
+              ├── ReviewRequests
+              └── Templates
+```
+
+Un User peut etre membre de plusieurs etablissements avec des roles differents. Un Establishment peut avoir plusieurs membres.
+
+### Hierarchie des roles
+
+```typescript
+const ROLE_LEVEL = { OWNER: 3, ADMIN: 2, MEMBER: 1 };
+```
+
+| Role | Niveau | Description |
+|------|--------|-------------|
+| OWNER | 3 | Proprietaire — tout acces, facturation, suppression |
+| ADMIN | 2 | Administrateur — parametres, clients, templates, invitations |
+| MEMBER | 1 | Membre — consultation, ajout clients, envoi demandes |
+
+### Verification des roles
+
+```typescript
+import { requireRole } from "@/lib/establishment";
+
+// Verifie que l'utilisateur a au moins le role ADMIN sur l'etablissement
+await requireRole(userId, establishmentId, "ADMIN");
+```
+
+### Etablissement courant
+
+L'etablissement actif est stocke dans un cookie `current-establishment-id` (httpOnly, secure en prod, sameSite=lax, 1 an). Il est verifie en BDD a chaque requete via `getCurrentEstablishment()`.
+
+```typescript
+import { getCurrentEstablishment } from "@/lib/establishment";
+
+const establishment = await getCurrentEstablishment();
+// Returns { ...establishment, role: "OWNER" | "ADMIN" | "MEMBER" } or null
+```
+
+Si aucun cookie n'est defini, le fallback selectionne le premier etablissement du user et pose le cookie automatiquement.
+
+### Heritage du plan
+
+Les membres (ADMIN, MEMBER) heritent du plan du proprietaire (OWNER) de l'etablissement :
+
+```typescript
+import { getEstablishmentOwner } from "@/lib/establishment";
+
+const owner = await getEstablishmentOwner(establishmentId);
+const effectivePlan = owner?.plan ?? user.plan;
+```
+
+Cela affecte : les features disponibles (SMS, CSV, templates, stats), le quota affiche, et les verifications dans toutes les actions.
+
+### Flux d'invitation
+
+1. OWNER/ADMIN appelle `inviteMember(email, role)` depuis `/dashboard/establishments`
+2. Si l'email a un compte : ajout direct + email de notification
+3. Si l'email n'a pas de compte : creation d'un `EstablishmentInvitation` (token 256 bits, expire 7j) + email avec lien `/invite/TOKEN`
+4. La page `/invite/TOKEN` affiche un formulaire simplifie (nom + mot de passe, email verrouille)
+5. L'action `acceptInvitation` cree le compte auto-verifie + rattache a l'etablissement
+6. Reponse identique dans les deux cas pour eviter l'enumeration d'emails
+
+### Limites par plan
+
+```typescript
+// src/config/plan-features.ts
+ESTABLISHMENT_LIMIT = { free: 1, pro: 5, business: 50 };
+MEMBERS_PER_ESTABLISHMENT = { free: 1, pro: 3, business: 999 };
+```
+
+La verification s'effectue au moment de la creation d'etablissement et de l'invitation de membres.
+
+---
+
+## 8. Routes API
 
 ### `GET|POST /api/cron/send-reviews`
 
@@ -318,7 +460,7 @@ Routes NextAuth standard (signin, signout, session, csrf, providers).
 
 ---
 
-## 8. Server Actions
+## 9. Server Actions
 
 ### `src/actions/dashboard.ts`
 
@@ -337,6 +479,20 @@ Routes NextAuth standard (signin, signout, session, csrf, providers).
 | `deleteTemplate(formData)` | Supprime un template | verification proprietaire |
 | `startTrial(formData)` | Demarre un essai gratuit | pas de trial actif |
 
+### `src/actions/establishments.ts`
+
+| Action | Role min | Description |
+|--------|----------|-------------|
+| `createEstablishment(formData)` | OWNER | Cree un etablissement + membership OWNER |
+| `updateEstablishment(formData)` | ADMIN | Modifie nom, niche, URL, telephone |
+| `deleteEstablishment(id)` | OWNER | Supprime (sauf le dernier) |
+| `switchEstablishment(id)` | MEMBER | Change l'etablissement actif (cookie) |
+| `inviteMember(formData)` | ADMIN | Invite par email (existant ou nouveau) |
+| `removeMember(formData)` | ADMIN | Retire un membre (sauf OWNER) |
+| `updateMemberRole(formData)` | OWNER | Change le role ADMIN ↔ MEMBER |
+| `updateEstablishmentSendingSettings(formData)` | ADMIN | Preferences envoi de l'etablissement |
+| `updateEstablishmentThreshold(formData)` | ADMIN | Seuil de satisfaction |
+
 ### `src/actions/auth.ts`
 
 | Action | Description | Rate limit |
@@ -346,6 +502,7 @@ Routes NextAuth standard (signin, signout, session, csrf, providers).
 | `resendVerificationEmail(email)` | Renvoyer verification | 3/15min |
 | `requestPasswordReset(formData)` | Mot de passe oublie | 3/h |
 | `resetPassword(formData)` | Nouveau mot de passe | Token 1h |
+| `acceptInvitation(formData)` | Cree un compte via invitation | 5/15min IP |
 
 ### `src/actions/review.ts`
 
@@ -355,7 +512,7 @@ Routes NextAuth standard (signin, signout, session, csrf, providers).
 
 ---
 
-## 9. Services
+## 10. Services
 
 ### `review-request.service.ts`
 
@@ -381,7 +538,7 @@ Routes NextAuth standard (signin, signout, session, csrf, providers).
 
 ---
 
-## 10. Configuration metiers
+## 11. Configuration metiers
 
 Fichier : `src/config/niches.ts`
 
@@ -417,7 +574,7 @@ Chaque metier definit :
 
 ---
 
-## 11. Plans et features
+## 12. Plans et features
 
 Fichier : `src/config/plan-features.ts`
 
@@ -440,6 +597,14 @@ Fichier : `src/config/plan-features.ts`
 | pro | 100 |
 | business | 5000 |
 
+### Limites etablissements
+
+| Plan | Etablissements | Membres/etablissement |
+|------|---------------|----------------------|
+| free | 1 | 1 |
+| pro | 5 | 3 |
+| business | 50 | 999 |
+
 ### Verification
 
 ```typescript
@@ -452,7 +617,7 @@ if (hasFeature(user.plan, "sms")) {
 
 ---
 
-## 12. Securite
+## 13. Securite
 
 ### Mots de passe
 
@@ -480,6 +645,16 @@ if (hasFeature(user.plan, "sms")) {
 - Protection anti-injection CSV (formules Excel bloquees)
 - Sanitisation des headers email (fromName)
 
+### Isolation des etablissements
+
+- Toutes les requetes dashboard sont scopees par `establishmentId`
+- Le cookie `current-establishment-id` est verifie en BDD a chaque requete (anti-IDOR)
+- Les clients, review requests et templates sont filtres par `establishmentId` dans les clauses `where`
+- Les actions destructives (delete, update) verifient que l'objet appartient a l'etablissement courant
+- Les invitations utilisent des tokens cryptographiques de 256 bits avec expiration 7 jours
+- Les reponses d'invitation sont uniformes (pas d'enumeration d'emails)
+- Le cookie utilise `secure: true` en production, `httpOnly`, `sameSite: lax`
+
 ### Protection anti-bot
 
 - Honeypot invisible sur les formulaires login et register
@@ -498,7 +673,40 @@ if (hasFeature(user.plan, "sms")) {
 
 ---
 
-## 13. Deploiement
+## 14. Tests
+
+### Framework
+
+- **Vitest** v4.1.4
+- Environnement Node.js, globals actives
+- Fichiers dans `tests/**/*.test.ts`
+- Alias `@` → `src/`
+
+### Execution
+
+```bash
+npm test          # Run once
+npm run test:watch # Watch mode
+```
+
+### Fichiers de tests (220 tests)
+
+| Fichier | Tests | Couverture |
+|---------|-------|-----------|
+| `tests/config/niches.test.ts` | Configurations metier |
+| `tests/config/plan-features.test.ts` | Features par plan, limites import |
+| `tests/config/establishment-limits.test.ts` | Limites etablissements/membres par plan |
+| `tests/lib/utils.test.ts` | sanitizeHtml, escapeHtml, formatDate, formatPrice |
+| `tests/lib/validation.test.ts` | Validation email, mot de passe |
+| `tests/lib/rate-limit.test.ts` | Rate limiter in-memory |
+| `tests/lib/sms-formatting.test.ts` | Formatage SMS |
+| `tests/lib/establishment-roles.test.ts` | Hierarchie des roles, matrice de permissions |
+| `tests/lib/establishment-validation.test.ts` | Validation champs, limites, CUID, anti-injection |
+| `tests/lib/plan-inheritance.test.ts` | Heritage plan OWNER → ADMIN/MEMBER |
+
+---
+
+## 15. Deploiement
 
 ### Vercel (recommande)
 
@@ -527,7 +735,7 @@ npx prisma db push
 
 ---
 
-## 14. Cron jobs
+## 16. Cron jobs
 
 ### Envoi des demandes programmees
 
