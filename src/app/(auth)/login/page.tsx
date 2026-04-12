@@ -15,6 +15,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const justRegistered = searchParams.get("registered") === "1";
+  const message = searchParams.get("message");
   const rawCallback = searchParams.get("callbackUrl");
   const callbackUrl =
     rawCallback && rawCallback.startsWith("/") && !rawCallback.startsWith("//")
@@ -64,9 +65,9 @@ function LoginForm() {
         </p>
       </div>
 
-      {justRegistered && (
+      {(justRegistered || message) && (
         <div className="mb-4 p-3 bg-success/10 border border-success/20 rounded-lg text-sm text-success">
-          Compte créé avec succès ! Connectez-vous ci-dessous.
+          {message || "Compte créé avec succès ! Connectez-vous ci-dessous."}
         </div>
       )}
 

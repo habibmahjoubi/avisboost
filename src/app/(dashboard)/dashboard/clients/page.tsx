@@ -11,6 +11,7 @@ import { CsvImport } from "@/components/dashboard/csv-import";
 import { UpgradeBadge } from "@/components/dashboard/upgrade-badge";
 import { PreviewButton } from "@/components/dashboard/preview-modal";
 import { hasFeature } from "@/config/plan-features";
+import { getCurrentEstablishment, getEstablishmentOwner } from "@/lib/establishment";
 
 export default async function ClientsPage() {
   const session = await auth();
@@ -20,18 +21,27 @@ export default async function ClientsPage() {
     where: { id: session.user.id },
   });
 
+  const establishment = await getCurrentEstablishment();
+  const owner = establishment && establishment.role !== "OWNER"
+    ? await getEstablishmentOwner(establishment.id)
+    : null;
+  const effectivePlan = owner?.plan ?? user.plan;
+  const estFilter = establishment ? { establishmentId: establishment.id } : { userId: session.user.id };
+
   const clients = await prisma.client.findMany({
-    where: { userId: session.user.id },
+    where: { ...estFilter },
     include: {
       _count: { select: { reviewRequests: true } },
     },
     orderBy: { createdAt: "desc" },
   });
 
-  const nicheConfig = NICHE_CONFIGS[user.niche];
+  const niche = establishment?.niche ?? user.niche;
+  const nicheConfig = NICHE_CONFIGS[niche];
   const vocab = nicheConfig.vocabulary;
   const clientLabel =
     vocab.clients.charAt(0).toUpperCase() + vocab.clients.slice(1);
+  const isAdmin = !establishment || establishment.role === "OWNER" || establishment.role === "ADMIN";
 
   return (
     <div>
@@ -47,10 +57,12 @@ export default async function ClientsPage() {
       {/* Actions */}
       <div className="flex flex-wrap gap-2">
         <AddClientForm />
-        {hasFeature(user.plan, "csv_import") ? (
-          <CsvImport />
-        ) : (
-          <UpgradeBadge feature="csv_import" variant="button" label="Importer (Pro)" />
+        {isAdmin && (
+          hasFeature(effectivePlan, "csv_import") ? (
+            <CsvImport />
+          ) : (
+            <UpgradeBadge feature="csv_import" variant="button" label="Importer (Pro)" />
+          )
         )}
       </div>
 
@@ -109,7 +121,7 @@ export default async function ClientsPage() {
                     <div className="flex flex-wrap items-center justify-end gap-1.5">
                       <PreviewButton
                         clientName={client.name}
-                        businessName={user.businessName || nicheConfig.vocabulary.establishment.charAt(0).toUpperCase() + nicheConfig.vocabulary.establishment.slice(1)}
+                        businessName={establishment?.name || user.businessName || nicheConfig.vocabulary.establishment.charAt(0).toUpperCase() + nicheConfig.vocabulary.establishment.slice(1)}
                         channel="EMAIL"
                         templateBody={nicheConfig.templates.EMAIL.body}
                         templateSubject={nicheConfig.templates.EMAIL.subject}
@@ -118,17 +130,19 @@ export default async function ClientsPage() {
                         clientId={client.id}
                         hasEmail={!!client.email}
                         hasPhone={!!client.phone}
-                        userPlan={user.plan}
-                        defaultDelay={user.defaultDelay ?? nicheConfig.defaultDelay}
+                        userPlan={effectivePlan}
+                        defaultDelay={establishment?.defaultDelay ?? user.defaultDelay ?? nicheConfig.defaultDelay}
                       />
-                      <EditClientForm
-                        clientId={client.id}
-                        name={client.name}
-                        email={client.email}
-                        phone={client.phone}
-                        notes={client.notes}
-                      />
-                      <DeleteClientButton clientId={client.id} />
+                      {isAdmin && (
+                        <EditClientForm
+                          clientId={client.id}
+                          name={client.name}
+                          email={client.email}
+                          phone={client.phone}
+                          notes={client.notes}
+                        />
+                      )}
+                      {isAdmin && <DeleteClientButton clientId={client.id} />}
                     </div>
                   </td>
                 </tr>

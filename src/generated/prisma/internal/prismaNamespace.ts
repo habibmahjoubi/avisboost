@@ -391,6 +391,9 @@ export const ModelName = {
   Plan: 'Plan',
   PasswordResetToken: 'PasswordResetToken',
   EmailVerificationToken: 'EmailVerificationToken',
+  EstablishmentInvitation: 'EstablishmentInvitation',
+  Establishment: 'Establishment',
+  EstablishmentMember: 'EstablishmentMember',
   Client: 'Client',
   ReviewRequest: 'ReviewRequest',
   Template: 'Template'
@@ -409,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "plan" | "passwordResetToken" | "emailVerificationToken" | "client" | "reviewRequest" | "template"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "plan" | "passwordResetToken" | "emailVerificationToken" | "establishmentInvitation" | "establishment" | "establishmentMember" | "client" | "reviewRequest" | "template"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -931,6 +934,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EstablishmentInvitation: {
+      payload: Prisma.$EstablishmentInvitationPayload<ExtArgs>
+      fields: Prisma.EstablishmentInvitationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EstablishmentInvitationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EstablishmentInvitationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload>
+        }
+        findFirst: {
+          args: Prisma.EstablishmentInvitationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EstablishmentInvitationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload>
+        }
+        findMany: {
+          args: Prisma.EstablishmentInvitationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload>[]
+        }
+        create: {
+          args: Prisma.EstablishmentInvitationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload>
+        }
+        createMany: {
+          args: Prisma.EstablishmentInvitationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EstablishmentInvitationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload>[]
+        }
+        delete: {
+          args: Prisma.EstablishmentInvitationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload>
+        }
+        update: {
+          args: Prisma.EstablishmentInvitationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload>
+        }
+        deleteMany: {
+          args: Prisma.EstablishmentInvitationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EstablishmentInvitationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EstablishmentInvitationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload>[]
+        }
+        upsert: {
+          args: Prisma.EstablishmentInvitationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentInvitationPayload>
+        }
+        aggregate: {
+          args: Prisma.EstablishmentInvitationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEstablishmentInvitation>
+        }
+        groupBy: {
+          args: Prisma.EstablishmentInvitationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EstablishmentInvitationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EstablishmentInvitationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EstablishmentInvitationCountAggregateOutputType> | number
+        }
+      }
+    }
+    Establishment: {
+      payload: Prisma.$EstablishmentPayload<ExtArgs>
+      fields: Prisma.EstablishmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EstablishmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EstablishmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload>
+        }
+        findFirst: {
+          args: Prisma.EstablishmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EstablishmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload>
+        }
+        findMany: {
+          args: Prisma.EstablishmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload>[]
+        }
+        create: {
+          args: Prisma.EstablishmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload>
+        }
+        createMany: {
+          args: Prisma.EstablishmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EstablishmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload>[]
+        }
+        delete: {
+          args: Prisma.EstablishmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload>
+        }
+        update: {
+          args: Prisma.EstablishmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.EstablishmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EstablishmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EstablishmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.EstablishmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentPayload>
+        }
+        aggregate: {
+          args: Prisma.EstablishmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEstablishment>
+        }
+        groupBy: {
+          args: Prisma.EstablishmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EstablishmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EstablishmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EstablishmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    EstablishmentMember: {
+      payload: Prisma.$EstablishmentMemberPayload<ExtArgs>
+      fields: Prisma.EstablishmentMemberFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EstablishmentMemberFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EstablishmentMemberFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload>
+        }
+        findFirst: {
+          args: Prisma.EstablishmentMemberFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EstablishmentMemberFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload>
+        }
+        findMany: {
+          args: Prisma.EstablishmentMemberFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload>[]
+        }
+        create: {
+          args: Prisma.EstablishmentMemberCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload>
+        }
+        createMany: {
+          args: Prisma.EstablishmentMemberCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EstablishmentMemberCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload>[]
+        }
+        delete: {
+          args: Prisma.EstablishmentMemberDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload>
+        }
+        update: {
+          args: Prisma.EstablishmentMemberUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload>
+        }
+        deleteMany: {
+          args: Prisma.EstablishmentMemberDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EstablishmentMemberUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EstablishmentMemberUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload>[]
+        }
+        upsert: {
+          args: Prisma.EstablishmentMemberUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EstablishmentMemberPayload>
+        }
+        aggregate: {
+          args: Prisma.EstablishmentMemberAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEstablishmentMember>
+        }
+        groupBy: {
+          args: Prisma.EstablishmentMemberGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EstablishmentMemberGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EstablishmentMemberCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EstablishmentMemberCountAggregateOutputType> | number
+        }
+      }
+    }
     Client: {
       payload: Prisma.$ClientPayload<ExtArgs>
       fields: Prisma.ClientFieldRefs
@@ -1302,9 +1527,55 @@ export const EmailVerificationTokenScalarFieldEnum = {
 export type EmailVerificationTokenScalarFieldEnum = (typeof EmailVerificationTokenScalarFieldEnum)[keyof typeof EmailVerificationTokenScalarFieldEnum]
 
 
+export const EstablishmentInvitationScalarFieldEnum = {
+  id: 'id',
+  establishmentId: 'establishmentId',
+  email: 'email',
+  role: 'role',
+  token: 'token',
+  invitedBy: 'invitedBy',
+  expires: 'expires',
+  createdAt: 'createdAt'
+} as const
+
+export type EstablishmentInvitationScalarFieldEnum = (typeof EstablishmentInvitationScalarFieldEnum)[keyof typeof EstablishmentInvitationScalarFieldEnum]
+
+
+export const EstablishmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  niche: 'niche',
+  customNiche: 'customNiche',
+  googlePlaceUrl: 'googlePlaceUrl',
+  phone: 'phone',
+  satisfactionThreshold: 'satisfactionThreshold',
+  defaultChannel: 'defaultChannel',
+  defaultDelay: 'defaultDelay',
+  senderName: 'senderName',
+  replyToEmail: 'replyToEmail',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EstablishmentScalarFieldEnum = (typeof EstablishmentScalarFieldEnum)[keyof typeof EstablishmentScalarFieldEnum]
+
+
+export const EstablishmentMemberScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  establishmentId: 'establishmentId',
+  role: 'role',
+  createdAt: 'createdAt'
+} as const
+
+export type EstablishmentMemberScalarFieldEnum = (typeof EstablishmentMemberScalarFieldEnum)[keyof typeof EstablishmentMemberScalarFieldEnum]
+
+
 export const ClientScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  establishmentId: 'establishmentId',
   name: 'name',
   email: 'email',
   phone: 'phone',
@@ -1319,6 +1590,7 @@ export const ReviewRequestScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   clientId: 'clientId',
+  establishmentId: 'establishmentId',
   channel: 'channel',
   status: 'status',
   token: 'token',
@@ -1336,6 +1608,7 @@ export type ReviewRequestScalarFieldEnum = (typeof ReviewRequestScalarFieldEnum)
 export const TemplateScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  establishmentId: 'establishmentId',
   name: 'name',
   niche: 'niche',
   channel: 'channel',
@@ -1469,6 +1742,20 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
+ * Reference to a field of type 'MemberRole'
+ */
+export type EnumMemberRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberRole'>
+    
+
+
+/**
+ * Reference to a field of type 'MemberRole[]'
+ */
+export type ListEnumMemberRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberRole[]'>
+    
+
+
+/**
  * Reference to a field of type 'RequestStatus'
  */
 export type EnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus'>
@@ -1583,6 +1870,9 @@ export type GlobalOmitConfig = {
   plan?: Prisma.PlanOmit
   passwordResetToken?: Prisma.PasswordResetTokenOmit
   emailVerificationToken?: Prisma.EmailVerificationTokenOmit
+  establishmentInvitation?: Prisma.EstablishmentInvitationOmit
+  establishment?: Prisma.EstablishmentOmit
+  establishmentMember?: Prisma.EstablishmentMemberOmit
   client?: Prisma.ClientOmit
   reviewRequest?: Prisma.ReviewRequestOmit
   template?: Prisma.TemplateOmit

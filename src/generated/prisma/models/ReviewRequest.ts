@@ -38,6 +38,7 @@ export type ReviewRequestMinAggregateOutputType = {
   id: string | null
   userId: string | null
   clientId: string | null
+  establishmentId: string | null
   channel: $Enums.Channel | null
   status: $Enums.RequestStatus | null
   token: string | null
@@ -53,6 +54,7 @@ export type ReviewRequestMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   clientId: string | null
+  establishmentId: string | null
   channel: $Enums.Channel | null
   status: $Enums.RequestStatus | null
   token: string | null
@@ -68,6 +70,7 @@ export type ReviewRequestCountAggregateOutputType = {
   id: number
   userId: number
   clientId: number
+  establishmentId: number
   channel: number
   status: number
   token: number
@@ -93,6 +96,7 @@ export type ReviewRequestMinAggregateInputType = {
   id?: true
   userId?: true
   clientId?: true
+  establishmentId?: true
   channel?: true
   status?: true
   token?: true
@@ -108,6 +112,7 @@ export type ReviewRequestMaxAggregateInputType = {
   id?: true
   userId?: true
   clientId?: true
+  establishmentId?: true
   channel?: true
   status?: true
   token?: true
@@ -123,6 +128,7 @@ export type ReviewRequestCountAggregateInputType = {
   id?: true
   userId?: true
   clientId?: true
+  establishmentId?: true
   channel?: true
   status?: true
   token?: true
@@ -225,6 +231,7 @@ export type ReviewRequestGroupByOutputType = {
   id: string
   userId: string
   clientId: string
+  establishmentId: string | null
   channel: $Enums.Channel
   status: $Enums.RequestStatus
   token: string
@@ -263,6 +270,7 @@ export type ReviewRequestWhereInput = {
   id?: Prisma.StringFilter<"ReviewRequest"> | string
   userId?: Prisma.StringFilter<"ReviewRequest"> | string
   clientId?: Prisma.StringFilter<"ReviewRequest"> | string
+  establishmentId?: Prisma.StringNullableFilter<"ReviewRequest"> | string | null
   channel?: Prisma.EnumChannelFilter<"ReviewRequest"> | $Enums.Channel
   status?: Prisma.EnumRequestStatusFilter<"ReviewRequest"> | $Enums.RequestStatus
   token?: Prisma.StringFilter<"ReviewRequest"> | string
@@ -274,12 +282,14 @@ export type ReviewRequestWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ReviewRequest"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  establishment?: Prisma.XOR<Prisma.EstablishmentNullableScalarRelationFilter, Prisma.EstablishmentWhereInput> | null
 }
 
 export type ReviewRequestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  establishmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   token?: Prisma.SortOrder
@@ -291,6 +301,7 @@ export type ReviewRequestOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   client?: Prisma.ClientOrderByWithRelationInput
+  establishment?: Prisma.EstablishmentOrderByWithRelationInput
 }
 
 export type ReviewRequestWhereUniqueInput = Prisma.AtLeast<{
@@ -301,6 +312,7 @@ export type ReviewRequestWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ReviewRequestWhereInput | Prisma.ReviewRequestWhereInput[]
   userId?: Prisma.StringFilter<"ReviewRequest"> | string
   clientId?: Prisma.StringFilter<"ReviewRequest"> | string
+  establishmentId?: Prisma.StringNullableFilter<"ReviewRequest"> | string | null
   channel?: Prisma.EnumChannelFilter<"ReviewRequest"> | $Enums.Channel
   status?: Prisma.EnumRequestStatusFilter<"ReviewRequest"> | $Enums.RequestStatus
   scheduledAt?: Prisma.DateTimeFilter<"ReviewRequest"> | Date | string
@@ -311,12 +323,14 @@ export type ReviewRequestWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ReviewRequest"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  establishment?: Prisma.XOR<Prisma.EstablishmentNullableScalarRelationFilter, Prisma.EstablishmentWhereInput> | null
 }, "id" | "token">
 
 export type ReviewRequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  establishmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   token?: Prisma.SortOrder
@@ -340,6 +354,7 @@ export type ReviewRequestScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ReviewRequest"> | string
   userId?: Prisma.StringWithAggregatesFilter<"ReviewRequest"> | string
   clientId?: Prisma.StringWithAggregatesFilter<"ReviewRequest"> | string
+  establishmentId?: Prisma.StringNullableWithAggregatesFilter<"ReviewRequest"> | string | null
   channel?: Prisma.EnumChannelWithAggregatesFilter<"ReviewRequest"> | $Enums.Channel
   status?: Prisma.EnumRequestStatusWithAggregatesFilter<"ReviewRequest"> | $Enums.RequestStatus
   token?: Prisma.StringWithAggregatesFilter<"ReviewRequest"> | string
@@ -364,12 +379,14 @@ export type ReviewRequestCreateInput = {
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutReviewRequestsInput
   client: Prisma.ClientCreateNestedOneWithoutReviewRequestsInput
+  establishment?: Prisma.EstablishmentCreateNestedOneWithoutReviewRequestsInput
 }
 
 export type ReviewRequestUncheckedCreateInput = {
   id?: string
   userId: string
   clientId: string
+  establishmentId?: string | null
   channel: $Enums.Channel
   status?: $Enums.RequestStatus
   token?: string
@@ -394,12 +411,14 @@ export type ReviewRequestUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutReviewRequestsNestedInput
   client?: Prisma.ClientUpdateOneRequiredWithoutReviewRequestsNestedInput
+  establishment?: Prisma.EstablishmentUpdateOneWithoutReviewRequestsNestedInput
 }
 
 export type ReviewRequestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  establishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   token?: Prisma.StringFieldUpdateOperationsInput | string
@@ -415,6 +434,7 @@ export type ReviewRequestCreateManyInput = {
   id?: string
   userId: string
   clientId: string
+  establishmentId?: string | null
   channel: $Enums.Channel
   status?: $Enums.RequestStatus
   token?: string
@@ -443,6 +463,7 @@ export type ReviewRequestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  establishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   token?: Prisma.StringFieldUpdateOperationsInput | string
@@ -468,6 +489,7 @@ export type ReviewRequestCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  establishmentId?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   token?: Prisma.SortOrder
@@ -487,6 +509,7 @@ export type ReviewRequestMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  establishmentId?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   token?: Prisma.SortOrder
@@ -502,6 +525,7 @@ export type ReviewRequestMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  establishmentId?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   token?: Prisma.SortOrder
@@ -556,6 +580,48 @@ export type ReviewRequestUncheckedUpdateManyWithoutUserNestedInput = {
   connect?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
   update?: Prisma.ReviewRequestUpdateWithWhereUniqueWithoutUserInput | Prisma.ReviewRequestUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.ReviewRequestUpdateManyWithWhereWithoutUserInput | Prisma.ReviewRequestUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ReviewRequestScalarWhereInput | Prisma.ReviewRequestScalarWhereInput[]
+}
+
+export type ReviewRequestCreateNestedManyWithoutEstablishmentInput = {
+  create?: Prisma.XOR<Prisma.ReviewRequestCreateWithoutEstablishmentInput, Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput> | Prisma.ReviewRequestCreateWithoutEstablishmentInput[] | Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput[]
+  connectOrCreate?: Prisma.ReviewRequestCreateOrConnectWithoutEstablishmentInput | Prisma.ReviewRequestCreateOrConnectWithoutEstablishmentInput[]
+  createMany?: Prisma.ReviewRequestCreateManyEstablishmentInputEnvelope
+  connect?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+}
+
+export type ReviewRequestUncheckedCreateNestedManyWithoutEstablishmentInput = {
+  create?: Prisma.XOR<Prisma.ReviewRequestCreateWithoutEstablishmentInput, Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput> | Prisma.ReviewRequestCreateWithoutEstablishmentInput[] | Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput[]
+  connectOrCreate?: Prisma.ReviewRequestCreateOrConnectWithoutEstablishmentInput | Prisma.ReviewRequestCreateOrConnectWithoutEstablishmentInput[]
+  createMany?: Prisma.ReviewRequestCreateManyEstablishmentInputEnvelope
+  connect?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+}
+
+export type ReviewRequestUpdateManyWithoutEstablishmentNestedInput = {
+  create?: Prisma.XOR<Prisma.ReviewRequestCreateWithoutEstablishmentInput, Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput> | Prisma.ReviewRequestCreateWithoutEstablishmentInput[] | Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput[]
+  connectOrCreate?: Prisma.ReviewRequestCreateOrConnectWithoutEstablishmentInput | Prisma.ReviewRequestCreateOrConnectWithoutEstablishmentInput[]
+  upsert?: Prisma.ReviewRequestUpsertWithWhereUniqueWithoutEstablishmentInput | Prisma.ReviewRequestUpsertWithWhereUniqueWithoutEstablishmentInput[]
+  createMany?: Prisma.ReviewRequestCreateManyEstablishmentInputEnvelope
+  set?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+  disconnect?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+  delete?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+  connect?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+  update?: Prisma.ReviewRequestUpdateWithWhereUniqueWithoutEstablishmentInput | Prisma.ReviewRequestUpdateWithWhereUniqueWithoutEstablishmentInput[]
+  updateMany?: Prisma.ReviewRequestUpdateManyWithWhereWithoutEstablishmentInput | Prisma.ReviewRequestUpdateManyWithWhereWithoutEstablishmentInput[]
+  deleteMany?: Prisma.ReviewRequestScalarWhereInput | Prisma.ReviewRequestScalarWhereInput[]
+}
+
+export type ReviewRequestUncheckedUpdateManyWithoutEstablishmentNestedInput = {
+  create?: Prisma.XOR<Prisma.ReviewRequestCreateWithoutEstablishmentInput, Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput> | Prisma.ReviewRequestCreateWithoutEstablishmentInput[] | Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput[]
+  connectOrCreate?: Prisma.ReviewRequestCreateOrConnectWithoutEstablishmentInput | Prisma.ReviewRequestCreateOrConnectWithoutEstablishmentInput[]
+  upsert?: Prisma.ReviewRequestUpsertWithWhereUniqueWithoutEstablishmentInput | Prisma.ReviewRequestUpsertWithWhereUniqueWithoutEstablishmentInput[]
+  createMany?: Prisma.ReviewRequestCreateManyEstablishmentInputEnvelope
+  set?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+  disconnect?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+  delete?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+  connect?: Prisma.ReviewRequestWhereUniqueInput | Prisma.ReviewRequestWhereUniqueInput[]
+  update?: Prisma.ReviewRequestUpdateWithWhereUniqueWithoutEstablishmentInput | Prisma.ReviewRequestUpdateWithWhereUniqueWithoutEstablishmentInput[]
+  updateMany?: Prisma.ReviewRequestUpdateManyWithWhereWithoutEstablishmentInput | Prisma.ReviewRequestUpdateManyWithWhereWithoutEstablishmentInput[]
   deleteMany?: Prisma.ReviewRequestScalarWhereInput | Prisma.ReviewRequestScalarWhereInput[]
 }
 
@@ -617,11 +683,13 @@ export type ReviewRequestCreateWithoutUserInput = {
   feedback?: string | null
   createdAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutReviewRequestsInput
+  establishment?: Prisma.EstablishmentCreateNestedOneWithoutReviewRequestsInput
 }
 
 export type ReviewRequestUncheckedCreateWithoutUserInput = {
   id?: string
   clientId: string
+  establishmentId?: string | null
   channel: $Enums.Channel
   status?: $Enums.RequestStatus
   token?: string
@@ -666,6 +734,7 @@ export type ReviewRequestScalarWhereInput = {
   id?: Prisma.StringFilter<"ReviewRequest"> | string
   userId?: Prisma.StringFilter<"ReviewRequest"> | string
   clientId?: Prisma.StringFilter<"ReviewRequest"> | string
+  establishmentId?: Prisma.StringNullableFilter<"ReviewRequest"> | string | null
   channel?: Prisma.EnumChannelFilter<"ReviewRequest"> | $Enums.Channel
   status?: Prisma.EnumRequestStatusFilter<"ReviewRequest"> | $Enums.RequestStatus
   token?: Prisma.StringFilter<"ReviewRequest"> | string
@@ -675,6 +744,62 @@ export type ReviewRequestScalarWhereInput = {
   rating?: Prisma.IntNullableFilter<"ReviewRequest"> | number | null
   feedback?: Prisma.StringNullableFilter<"ReviewRequest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ReviewRequest"> | Date | string
+}
+
+export type ReviewRequestCreateWithoutEstablishmentInput = {
+  id?: string
+  channel: $Enums.Channel
+  status?: $Enums.RequestStatus
+  token?: string
+  scheduledAt: Date | string
+  sentAt?: Date | string | null
+  clickedAt?: Date | string | null
+  rating?: number | null
+  feedback?: string | null
+  createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutReviewRequestsInput
+  client: Prisma.ClientCreateNestedOneWithoutReviewRequestsInput
+}
+
+export type ReviewRequestUncheckedCreateWithoutEstablishmentInput = {
+  id?: string
+  userId: string
+  clientId: string
+  channel: $Enums.Channel
+  status?: $Enums.RequestStatus
+  token?: string
+  scheduledAt: Date | string
+  sentAt?: Date | string | null
+  clickedAt?: Date | string | null
+  rating?: number | null
+  feedback?: string | null
+  createdAt?: Date | string
+}
+
+export type ReviewRequestCreateOrConnectWithoutEstablishmentInput = {
+  where: Prisma.ReviewRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReviewRequestCreateWithoutEstablishmentInput, Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput>
+}
+
+export type ReviewRequestCreateManyEstablishmentInputEnvelope = {
+  data: Prisma.ReviewRequestCreateManyEstablishmentInput | Prisma.ReviewRequestCreateManyEstablishmentInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReviewRequestUpsertWithWhereUniqueWithoutEstablishmentInput = {
+  where: Prisma.ReviewRequestWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReviewRequestUpdateWithoutEstablishmentInput, Prisma.ReviewRequestUncheckedUpdateWithoutEstablishmentInput>
+  create: Prisma.XOR<Prisma.ReviewRequestCreateWithoutEstablishmentInput, Prisma.ReviewRequestUncheckedCreateWithoutEstablishmentInput>
+}
+
+export type ReviewRequestUpdateWithWhereUniqueWithoutEstablishmentInput = {
+  where: Prisma.ReviewRequestWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReviewRequestUpdateWithoutEstablishmentInput, Prisma.ReviewRequestUncheckedUpdateWithoutEstablishmentInput>
+}
+
+export type ReviewRequestUpdateManyWithWhereWithoutEstablishmentInput = {
+  where: Prisma.ReviewRequestScalarWhereInput
+  data: Prisma.XOR<Prisma.ReviewRequestUpdateManyMutationInput, Prisma.ReviewRequestUncheckedUpdateManyWithoutEstablishmentInput>
 }
 
 export type ReviewRequestCreateWithoutClientInput = {
@@ -689,11 +814,13 @@ export type ReviewRequestCreateWithoutClientInput = {
   feedback?: string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutReviewRequestsInput
+  establishment?: Prisma.EstablishmentCreateNestedOneWithoutReviewRequestsInput
 }
 
 export type ReviewRequestUncheckedCreateWithoutClientInput = {
   id?: string
   userId: string
+  establishmentId?: string | null
   channel: $Enums.Channel
   status?: $Enums.RequestStatus
   token?: string
@@ -734,6 +861,7 @@ export type ReviewRequestUpdateManyWithWhereWithoutClientInput = {
 export type ReviewRequestCreateManyUserInput = {
   id?: string
   clientId: string
+  establishmentId?: string | null
   channel: $Enums.Channel
   status?: $Enums.RequestStatus
   token?: string
@@ -757,11 +885,13 @@ export type ReviewRequestUpdateWithoutUserInput = {
   feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutReviewRequestsNestedInput
+  establishment?: Prisma.EstablishmentUpdateOneWithoutReviewRequestsNestedInput
 }
 
 export type ReviewRequestUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  establishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   token?: Prisma.StringFieldUpdateOperationsInput | string
@@ -775,6 +905,67 @@ export type ReviewRequestUncheckedUpdateWithoutUserInput = {
 
 export type ReviewRequestUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  establishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
+  token?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReviewRequestCreateManyEstablishmentInput = {
+  id?: string
+  userId: string
+  clientId: string
+  channel: $Enums.Channel
+  status?: $Enums.RequestStatus
+  token?: string
+  scheduledAt: Date | string
+  sentAt?: Date | string | null
+  clickedAt?: Date | string | null
+  rating?: number | null
+  feedback?: string | null
+  createdAt?: Date | string
+}
+
+export type ReviewRequestUpdateWithoutEstablishmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
+  token?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutReviewRequestsNestedInput
+  client?: Prisma.ClientUpdateOneRequiredWithoutReviewRequestsNestedInput
+}
+
+export type ReviewRequestUncheckedUpdateWithoutEstablishmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
+  token?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  clickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReviewRequestUncheckedUpdateManyWithoutEstablishmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
@@ -790,6 +981,7 @@ export type ReviewRequestUncheckedUpdateManyWithoutUserInput = {
 export type ReviewRequestCreateManyClientInput = {
   id?: string
   userId: string
+  establishmentId?: string | null
   channel: $Enums.Channel
   status?: $Enums.RequestStatus
   token?: string
@@ -813,11 +1005,13 @@ export type ReviewRequestUpdateWithoutClientInput = {
   feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutReviewRequestsNestedInput
+  establishment?: Prisma.EstablishmentUpdateOneWithoutReviewRequestsNestedInput
 }
 
 export type ReviewRequestUncheckedUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  establishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   token?: Prisma.StringFieldUpdateOperationsInput | string
@@ -832,6 +1026,7 @@ export type ReviewRequestUncheckedUpdateWithoutClientInput = {
 export type ReviewRequestUncheckedUpdateManyWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  establishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   token?: Prisma.StringFieldUpdateOperationsInput | string
@@ -849,6 +1044,7 @@ export type ReviewRequestSelect<ExtArgs extends runtime.Types.Extensions.Interna
   id?: boolean
   userId?: boolean
   clientId?: boolean
+  establishmentId?: boolean
   channel?: boolean
   status?: boolean
   token?: boolean
@@ -860,12 +1056,14 @@ export type ReviewRequestSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  establishment?: boolean | Prisma.ReviewRequest$establishmentArgs<ExtArgs>
 }, ExtArgs["result"]["reviewRequest"]>
 
 export type ReviewRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   clientId?: boolean
+  establishmentId?: boolean
   channel?: boolean
   status?: boolean
   token?: boolean
@@ -877,12 +1075,14 @@ export type ReviewRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  establishment?: boolean | Prisma.ReviewRequest$establishmentArgs<ExtArgs>
 }, ExtArgs["result"]["reviewRequest"]>
 
 export type ReviewRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   clientId?: boolean
+  establishmentId?: boolean
   channel?: boolean
   status?: boolean
   token?: boolean
@@ -894,12 +1094,14 @@ export type ReviewRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  establishment?: boolean | Prisma.ReviewRequest$establishmentArgs<ExtArgs>
 }, ExtArgs["result"]["reviewRequest"]>
 
 export type ReviewRequestSelectScalar = {
   id?: boolean
   userId?: boolean
   clientId?: boolean
+  establishmentId?: boolean
   channel?: boolean
   status?: boolean
   token?: boolean
@@ -911,18 +1113,21 @@ export type ReviewRequestSelectScalar = {
   createdAt?: boolean
 }
 
-export type ReviewRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "clientId" | "channel" | "status" | "token" | "scheduledAt" | "sentAt" | "clickedAt" | "rating" | "feedback" | "createdAt", ExtArgs["result"]["reviewRequest"]>
+export type ReviewRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "clientId" | "establishmentId" | "channel" | "status" | "token" | "scheduledAt" | "sentAt" | "clickedAt" | "rating" | "feedback" | "createdAt", ExtArgs["result"]["reviewRequest"]>
 export type ReviewRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  establishment?: boolean | Prisma.ReviewRequest$establishmentArgs<ExtArgs>
 }
 export type ReviewRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  establishment?: boolean | Prisma.ReviewRequest$establishmentArgs<ExtArgs>
 }
 export type ReviewRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  establishment?: boolean | Prisma.ReviewRequest$establishmentArgs<ExtArgs>
 }
 
 export type $ReviewRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -930,11 +1135,13 @@ export type $ReviewRequestPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     client: Prisma.$ClientPayload<ExtArgs>
+    establishment: Prisma.$EstablishmentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
     clientId: string
+    establishmentId: string | null
     channel: $Enums.Channel
     status: $Enums.RequestStatus
     token: string
@@ -1340,6 +1547,7 @@ export interface Prisma__ReviewRequestClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  establishment<T extends Prisma.ReviewRequest$establishmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReviewRequest$establishmentArgs<ExtArgs>>): Prisma.Prisma__EstablishmentClient<runtime.Types.Result.GetResult<Prisma.$EstablishmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1372,6 +1580,7 @@ export interface ReviewRequestFieldRefs {
   readonly id: Prisma.FieldRef<"ReviewRequest", 'String'>
   readonly userId: Prisma.FieldRef<"ReviewRequest", 'String'>
   readonly clientId: Prisma.FieldRef<"ReviewRequest", 'String'>
+  readonly establishmentId: Prisma.FieldRef<"ReviewRequest", 'String'>
   readonly channel: Prisma.FieldRef<"ReviewRequest", 'Channel'>
   readonly status: Prisma.FieldRef<"ReviewRequest", 'RequestStatus'>
   readonly token: Prisma.FieldRef<"ReviewRequest", 'String'>
@@ -1779,6 +1988,25 @@ export type ReviewRequestDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many ReviewRequests to delete.
    */
   limit?: number
+}
+
+/**
+ * ReviewRequest.establishment
+ */
+export type ReviewRequest$establishmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Establishment
+   */
+  select?: Prisma.EstablishmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Establishment
+   */
+  omit?: Prisma.EstablishmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EstablishmentInclude<ExtArgs> | null
+  where?: Prisma.EstablishmentWhereInput
 }
 
 /**

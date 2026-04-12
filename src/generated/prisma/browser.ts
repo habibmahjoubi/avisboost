@@ -53,6 +53,21 @@ export type PasswordResetToken = Prisma.PasswordResetTokenModel
  */
 export type EmailVerificationToken = Prisma.EmailVerificationTokenModel
 /**
+ * Model EstablishmentInvitation
+ * 
+ */
+export type EstablishmentInvitation = Prisma.EstablishmentInvitationModel
+/**
+ * Model Establishment
+ * 
+ */
+export type Establishment = Prisma.EstablishmentModel
+/**
+ * Model EstablishmentMember
+ * 
+ */
+export type EstablishmentMember = Prisma.EstablishmentMemberModel
+/**
  * Model Client
  * 
  */

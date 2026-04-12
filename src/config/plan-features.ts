@@ -36,8 +36,28 @@ export const IMPORT_LIMIT: Record<PlanKey, number> = {
   business: 5000,
 };
 
+export const ESTABLISHMENT_LIMIT: Record<PlanKey, number> = {
+  free: 1,
+  pro: 5,
+  business: 50,
+};
+
+export const MEMBERS_PER_ESTABLISHMENT: Record<PlanKey, number> = {
+  free: 1,
+  pro: 3,
+  business: 999,
+};
+
 export function getImportLimit(plan: string): number {
   return IMPORT_LIMIT[plan as PlanKey] ?? 0;
+}
+
+export function getEstablishmentLimit(plan: string): number {
+  return ESTABLISHMENT_LIMIT[plan as PlanKey] ?? 1;
+}
+
+export function getMembersPerEstablishment(plan: string): number {
+  return MEMBERS_PER_ESTABLISHMENT[plan as PlanKey] ?? 1;
 }
 
 export function hasFeature(plan: string, feature: Feature): boolean {

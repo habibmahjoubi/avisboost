@@ -46,6 +46,8 @@ export default async function AdminDashboard() {
     expiredTrials,
     plans,
     pendingCancellations,
+    totalEstablishments,
+    totalMembers,
   ] = await Promise.all([
     prisma.user.count({ where: { isAdmin: false } }),
     prisma.user.count({ where: { isAdmin: false, isSuspended: false } }),
@@ -106,6 +108,8 @@ export default async function AdminDashboard() {
       },
       orderBy: { cancelRequestedAt: "asc" },
     }),
+    prisma.establishment.count(),
+    prisma.establishmentMember.count(),
   ]);
 
   // Compute MRR from DB plans
@@ -286,12 +290,14 @@ export default async function AdminDashboard() {
       </div>
 
       {/* KPI row 2 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         {[
           { label: "ARPU", value: formatPrice(arpu) },
-          { label: "Conversion Free\u2192Paid", value: `${conversionRate}%` },
+          { label: "Conversion Free→Paid", value: `${conversionRate}%` },
           { label: "Essais actifs", value: String(activeTrials) },
           { label: "Comptes suspendus", value: String(suspendedUsers) },
+          { label: "Établissements", value: String(totalEstablishments) },
+          { label: "Membres total", value: String(totalMembers) },
         ].map((stat) => (
           <div
             key={stat.label}

@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { NICHE_CONFIGS } from "@/config/niches";
 import { LogoutButton } from "@/components/dashboard/logout-button";
 import { MobileSidebar } from "@/components/ui/mobile-sidebar";
+import { EstablishmentSwitcher } from "@/components/dashboard/establishment-switcher";
+import { getCurrentEstablishment, getUserEstablishments, getEstablishmentOwner } from "@/lib/establishment";
 import {
   LayoutDashboard,
   Users,
@@ -12,6 +14,7 @@ import {
   Settings,
   CreditCard,
   Star,
+  Building2,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
@@ -68,18 +71,37 @@ export default async function DashboardLayout({
     user.quotaUsed = 0;
   }
 
-  const vocab = NICHE_CONFIGS[user.niche].vocabulary;
+  // Get current establishment context
+  const establishment = await getCurrentEstablishment();
+  const establishments = await getUserEstablishments(user.id);
 
-  const NAV_ITEMS: { href: string; label: string; icon: LucideIcon }[] = [
-    { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
+  // MEMBER inherits the OWNER's plan/quota
+  const owner = establishment && establishment.role !== "OWNER"
+    ? await getEstablishmentOwner(establishment.id)
+    : null;
+  const effectivePlan = owner?.plan ?? user.plan;
+  const effectiveQuotaUsed = owner?.quotaUsed ?? user.quotaUsed;
+  const effectiveQuota = owner?.monthlyQuota ?? user.monthlyQuota;
+
+  const niche = establishment?.niche ?? user.niche;
+  const vocab = NICHE_CONFIGS[niche].vocabulary;
+
+  const role = establishment?.role ?? "OWNER";
+  const isOwner = role === "OWNER";
+  const isAdmin = role === "OWNER" || role === "ADMIN";
+
+  const NAV_ITEMS: { href: string; label: string; icon: LucideIcon; show: boolean }[] = [
+    { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard, show: true },
     {
       href: "/dashboard/clients",
       label: vocab.clients.charAt(0).toUpperCase() + vocab.clients.slice(1),
       icon: Users,
+      show: true,
     },
-    { href: "/dashboard/campaigns", label: "Campagnes", icon: Send },
-    { href: "/dashboard/settings", label: "Paramètres", icon: Settings },
-    { href: "/dashboard/billing", label: "Abonnement", icon: CreditCard },
+    { href: "/dashboard/campaigns", label: "Campagnes", icon: Send, show: true },
+    { href: "/dashboard/establishments", label: "Établissements", icon: Building2, show: true },
+    { href: "/dashboard/settings", label: "Paramètres", icon: Settings, show: isAdmin },
+    { href: "/dashboard/billing", label: "Abonnement", icon: CreditCard, show: isOwner },
   ];
 
   return (
@@ -92,13 +114,18 @@ export default async function DashboardLayout({
             </div>
             <span className="text-lg font-bold">Valoravis</span>
           </Link>
-          <p className="text-xs text-muted-foreground mt-1 truncate">
-            {user.businessName || user.email}
-          </p>
+          <EstablishmentSwitcher
+            establishments={establishments.map((e) => ({
+              id: e.id,
+              name: e.name,
+              role: e.role,
+            }))}
+            currentId={establishment?.id ?? ""}
+          />
         </div>
 
         <nav className="flex-1 p-3 space-y-1">
-          {NAV_ITEMS.map((item) => (
+          {NAV_ITEMS.filter((item) => item.show).map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -113,9 +140,9 @@ export default async function DashboardLayout({
         <div className="p-3 border-t border-border">
           <div className="flex items-center justify-between px-3 py-2 text-xs text-muted-foreground">
             <span>
-              {user.quotaUsed}/{user.monthlyQuota} envois
+              {effectiveQuotaUsed}/{effectiveQuota} envois
             </span>
-            <span className="font-medium uppercase">{user.plan}</span>
+            <span className="font-medium uppercase">{effectivePlan}</span>
           </div>
           <LogoutButton />
         </div>

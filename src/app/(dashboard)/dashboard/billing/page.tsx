@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { stripe, getPlans } from "@/lib/stripe";
 import { formatPrice } from "@/lib/utils";
+import { getCurrentEstablishment } from "@/lib/establishment";
 import { Sparkles, AlertTriangle } from "lucide-react";
 import { UpgradeButton } from "@/components/dashboard/upgrade-button";
 import { CancelButton } from "@/components/dashboard/cancel-button";
@@ -11,6 +12,12 @@ import { TrialButton } from "@/components/dashboard/trial-button";
 export default async function BillingPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
+
+  // Only OWNER can access billing
+  const establishment = await getCurrentEstablishment();
+  if (establishment && establishment.role !== "OWNER") {
+    redirect("/dashboard");
+  }
 
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: session.user.id },

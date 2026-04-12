@@ -8,11 +8,28 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { Niche, Channel } from "@/generated/prisma/enums";
 import { hasFeature, getImportLimit } from "@/config/plan-features";
+import { getCurrentEstablishment, getEstablishmentOwner } from "@/lib/establishment";
 
 async function getUserId(): Promise<string> {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Non authentifié");
   return session.user.id;
+}
+
+async function getEstablishmentId(): Promise<string | null> {
+  const est = await getCurrentEstablishment();
+  return est?.id ?? null;
+}
+
+/** Returns the effective plan string: OWNER's plan if member, else user's own plan */
+async function getEffectivePlan(userId: string): Promise<string> {
+  const est = await getCurrentEstablishment();
+  if (est && est.role !== "OWNER") {
+    const owner = await getEstablishmentOwner(est.id);
+    if (owner) return owner.plan;
+  }
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  return user.plan;
 }
 
 // --- Onboarding ---
@@ -29,6 +46,21 @@ export async function completeOnboarding(formData: FormData) {
   validateLength(googlePlaceUrl, 2000, "URL Google");
   validateLength(phone, 20, "Téléphone");
 
+  // Create the first establishment + OWNER membership
+  const establishment = await prisma.establishment.create({
+    data: {
+      name: businessName,
+      niche,
+      customNiche: niche === "OTHER" ? customNiche : null,
+      googlePlaceUrl,
+      phone,
+      members: {
+        create: { userId, role: "OWNER" },
+      },
+    },
+  });
+
+  // Also update User for backward compatibility
   await prisma.user.update({
     where: { id: userId },
     data: {
@@ -39,6 +71,17 @@ export async function completeOnboarding(formData: FormData) {
       phone,
       onboarded: true,
     },
+  });
+
+  // Set the current establishment cookie
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  cookieStore.set("current-establishment-id", establishment.id, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
   });
 
   revalidatePath("/dashboard");
@@ -53,14 +96,18 @@ function validateLength(value: string | null, max: number, label: string) {
 // --- Clients ---
 export async function addClient(formData: FormData) {
   const userId = await getUserId();
+  const establishmentId = await getEstablishmentId();
   const name = formData.get("name") as string;
   validateLength(name, 200, "Nom");
   validateLength(formData.get("email") as string, 255, "Email");
   validateLength(formData.get("notes") as string, 1000, "Notes");
 
+  if (!establishmentId) throw new Error("Aucun établissement sélectionné.");
+
   await prisma.client.create({
     data: {
       user: { connect: { id: userId } },
+      establishment: { connect: { id: establishmentId } },
       name: formData.get("name") as string,
       email: (formData.get("email") as string) || null,
       phone: (formData.get("phone") as string) || null,
@@ -73,10 +120,12 @@ export async function addClient(formData: FormData) {
 
 export async function updateClient(formData: FormData) {
   const userId = await getUserId();
+  const establishmentId = await getEstablishmentId();
   const clientId = formData.get("clientId") as string;
 
+  // Scope to establishment to prevent IDOR across establishments
   await prisma.client.update({
-    where: { id: clientId, userId },
+    where: { id: clientId, userId, ...(establishmentId ? { establishmentId } : {}) },
     data: {
       name: formData.get("name") as string,
       email: (formData.get("email") as string) || null,
@@ -91,8 +140,14 @@ export async function updateClient(formData: FormData) {
 export async function deleteClient(clientId: string) {
   const userId = await getUserId();
 
+  // MEMBER cannot delete clients
+  const est = await getCurrentEstablishment();
+  if (est && est.role === "MEMBER") {
+    throw new Error("Permissions insuffisantes.");
+  }
+
   await prisma.client.delete({
-    where: { id: clientId, userId },
+    where: { id: clientId, userId, ...(est ? { establishmentId: est.id } : {}) },
   });
 
   revalidatePath("/dashboard/clients");
@@ -100,15 +155,26 @@ export async function deleteClient(clientId: string) {
 
 export async function importClients(csvData: string) {
   const userId = await getUserId();
+  const establishmentId = await getEstablishmentId();
+  if (!establishmentId) {
+    return { imported: 0, skipped: 0, errors: [{ row: 0, name: "", reason: "Aucun établissement sélectionné." }] };
+  }
+
+  // MEMBER cannot import clients
+  const est = await getCurrentEstablishment();
+  if (est && est.role === "MEMBER") {
+    return { imported: 0, skipped: 0, errors: [{ row: 0, name: "", reason: "Permissions insuffisantes." }] };
+  }
   const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
-  if (!hasFeature(user.plan, "csv_import")) {
+  const plan = await getEffectivePlan(userId);
+  if (!hasFeature(plan, "csv_import")) {
     return { imported: 0, skipped: 0, errors: [{ row: 0, name: "", reason: "L'import CSV nécessite le plan Pro ou supérieur." }] };
   }
-  const limit = getImportLimit(user.plan);
+  const limit = getImportLimit(plan);
   const lines = csvData.split("\n").filter((l) => l.trim());
 
   if (lines.length > limit) {
-    return { imported: 0, skipped: 0, errors: [{ row: 0, name: "", reason: `Maximum ${limit} lignes pour le plan ${user.plan} (${lines.length} fournies).` }] };
+    return { imported: 0, skipped: 0, errors: [{ row: 0, name: "", reason: `Maximum ${limit} lignes pour le plan ${plan} (${lines.length} fournies).` }] };
   }
 
   let imported = 0;
@@ -182,6 +248,7 @@ export async function importClients(csvData: string) {
     await prisma.client.create({
       data: {
         userId,
+        establishmentId,
         name,
         email: email || null,
         phone: phone || null,
@@ -198,7 +265,16 @@ export async function importClients(csvData: string) {
 // --- Review Requests ---
 export async function sendReviewRequest(formData: FormData) {
   const userId = await getUserId();
+  const establishmentId = await getEstablishmentId();
+  if (!establishmentId) return { error: "Aucun établissement sélectionné." };
   const clientId = formData.get("clientId") as string;
+
+  // Verify client belongs to this establishment
+  const client = await prisma.client.findFirst({
+    where: { id: clientId, userId, establishmentId },
+  });
+  if (!client) return { error: "Client introuvable dans cet établissement." };
+
   const channelRaw = formData.get("channel") as string;
   if (!["EMAIL", "SMS"].includes(channelRaw)) {
     return { error: "Canal invalide" };
@@ -206,8 +282,8 @@ export async function sendReviewRequest(formData: FormData) {
   const channel = channelRaw as Channel;
 
   if (channel === "SMS") {
-    const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
-    if (!hasFeature(user.plan, "sms")) {
+    const plan = await getEffectivePlan(userId);
+    if (!hasFeature(plan, "sms")) {
       return { error: "L'envoi par SMS nécessite le plan Pro ou supérieur." };
     }
   }
@@ -223,6 +299,7 @@ export async function sendReviewRequest(formData: FormData) {
       clientId,
       channel,
       delayHours,
+      establishmentId: establishmentId ?? undefined,
     });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Erreur inconnue";
@@ -271,8 +348,16 @@ export async function startTrial(planKey: string) {
 // --- Templates ---
 export async function saveTemplate(formData: FormData) {
   const userId = await getUserId();
+  const establishmentId = await getEstablishmentId();
   const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
-  if (!hasFeature(user.plan, "custom_templates")) {
+
+  // MEMBER cannot manage templates
+  const est = await getCurrentEstablishment();
+  if (est && est.role === "MEMBER") {
+    throw new Error("Permissions insuffisantes.");
+  }
+  const plan = await getEffectivePlan(userId);
+  if (!hasFeature(plan, "custom_templates")) {
     throw new Error("Les templates personnalisés nécessitent le plan Pro ou supérieur.");
   }
   const niche = formData.get("niche") as Niche;
@@ -301,12 +386,12 @@ export async function saveTemplate(formData: FormData) {
       });
     } else {
       await prisma.template.create({
-        data: { userId, niche, channel, name, subject, body, isDefault },
+        data: { userId, establishmentId, niche, channel, name, subject, body, isDefault },
       });
     }
   } else {
     await prisma.template.create({
-      data: { userId, niche, channel, name, subject, body, isDefault },
+      data: { userId, establishmentId, niche, channel, name, subject, body, isDefault },
     });
   }
 
@@ -315,8 +400,10 @@ export async function saveTemplate(formData: FormData) {
 
 export async function deleteTemplate(formData: FormData) {
   const userId = await getUserId();
-  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
-  if (!hasFeature(user.plan, "custom_templates")) {
+  const est = await getCurrentEstablishment();
+  if (est && est.role === "MEMBER") throw new Error("Permissions insuffisantes.");
+  const plan = await getEffectivePlan(userId);
+  if (!hasFeature(plan, "custom_templates")) {
     throw new Error("Les templates personnalisés nécessitent le plan Pro ou supérieur.");
   }
   const templateId = formData.get("templateId") as string;
@@ -331,6 +418,8 @@ export async function deleteTemplate(formData: FormData) {
 // --- Satisfaction Threshold ---
 export async function updateThreshold(formData: FormData) {
   const userId = await getUserId();
+  const est = await getCurrentEstablishment();
+  if (est && est.role === "MEMBER") throw new Error("Permissions insuffisantes.");
   const threshold = Number(formData.get("threshold"));
   if (!Number.isInteger(threshold) || threshold < 1 || threshold > 5) {
     throw new Error("Seuil invalide (entre 1 et 5)");
@@ -347,6 +436,8 @@ export async function updateThreshold(formData: FormData) {
 // --- Sending Preferences ---
 export async function updateSendingSettings(formData: FormData) {
   const userId = await getUserId();
+  const est = await getCurrentEstablishment();
+  if (est && est.role === "MEMBER") return { error: "Permissions insuffisantes." };
   const defaultChannel = formData.get("defaultChannel") as string;
   const defaultDelayRaw = formData.get("defaultDelay") as string;
   const senderName = (formData.get("senderName") as string) || null;
@@ -358,8 +449,8 @@ export async function updateSendingSettings(formData: FormData) {
   }
 
   if (defaultChannel === "SMS") {
-    const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
-    if (!hasFeature(user.plan, "sms")) {
+    const plan = await getEffectivePlan(userId);
+    if (!hasFeature(plan, "sms")) {
       return { error: "Le SMS nécessite le plan Pro ou supérieur." };
     }
     if (!phone) {
@@ -438,8 +529,9 @@ export async function sendTestEmail() {
 export async function sendTestSms() {
   const userId = await getUserId();
   const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  const plan = await getEffectivePlan(userId);
 
-  if (!hasFeature(user.plan, "sms")) {
+  if (!hasFeature(plan, "sms")) {
     return { error: "Le SMS nécessite le plan Pro ou supérieur." };
   }
 
@@ -474,26 +566,38 @@ export async function sendTestSms() {
 // --- Settings ---
 export async function updateSettings(formData: FormData) {
   const userId = await getUserId();
+  const estCtx = await getCurrentEstablishment();
+  if (estCtx && estCtx.role === "MEMBER") throw new Error("Permissions insuffisantes.");
+  const establishmentId = estCtx?.id ?? null;
   const niche = formData.get("niche") as Niche;
   const customNicheInput = formData.get("customNiche") as string | null;
-
-  // Si niche OTHER : sauvegarder le customNiche saisi
-  // Si autre niche : garder l'ancien customNiche au cas où l'utilisateur reviendrait
-  const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
-  const customNiche =
-    niche === "OTHER"
-      ? customNicheInput || user.customNiche
-      : null;
 
   const businessName = formData.get("businessName") as string;
   const googlePlaceUrl = formData.get("googlePlaceUrl") as string;
   const phone = (formData.get("phone") as string) || null;
 
   validateLength(businessName, 200, "Nom de l'établissement");
-  validateLength(customNiche, 100, "Métier personnalisé");
+  validateLength(customNicheInput, 100, "Métier personnalisé");
   validateLength(googlePlaceUrl, 2000, "URL Google");
   validateLength(phone, 20, "Téléphone");
 
+  const customNiche = niche === "OTHER" ? customNicheInput : null;
+
+  // Update establishment if available
+  if (establishmentId) {
+    await prisma.establishment.update({
+      where: { id: establishmentId },
+      data: {
+        name: businessName,
+        niche,
+        customNiche,
+        googlePlaceUrl,
+        phone,
+      },
+    });
+  }
+
+  // Also keep User in sync for backward compat
   await prisma.user.update({
     where: { id: userId },
     data: {

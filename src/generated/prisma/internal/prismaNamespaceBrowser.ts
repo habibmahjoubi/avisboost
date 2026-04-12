@@ -58,6 +58,9 @@ export const ModelName = {
   Plan: 'Plan',
   PasswordResetToken: 'PasswordResetToken',
   EmailVerificationToken: 'EmailVerificationToken',
+  EstablishmentInvitation: 'EstablishmentInvitation',
+  Establishment: 'Establishment',
+  EstablishmentMember: 'EstablishmentMember',
   Client: 'Client',
   ReviewRequest: 'ReviewRequest',
   Template: 'Template'
@@ -189,9 +192,55 @@ export const EmailVerificationTokenScalarFieldEnum = {
 export type EmailVerificationTokenScalarFieldEnum = (typeof EmailVerificationTokenScalarFieldEnum)[keyof typeof EmailVerificationTokenScalarFieldEnum]
 
 
+export const EstablishmentInvitationScalarFieldEnum = {
+  id: 'id',
+  establishmentId: 'establishmentId',
+  email: 'email',
+  role: 'role',
+  token: 'token',
+  invitedBy: 'invitedBy',
+  expires: 'expires',
+  createdAt: 'createdAt'
+} as const
+
+export type EstablishmentInvitationScalarFieldEnum = (typeof EstablishmentInvitationScalarFieldEnum)[keyof typeof EstablishmentInvitationScalarFieldEnum]
+
+
+export const EstablishmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  niche: 'niche',
+  customNiche: 'customNiche',
+  googlePlaceUrl: 'googlePlaceUrl',
+  phone: 'phone',
+  satisfactionThreshold: 'satisfactionThreshold',
+  defaultChannel: 'defaultChannel',
+  defaultDelay: 'defaultDelay',
+  senderName: 'senderName',
+  replyToEmail: 'replyToEmail',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EstablishmentScalarFieldEnum = (typeof EstablishmentScalarFieldEnum)[keyof typeof EstablishmentScalarFieldEnum]
+
+
+export const EstablishmentMemberScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  establishmentId: 'establishmentId',
+  role: 'role',
+  createdAt: 'createdAt'
+} as const
+
+export type EstablishmentMemberScalarFieldEnum = (typeof EstablishmentMemberScalarFieldEnum)[keyof typeof EstablishmentMemberScalarFieldEnum]
+
+
 export const ClientScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  establishmentId: 'establishmentId',
   name: 'name',
   email: 'email',
   phone: 'phone',
@@ -206,6 +255,7 @@ export const ReviewRequestScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   clientId: 'clientId',
+  establishmentId: 'establishmentId',
   channel: 'channel',
   status: 'status',
   token: 'token',
@@ -223,6 +273,7 @@ export type ReviewRequestScalarFieldEnum = (typeof ReviewRequestScalarFieldEnum)
 export const TemplateScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  establishmentId: 'establishmentId',
   name: 'name',
   niche: 'niche',
   channel: 'channel',

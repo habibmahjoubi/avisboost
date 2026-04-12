@@ -409,6 +409,7 @@ export type UserWhereInput = {
   clients?: Prisma.ClientListRelationFilter
   reviewRequests?: Prisma.ReviewRequestListRelationFilter
   templates?: Prisma.TemplateListRelationFilter
+  memberships?: Prisma.EstablishmentMemberListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -444,6 +445,7 @@ export type UserOrderByWithRelationInput = {
   clients?: Prisma.ClientOrderByRelationAggregateInput
   reviewRequests?: Prisma.ReviewRequestOrderByRelationAggregateInput
   templates?: Prisma.TemplateOrderByRelationAggregateInput
+  memberships?: Prisma.EstablishmentMemberOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -482,6 +484,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   clients?: Prisma.ClientListRelationFilter
   reviewRequests?: Prisma.ReviewRequestListRelationFilter
   templates?: Prisma.TemplateListRelationFilter
+  memberships?: Prisma.EstablishmentMemberListRelationFilter
 }, "id" | "email" | "stripeCustomerId">
 
 export type UserOrderByWithAggregationInput = {
@@ -585,6 +588,7 @@ export type UserCreateInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -620,6 +624,7 @@ export type UserUncheckedCreateInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestUncheckedCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -655,6 +660,7 @@ export type UserUpdateInput = {
   clients?: Prisma.ClientUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -690,6 +696,7 @@ export type UserUncheckedUpdateInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUncheckedUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -963,6 +970,20 @@ export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
 }
 
+export type UserCreateNestedOneWithoutMembershipsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMembershipsInput, Prisma.UserUncheckedCreateWithoutMembershipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMembershipsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutMembershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMembershipsInput, Prisma.UserUncheckedCreateWithoutMembershipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMembershipsInput
+  upsert?: Prisma.UserUpsertWithoutMembershipsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMembershipsInput, Prisma.UserUpdateWithoutMembershipsInput>, Prisma.UserUncheckedUpdateWithoutMembershipsInput>
+}
+
 export type UserCreateNestedOneWithoutClientsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutClientsInput, Prisma.UserUncheckedCreateWithoutClientsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutClientsInput
@@ -1037,6 +1058,7 @@ export type UserCreateWithoutAccountsInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1071,6 +1093,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestUncheckedCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1121,6 +1144,7 @@ export type UserUpdateWithoutAccountsInput = {
   clients?: Prisma.ClientUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1155,6 +1179,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUncheckedUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1189,6 +1214,7 @@ export type UserCreateWithoutSessionsInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1223,6 +1249,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestUncheckedCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1273,6 +1300,7 @@ export type UserUpdateWithoutSessionsInput = {
   clients?: Prisma.ClientUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1304,6 +1332,163 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutUserNestedInput
+  reviewRequests?: Prisma.ReviewRequestUncheckedUpdateManyWithoutUserNestedInput
+  templates?: Prisma.TemplateUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutMembershipsInput = {
+  id?: string
+  email: string
+  emailVerified?: Date | string | null
+  password?: string | null
+  name?: string | null
+  businessName?: string | null
+  niche?: $Enums.Niche
+  customNiche?: string | null
+  googlePlaceUrl?: string | null
+  phone?: string | null
+  stripeCustomerId?: string | null
+  plan?: string
+  monthlyQuota?: number
+  quotaUsed?: number
+  onboarded?: boolean
+  isAdmin?: boolean
+  isSuspended?: boolean
+  satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
+  trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  clients?: Prisma.ClientCreateNestedManyWithoutUserInput
+  reviewRequests?: Prisma.ReviewRequestCreateNestedManyWithoutUserInput
+  templates?: Prisma.TemplateCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMembershipsInput = {
+  id?: string
+  email: string
+  emailVerified?: Date | string | null
+  password?: string | null
+  name?: string | null
+  businessName?: string | null
+  niche?: $Enums.Niche
+  customNiche?: string | null
+  googlePlaceUrl?: string | null
+  phone?: string | null
+  stripeCustomerId?: string | null
+  plan?: string
+  monthlyQuota?: number
+  quotaUsed?: number
+  onboarded?: boolean
+  isAdmin?: boolean
+  isSuspended?: boolean
+  satisfactionThreshold?: number
+  defaultChannel?: $Enums.Channel
+  defaultDelay?: number | null
+  senderName?: string | null
+  replyToEmail?: string | null
+  trialEndsAt?: Date | string | null
+  cancelRequestedAt?: Date | string | null
+  cancelEffectiveAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutUserInput
+  reviewRequests?: Prisma.ReviewRequestUncheckedCreateNestedManyWithoutUserInput
+  templates?: Prisma.TemplateUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMembershipsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMembershipsInput, Prisma.UserUncheckedCreateWithoutMembershipsInput>
+}
+
+export type UserUpsertWithoutMembershipsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMembershipsInput, Prisma.UserUncheckedUpdateWithoutMembershipsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMembershipsInput, Prisma.UserUncheckedCreateWithoutMembershipsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMembershipsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMembershipsInput, Prisma.UserUncheckedUpdateWithoutMembershipsInput>
+}
+
+export type UserUpdateWithoutMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  niche?: Prisma.EnumNicheFieldUpdateOperationsInput | $Enums.Niche
+  customNiche?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googlePlaceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyQuota?: Prisma.IntFieldUpdateOperationsInput | number
+  quotaUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutUserNestedInput
+  reviewRequests?: Prisma.ReviewRequestUpdateManyWithoutUserNestedInput
+  templates?: Prisma.TemplateUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  niche?: Prisma.EnumNicheFieldUpdateOperationsInput | $Enums.Niche
+  customNiche?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googlePlaceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyQuota?: Prisma.IntFieldUpdateOperationsInput | number
+  quotaUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  satisfactionThreshold?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultChannel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
+  defaultDelay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replyToEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelEffectiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUncheckedUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUncheckedUpdateManyWithoutUserNestedInput
@@ -1341,6 +1526,7 @@ export type UserCreateWithoutClientsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutClientsInput = {
@@ -1375,6 +1561,7 @@ export type UserUncheckedCreateWithoutClientsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestUncheckedCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutClientsInput = {
@@ -1425,6 +1612,7 @@ export type UserUpdateWithoutClientsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutClientsInput = {
@@ -1459,6 +1647,7 @@ export type UserUncheckedUpdateWithoutClientsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUncheckedUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewRequestsInput = {
@@ -1493,6 +1682,7 @@ export type UserCreateWithoutReviewRequestsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   clients?: Prisma.ClientCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewRequestsInput = {
@@ -1527,6 +1717,7 @@ export type UserUncheckedCreateWithoutReviewRequestsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutUserInput
   templates?: Prisma.TemplateUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewRequestsInput = {
@@ -1577,6 +1768,7 @@ export type UserUpdateWithoutReviewRequestsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   clients?: Prisma.ClientUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewRequestsInput = {
@@ -1611,6 +1803,7 @@ export type UserUncheckedUpdateWithoutReviewRequestsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutUserNestedInput
   templates?: Prisma.TemplateUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTemplatesInput = {
@@ -1645,6 +1838,7 @@ export type UserCreateWithoutTemplatesInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   clients?: Prisma.ClientCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTemplatesInput = {
@@ -1679,6 +1873,7 @@ export type UserUncheckedCreateWithoutTemplatesInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutUserInput
   reviewRequests?: Prisma.ReviewRequestUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.EstablishmentMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTemplatesInput = {
@@ -1729,6 +1924,7 @@ export type UserUpdateWithoutTemplatesInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   clients?: Prisma.ClientUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTemplatesInput = {
@@ -1763,6 +1959,7 @@ export type UserUncheckedUpdateWithoutTemplatesInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutUserNestedInput
   reviewRequests?: Prisma.ReviewRequestUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.EstablishmentMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1776,6 +1973,7 @@ export type UserCountOutputType = {
   clients: number
   reviewRequests: number
   templates: number
+  memberships: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1784,6 +1982,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   clients?: boolean | UserCountOutputTypeCountClientsArgs
   reviewRequests?: boolean | UserCountOutputTypeCountReviewRequestsArgs
   templates?: boolean | UserCountOutputTypeCountTemplatesArgs
+  memberships?: boolean | UserCountOutputTypeCountMembershipsArgs
 }
 
 /**
@@ -1831,6 +2030,13 @@ export type UserCountOutputTypeCountTemplatesArgs<ExtArgs extends runtime.Types.
   where?: Prisma.TemplateWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EstablishmentMemberWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1865,6 +2071,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   clients?: boolean | Prisma.User$clientsArgs<ExtArgs>
   reviewRequests?: boolean | Prisma.User$reviewRequestsArgs<ExtArgs>
   templates?: boolean | Prisma.User$templatesArgs<ExtArgs>
+  memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1965,6 +2172,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   clients?: boolean | Prisma.User$clientsArgs<ExtArgs>
   reviewRequests?: boolean | Prisma.User$reviewRequestsArgs<ExtArgs>
   templates?: boolean | Prisma.User$templatesArgs<ExtArgs>
+  memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1978,6 +2186,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     clients: Prisma.$ClientPayload<ExtArgs>[]
     reviewRequests: Prisma.$ReviewRequestPayload<ExtArgs>[]
     templates: Prisma.$TemplatePayload<ExtArgs>[]
+    memberships: Prisma.$EstablishmentMemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2406,6 +2615,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   clients<T extends Prisma.User$clientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$clientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewRequests<T extends Prisma.User$reviewRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   templates<T extends Prisma.User$templatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$templatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  memberships<T extends Prisma.User$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EstablishmentMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2972,6 +3182,30 @@ export type User$templatesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.TemplateScalarFieldEnum | Prisma.TemplateScalarFieldEnum[]
+}
+
+/**
+ * User.memberships
+ */
+export type User$membershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EstablishmentMember
+   */
+  select?: Prisma.EstablishmentMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EstablishmentMember
+   */
+  omit?: Prisma.EstablishmentMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EstablishmentMemberInclude<ExtArgs> | null
+  where?: Prisma.EstablishmentMemberWhereInput
+  orderBy?: Prisma.EstablishmentMemberOrderByWithRelationInput | Prisma.EstablishmentMemberOrderByWithRelationInput[]
+  cursor?: Prisma.EstablishmentMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EstablishmentMemberScalarFieldEnum | Prisma.EstablishmentMemberScalarFieldEnum[]
 }
 
 /**

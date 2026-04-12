@@ -28,6 +28,12 @@ enum RequestStatus {
   FAILED
 }
 
+enum MemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
 model User {
   id               String   @id @default(cuid())
   email            String   @unique
@@ -62,6 +68,7 @@ model User {
   clients        Client[]
   reviewRequests ReviewRequest[]
   templates      Template[]
+  memberships    EstablishmentMember[]
 }
 
 model Account {
@@ -135,54 +142,118 @@ model EmailVerificationToken {
   @@index([email])
 }
 
+model EstablishmentInvitation {
+  id              String     @id @default(cuid())
+  establishmentId String
+  email           String
+  role            MemberRole @default(MEMBER)
+  token           String     @unique
+  invitedBy       String
+  expires         DateTime
+  createdAt       DateTime   @default(now())
+
+  establishment Establishment @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([email])
+  @@unique([establishmentId, email])
+}
+
+model Establishment {
+  id                    String   @id @default(cuid())
+  name                  String
+  niche                 Niche    @default(DENTIST)
+  customNiche           String?
+  googlePlaceUrl        String?
+  phone                 String?
+  satisfactionThreshold Int      @default(4)
+  defaultChannel        Channel  @default(EMAIL)
+  defaultDelay          Int?
+  senderName            String?
+  replyToEmail          String?
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  members        EstablishmentMember[]
+  invitations    EstablishmentInvitation[]
+  clients        Client[]
+  reviewRequests ReviewRequest[]
+  templates      Template[]
+}
+
+model EstablishmentMember {
+  id              String     @id @default(cuid())
+  userId          String
+  establishmentId String
+  role            MemberRole @default(MEMBER)
+  createdAt       DateTime   @default(now())
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  establishment Establishment @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, establishmentId])
+  @@index([userId])
+  @@index([establishmentId])
+}
+
 model Client {
-  id        String   @id @default(cuid())
-  userId    String
-  name      String
-  email     String?
-  phone     String?
-  notes     String?
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  userId          String
+  establishmentId String?
+  name            String
+  email           String?
+  phone           String?
+  notes           String?
+  createdAt       DateTime @default(now())
 
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  establishment  Establishment?  @relation(fields: [establishmentId], references: [id], onDelete: SetNull)
   reviewRequests ReviewRequest[]
 
   @@index([userId])
+  @@index([establishmentId])
 }
 
 model ReviewRequest {
-  id          String        @id @default(cuid())
-  userId      String
-  clientId    String
-  channel     Channel
-  status      RequestStatus @default(PENDING)
-  token       String        @unique @default(cuid())
-  scheduledAt DateTime
-  sentAt      DateTime?
-  clickedAt   DateTime?
-  rating      Int?
-  feedback    String?
-  createdAt   DateTime      @default(now())
+  id              String        @id @default(cuid())
+  userId          String
+  clientId        String
+  establishmentId String?
+  channel         Channel
+  status          RequestStatus @default(PENDING)
+  token           String        @unique @default(cuid())
+  scheduledAt     DateTime
+  sentAt          DateTime?
+  clickedAt       DateTime?
+  rating          Int?
+  feedback        String?
+  createdAt       DateTime      @default(now())
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client        Client         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  establishment Establishment? @relation(fields: [establishmentId], references: [id], onDelete: SetNull)
 
   @@index([userId])
+  @@index([establishmentId])
   @@index([token])
   @@index([status, scheduledAt])
 }
 
 model Template {
-  id        String  @id @default(cuid())
-  userId    String
-  name      String  @default("Par défaut")
-  niche     Niche
-  channel   Channel
-  subject   String?
-  body      String
-  isDefault Boolean @default(false)
+  id              String  @id @default(cuid())
+  userId          String
+  establishmentId String?
+  name            String  @default("Par défaut")
+  niche           Niche
+  channel         Channel
+  subject         String?
+  body            String
+  isDefault       Boolean @default(false)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  establishment Establishment? @relation(fields: [establishmentId], references: [id], onDelete: SetNull)
 
   @@index([userId, niche, channel])
+  @@index([establishmentId])
 }

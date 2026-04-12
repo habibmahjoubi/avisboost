@@ -9,6 +9,7 @@ import { NicheSelector } from "@/components/dashboard/niche-selector";
 import { ThresholdSelector } from "@/components/dashboard/threshold-selector";
 import { SendingSettings } from "@/components/dashboard/sending-settings";
 import { hasFeature } from "@/config/plan-features";
+import { getCurrentEstablishment, getEstablishmentOwner } from "@/lib/establishment";
 import { Lock } from "lucide-react";
 
 export default async function SettingsPage() {
@@ -19,13 +20,31 @@ export default async function SettingsPage() {
     where: { id: session.user.id },
   });
 
-  // Load custom templates
+  const establishment = await getCurrentEstablishment();
+
+  // MEMBER cannot access settings
+  if (establishment && establishment.role === "MEMBER") {
+    redirect("/dashboard");
+  }
+
+  const owner = establishment && establishment.role !== "OWNER"
+    ? await getEstablishmentOwner(establishment.id)
+    : null;
+  const effectivePlan = owner?.plan ?? user.plan;
+
+  const niche = establishment?.niche ?? user.niche;
+
+  // Load custom templates scoped by establishment
   const customTemplates = await prisma.template.findMany({
-    where: { userId: user.id, niche: user.niche },
+    where: {
+      userId: user.id,
+      niche,
+      ...(establishment ? { establishmentId: establishment.id } : {}),
+    },
     orderBy: { isDefault: "desc" },
   });
 
-  const nicheConfig = NICHE_CONFIGS[user.niche];
+  const nicheConfig = NICHE_CONFIGS[niche];
   const defaultTemplates = nicheConfig.templates;
 
   // Serialize templates for the editor
@@ -47,25 +66,25 @@ export default async function SettingsPage() {
         action={updateSettings}
         className="max-w-2xl space-y-5 bg-card border border-border rounded-xl p-4 sm:p-6"
       >
-        <h2 className="font-semibold">Établissement</h2>
+        <h2 className="font-semibold">Établissement {establishment ? `— ${establishment.name}` : ""}</h2>
         <div>
           <label className="block text-sm font-medium mb-1">
             Nom de l'établissement
           </label>
           <input
             name="businessName"
-            defaultValue={user.businessName || ""}
+            defaultValue={establishment?.name || user.businessName || ""}
             required
             className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
 
         <NicheSelector
-          defaultNiche={user.niche}
-          defaultCustomNiche={user.customNiche}
+          defaultNiche={niche}
+          defaultCustomNiche={establishment?.customNiche || user.customNiche}
         />
 
-        <GooglePlaceField defaultValue={user.googlePlaceUrl || ""} />
+        <GooglePlaceField defaultValue={establishment?.googlePlaceUrl || user.googlePlaceUrl || ""} />
 
         <div>
           <label className="block text-sm font-medium mb-1">
@@ -74,7 +93,7 @@ export default async function SettingsPage() {
           <input
             name="phone"
             type="tel"
-            defaultValue={user.phone || ""}
+            defaultValue={establishment?.phone || user.phone || ""}
             className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
@@ -89,23 +108,23 @@ export default async function SettingsPage() {
 
       {/* Sending Preferences */}
       <SendingSettings
-        defaultChannel={user.defaultChannel as "EMAIL" | "SMS"}
-        defaultDelay={user.defaultDelay}
-        senderName={user.senderName}
-        replyToEmail={user.replyToEmail}
-        phone={user.phone}
+        defaultChannel={(establishment?.defaultChannel || user.defaultChannel) as "EMAIL" | "SMS"}
+        defaultDelay={establishment?.defaultDelay ?? user.defaultDelay}
+        senderName={establishment?.senderName || user.senderName}
+        replyToEmail={establishment?.replyToEmail || user.replyToEmail}
+        phone={establishment?.phone || user.phone}
         nicheDefaultDelay={nicheConfig.defaultDelay}
-        hasSms={hasFeature(user.plan, "sms")}
+        hasSms={hasFeature(effectivePlan, "sms")}
         establishment={nicheConfig.vocabulary.establishment}
       />
 
       {/* Satisfaction Threshold */}
-      <ThresholdSelector defaultValue={user.satisfactionThreshold} />
+      <ThresholdSelector defaultValue={establishment?.satisfactionThreshold ?? user.satisfactionThreshold} />
 
       {/* Template Editor */}
-      {hasFeature(user.plan, "custom_templates") ? (
+      {hasFeature(effectivePlan, "custom_templates") ? (
         <TemplateEditor
-          niche={user.niche}
+          niche={niche}
           userTemplates={userTemplates}
           defaultTemplates={defaultTemplates}
           presets={nicheConfig.presets}

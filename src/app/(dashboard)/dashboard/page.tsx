@@ -7,6 +7,7 @@ import { formatDate } from "@/lib/utils";
 import { OnboardingModal } from "@/components/dashboard/onboarding-modal";
 import { PeriodSelector } from "@/components/dashboard/period-selector";
 import { StatsChart } from "@/components/dashboard/stats-chart";
+import { getCurrentEstablishment, getEstablishmentOwner } from "@/lib/establishment";
 import { Suspense } from "react";
 import {
   Users, Send, MousePointerClick, Star, Stethoscope, Bone, Wrench, Building2,
@@ -39,36 +40,47 @@ export default async function DashboardPage({
     return <OnboardingModal defaultNiche={params.niche || user.niche} defaultBusinessName={user.businessName || ""} />;
   }
 
+  const establishment = await getCurrentEstablishment();
+  const estFilter = establishment ? { establishmentId: establishment.id } : { userId: user.id };
+
+  // MEMBER inherits the OWNER's plan for feature access
+  const owner = establishment && establishment.role !== "OWNER"
+    ? await getEstablishmentOwner(establishment.id)
+    : null;
+  const effectivePlan = owner?.plan ?? user.plan;
+  const effectiveQuotaUsed = owner?.quotaUsed ?? user.quotaUsed;
+  const effectiveQuota = owner?.monthlyQuota ?? user.monthlyQuota;
+
   const rawDays = Number(params.period);
   const days = [7, 30, 90].includes(rawDays) ? rawDays : 30;
   const periodStart = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   const periodFilter = { createdAt: { gte: periodStart } };
 
-  const showDetailed = hasFeature(user.plan, "detailed_stats");
-  const showAdvanced = hasFeature(user.plan, "advanced_stats");
+  const showDetailed = hasFeature(effectivePlan, "detailed_stats");
+  const showAdvanced = hasFeature(effectivePlan, "advanced_stats");
 
   const [totalClients, totalSent, totalClicked, totalReviewed, recentRequests] =
     await Promise.all([
-      prisma.client.count({ where: { userId: user.id } }),
+      prisma.client.count({ where: { ...estFilter } }),
       prisma.reviewRequest.count({
         where: {
-          userId: user.id,
+          ...estFilter,
           status: { in: ["SENT", "CLICKED", "REVIEWED"] },
           ...periodFilter,
         },
       }),
       prisma.reviewRequest.count({
         where: {
-          userId: user.id,
+          ...estFilter,
           status: { in: ["CLICKED", "REVIEWED"] },
           ...periodFilter,
         },
       }),
       prisma.reviewRequest.count({
-        where: { userId: user.id, status: "REVIEWED", ...periodFilter },
+        where: { ...estFilter, status: "REVIEWED", ...periodFilter },
       }),
       prisma.reviewRequest.findMany({
-        where: { userId: user.id, ...periodFilter },
+        where: { ...estFilter, ...periodFilter },
         include: { client: true },
         orderBy: { createdAt: "desc" },
         take: 10,
@@ -86,7 +98,7 @@ export default async function DashboardPage({
 
   if (showAdvanced) {
     const allRequestsForChart = await prisma.reviewRequest.findMany({
-      where: { userId: user.id, ...periodFilter },
+      where: { ...estFilter, ...periodFilter },
       select: { createdAt: true, status: true },
       orderBy: { createdAt: "asc" },
     });
@@ -125,17 +137,17 @@ export default async function DashboardPage({
   if (showDetailed) {
     const [emailC, smsC, ratingAgg, feedbackC] = await Promise.all([
       prisma.reviewRequest.count({
-        where: { userId: user.id, channel: "EMAIL", status: { in: ["SENT", "CLICKED", "REVIEWED"] }, ...periodFilter },
+        where: { ...estFilter, channel: "EMAIL", status: { in: ["SENT", "CLICKED", "REVIEWED"] }, ...periodFilter },
       }),
       prisma.reviewRequest.count({
-        where: { userId: user.id, channel: "SMS", status: { in: ["SENT", "CLICKED", "REVIEWED"] }, ...periodFilter },
+        where: { ...estFilter, channel: "SMS", status: { in: ["SENT", "CLICKED", "REVIEWED"] }, ...periodFilter },
       }),
       prisma.reviewRequest.aggregate({
-        where: { userId: user.id, rating: { not: null }, ...periodFilter },
+        where: { ...estFilter, rating: { not: null }, ...periodFilter },
         _avg: { rating: true },
       }),
       prisma.reviewRequest.count({
-        where: { userId: user.id, status: "FEEDBACK", ...periodFilter },
+        where: { ...estFilter, status: "FEEDBACK", ...periodFilter },
       }),
     ]);
     emailSent = emailC;
@@ -148,12 +160,13 @@ export default async function DashboardPage({
     totalSent > 0 ? Math.round((totalClicked / totalSent) * 100) : 0;
   const conversionRate =
     totalSent > 0 ? Math.round((totalReviewed / totalSent) * 100) : 0;
-  const nicheConfig = NICHE_CONFIGS[user.niche];
+  const niche = establishment?.niche ?? user.niche;
+  const nicheConfig = NICHE_CONFIGS[niche];
   const vocab = nicheConfig.vocabulary;
 
   const stats: { label: string; value: string | number; Icon: LucideIcon }[] = [
     { label: vocab.clients.charAt(0).toUpperCase() + vocab.clients.slice(1), value: totalClients, Icon: Users },
-    { label: "Envois", value: `${user.quotaUsed}/${user.monthlyQuota}`, Icon: Send },
+    { label: "Envois", value: `${effectiveQuotaUsed}/${effectiveQuota}`, Icon: Send },
     { label: "Taux de clic", value: `${clickRate}%`, Icon: MousePointerClick },
     { label: "Avis obtenus", value: totalReviewed, Icon: Star },
   ];
@@ -174,11 +187,11 @@ export default async function DashboardPage({
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
-            {(() => { const NIcon = NICHE_ICONS[user.niche]; return <NIcon className="w-6 h-6 text-primary" />; })()}
-            {user.businessName || "Mon établissement"}
+            {(() => { const NIcon = NICHE_ICONS[niche]; return <NIcon className="w-6 h-6 text-primary" />; })()}
+            {establishment?.name || user.businessName || "Mon établissement"}
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {nicheConfig.label} — Plan {user.plan}
+            {nicheConfig.label} — Plan {effectivePlan}
           </p>
         </div>
         <Suspense>

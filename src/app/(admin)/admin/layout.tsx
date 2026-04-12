@@ -6,7 +6,7 @@ import { LogoutButton } from "@/components/dashboard/logout-button";
 import { MobileSidebar } from "@/components/ui/mobile-sidebar";
 import {
   LayoutDashboard,
-  Users,
+  Building2,
   CreditCard,
   Star,
 } from "lucide-react";
@@ -14,7 +14,7 @@ import type { LucideIcon } from "lucide-react";
 
 const NAV_ITEMS: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/admin", label: "Vue d'ensemble", icon: LayoutDashboard },
-  { href: "/admin/users", label: "Utilisateurs", icon: Users },
+  { href: "/admin/users", label: "Établissements", icon: Building2 },
   { href: "/admin/plans", label: "Offres & Plans", icon: CreditCard },
 ];
 

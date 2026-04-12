@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { formatDate } from "@/lib/utils";
 import { CampaignFilters } from "@/components/dashboard/campaign-filters";
+import { getCurrentEstablishment } from "@/lib/establishment";
 import { Suspense } from "react";
 import { Mail, Smartphone, Star } from "lucide-react";
 import type { RequestStatus, Channel } from "@/generated/prisma/enums";
@@ -16,9 +17,12 @@ export default async function CampaignsPage({
   if (!session?.user?.id) redirect("/login");
 
   const params = await searchParams;
+  const establishment = await getCurrentEstablishment();
 
-  // Build dynamic where clause
-  const where: Record<string, unknown> = { userId: session.user.id };
+  // Build dynamic where clause - scope by establishment if available
+  const where: Record<string, unknown> = establishment
+    ? { establishmentId: establishment.id }
+    : { userId: session.user.id };
 
   const validStatuses = ["PENDING", "SENT", "CLICKED", "REVIEWED", "FEEDBACK", "FAILED"];
   const validChannels = ["EMAIL", "SMS"];

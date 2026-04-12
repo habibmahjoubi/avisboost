@@ -31,6 +31,23 @@ export default async function AdminUserDetailPage({
 
   if (!user || user.isAdmin) notFound();
 
+  // Load user's establishments with their members
+  const memberships = await prisma.establishmentMember.findMany({
+    where: { userId: user.id },
+    include: {
+      establishment: {
+        include: {
+          _count: { select: { members: true, clients: true, reviewRequests: true } },
+          members: {
+            include: { user: { select: { id: true, name: true, email: true } } },
+            orderBy: { role: "asc" },
+          },
+        },
+      },
+    },
+    orderBy: { role: "asc" },
+  });
+
   const sentCount = user.reviewRequests.filter((r) =>
     ["SENT", "CLICKED", "REVIEWED"].includes(r.status)
   ).length;
@@ -64,16 +81,16 @@ export default async function AdminUserDetailPage({
           href="/admin/users"
           className="text-sm text-muted-foreground hover:text-foreground"
         >
-          {"\u2190"} Retour aux utilisateurs
+          {"\u2190"} Retour aux établissements
         </Link>
       </div>
 
       <div className="flex flex-col md:flex-row items-start justify-between gap-4 mb-8">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold">
-            {user.businessName || "Non configure"}
+            {user.businessName || "Non configuré"}
           </h1>
-          <p className="text-muted-foreground text-sm mt-1">{user.email}</p>
+          <p className="text-muted-foreground text-sm mt-1">Propriétaire : {user.name || user.email} ({user.email})</p>
           <div className="flex items-center gap-2 mt-2">
             <span className="px-2 py-0.5 bg-muted rounded text-xs font-medium">
               {getNicheLabel(user.niche, user.customNiche)}
@@ -208,6 +225,50 @@ export default async function AdminUserDetailPage({
             </div>
           )}
         </div>
+      </div>
+
+      {/* Establishments */}
+      <div className="bg-card border border-border rounded-xl p-6 mb-8">
+        <h2 className="font-semibold mb-3">
+          Établissements ({memberships.length})
+        </h2>
+        {memberships.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Aucun établissement</p>
+        ) : (
+          <div className="space-y-4">
+            {memberships.map((m) => {
+              const est = m.establishment;
+              return (
+                <div key={m.id} className="border border-border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <p className="text-sm font-semibold">{est.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {getNicheLabel(est.niche, est.customNiche)} · {est._count.clients} client{est._count.clients !== 1 ? "s" : ""} · {est._count.reviewRequests} envoi{est._count.reviewRequests !== 1 ? "s" : ""}
+                      </p>
+                    </div>
+                  </div>
+                  {/* Members of this establishment */}
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      {est._count.members} membre{est._count.members !== 1 ? "s" : ""}
+                    </p>
+                    {est.members.map((member) => {
+                      const rl = member.role === "OWNER" ? "Propriétaire" : member.role === "ADMIN" ? "Admin" : "Membre";
+                      const rc = member.role === "OWNER" ? "text-primary" : member.role === "ADMIN" ? "text-amber-500" : "text-muted-foreground";
+                      return (
+                        <div key={member.id} className="flex items-center justify-between text-xs py-1">
+                          <span>{member.user.name || member.user.email} <span className="text-muted-foreground">({member.user.email})</span></span>
+                          <span className={`font-medium uppercase ${rc}`}>{rl}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Review requests */}

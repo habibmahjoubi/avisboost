@@ -13,10 +13,16 @@ export default async function ReviewPage({
 
   const request = await prisma.reviewRequest.findUnique({
     where: { token },
-    include: { user: true, client: true },
+    include: { user: true, client: true, establishment: true },
   });
 
   if (!request) notFound();
+
+  // Use establishment data with user fallback
+  const est = request.establishment;
+  const businessName = est?.name ?? request.user.businessName ?? "notre établissement";
+  const googlePlaceUrl = est?.googlePlaceUrl ?? request.user.googlePlaceUrl ?? "";
+  const threshold = est?.satisfactionThreshold ?? request.user.satisfactionThreshold;
 
   if (request.status === "SENT") {
     await prisma.reviewRequest.update({
@@ -26,9 +32,7 @@ export default async function ReviewPage({
   }
 
   if (request.rating) {
-    const googleUrl = toGoogleWriteReviewUrl(
-      request.user.googlePlaceUrl || ""
-    );
+    const googleUrl = toGoogleWriteReviewUrl(googlePlaceUrl);
     return (
       <div className="min-h-dvh w-full flex flex-col justify-start sm:justify-center px-4 pt-12 sm:pt-0 pb-8 bg-muted">
         <div className="w-full sm:max-w-sm sm:mx-auto text-center">
@@ -39,7 +43,7 @@ export default async function ReviewPage({
           <p className="text-muted-foreground mb-4">
             Votre retour a bien été enregistré.
           </p>
-          {googleUrl && request.rating >= request.user.satisfactionThreshold && (
+          {googleUrl && request.rating >= threshold && (
             <a
               href={googleUrl}
               target="_blank"
@@ -54,19 +58,17 @@ export default async function ReviewPage({
     );
   }
 
-  const googleReviewUrl = toGoogleWriteReviewUrl(
-    request.user.googlePlaceUrl || ""
-  );
+  const googleReviewUrl = toGoogleWriteReviewUrl(googlePlaceUrl);
 
   return (
     <div className="min-h-dvh w-full flex flex-col justify-start sm:justify-center px-4 pt-12 sm:pt-0 pb-8 bg-muted">
       <div className="w-full sm:max-w-sm sm:mx-auto">
       <SatisfactionGate
         token={token}
-        businessName={request.user.businessName || "notre établissement"}
+        businessName={businessName}
         clientName={request.client.name}
         googlePlaceUrl={googleReviewUrl}
-        threshold={request.user.satisfactionThreshold}
+        threshold={threshold}
       />
       </div>
     </div>

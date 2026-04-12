@@ -91,6 +91,7 @@ export async function registerUser(formData: FormData) {
   const name = (formData.get("name") as string) || null;
   const niche = (formData.get("niche") as string) || "DENTIST";
   const customNiche = (formData.get("customNiche") as string) || null;
+  const inviteToken = (formData.get("inviteToken") as string) || null;
 
   if (!email || !password) {
     return { error: "Email et mot de passe requis" };
@@ -127,6 +128,27 @@ export async function registerUser(formData: FormData) {
     return { error: "Cette adresse email est déjà associée à un compte. Connectez-vous ou utilisez une autre adresse." };
   }
 
+  // Validate invitation token if provided
+  let invitation: {
+    id: string;
+    establishmentId: string;
+    role: "OWNER" | "ADMIN" | "MEMBER";
+    email: string;
+  } | null = null;
+
+  if (inviteToken) {
+    const inv = await prisma.establishmentInvitation.findUnique({
+      where: { token: inviteToken },
+    });
+    if (!inv || inv.expires < new Date()) {
+      return { error: "Lien d'invitation invalide ou expiré." };
+    }
+    if (inv.email !== email) {
+      return { error: "Cet email ne correspond pas à l'invitation." };
+    }
+    invitation = { id: inv.id, establishmentId: inv.establishmentId, role: inv.role, email: inv.email };
+  }
+
   const hashedPassword = await bcrypt.hash(password, 12);
   const selectedPlan = (formData.get("plan") as string) || "free";
 
@@ -137,8 +159,12 @@ export async function registerUser(formData: FormData) {
     ? new Date(Date.now() + plan.trialDays * 24 * 60 * 60 * 1000)
     : null;
 
+  // If invited: auto-verify email (the invitation link proves email ownership)
+  const isInvited = !!invitation;
+
+  let newUser;
   try {
-    await prisma.user.create({
+    newUser = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
@@ -153,22 +179,126 @@ export async function registerUser(formData: FormData) {
             : plan.quota
           : 50,
         trialEndsAt,
+        emailVerified: isInvited ? new Date() : null,
+        onboarded: isInvited,
       },
     });
   } catch {
     return { error: "Erreur lors de la création du compte. Réessayez." };
   }
 
-  // Envoyer l'email de vérification
+  // If invited: add to establishment and clean up invitation
+  if (invitation) {
+    try {
+      await prisma.establishmentMember.create({
+        data: {
+          userId: newUser.id,
+          establishmentId: invitation.establishmentId,
+          role: invitation.role,
+        },
+      });
+      await prisma.establishmentInvitation.delete({
+        where: { id: invitation.id },
+      });
+    } catch (err) {
+      console.error("[register] accept invitation failed:", err);
+    }
+
+    return { success: true, email, invited: true };
+  }
+
+  // Normal registration: send verification email
   try {
     const token = await generateVerificationToken(email);
     await sendVerificationEmail(email, name, token);
   } catch (err) {
     console.error("[register] verification email failed:", err);
-    // Le compte est créé, l'utilisateur pourra renvoyer l'email depuis /check-email
   }
 
   return { success: true, email };
+}
+
+// --- Accepter une invitation (créer un compte simplifié) ---
+export async function acceptInvitation(formData: FormData) {
+  const token = formData.get("token") as string;
+  const email = (formData.get("email") as string).trim().toLowerCase();
+  const name = (formData.get("name") as string) || null;
+  const password = formData.get("password") as string;
+
+  if (!token || !email || !password) {
+    return { error: "Données manquantes" };
+  }
+
+  const passwordError = validatePassword(password);
+  if (passwordError) {
+    return { error: passwordError };
+  }
+
+  if (name && name.length > 100) {
+    return { error: "Nom trop long" };
+  }
+
+  // Rate limit
+  const ip = await getClientIp();
+  const rl = rateLimit(`invite-accept:${ip}`, { maxAttempts: 5, windowMs: 15 * 60 * 1000 });
+  if (!rl.success) {
+    return { error: `Trop de tentatives. Réessayez dans ${rl.retryAfterSeconds}s.` };
+  }
+
+  // Validate invitation
+  const inv = await prisma.establishmentInvitation.findUnique({
+    where: { token },
+    include: { establishment: true },
+  });
+
+  if (!inv || inv.expires < new Date()) {
+    return { error: "Invitation invalide ou expirée." };
+  }
+
+  if (inv.email !== email) {
+    return { error: "Email non autorisé." };
+  }
+
+  // Check if account already exists
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) {
+    return { error: "Un compte existe déjà avec cet email. Connectez-vous plutôt." };
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  try {
+    // Create the user — auto-verified, onboarded, attached to establishment
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        businessName: name,
+        niche: inv.establishment.niche,
+        emailVerified: new Date(),
+        onboarded: true,
+        plan: "free",
+        monthlyQuota: 50,
+      },
+    });
+
+    // Add to establishment
+    await prisma.establishmentMember.create({
+      data: {
+        userId: user.id,
+        establishmentId: inv.establishmentId,
+        role: inv.role,
+      },
+    });
+
+    // Delete used invitation
+    await prisma.establishmentInvitation.delete({ where: { id: inv.id } });
+  } catch {
+    return { error: "Erreur lors de la création du compte. Réessayez." };
+  }
+
+  return { success: true };
 }
 
 // --- Vérifier l'email ---
@@ -204,7 +334,46 @@ export async function verifyEmail(token: string) {
   // Supprimer le token utilisé
   await prisma.emailVerificationToken.delete({ where: { id: verificationToken.id } });
 
+  // Accept pending establishment invitations for this email
+  await acceptPendingInvitations(verificationToken.email);
+
   return { success: true };
+}
+
+async function acceptPendingInvitations(email: string) {
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return;
+
+    const invitations = await prisma.establishmentInvitation.findMany({
+      where: { email, expires: { gt: new Date() } },
+    });
+
+    for (const inv of invitations) {
+      // Check not already a member
+      const existing = await prisma.establishmentMember.findUnique({
+        where: { userId_establishmentId: { userId: user.id, establishmentId: inv.establishmentId } },
+      });
+      if (!existing) {
+        await prisma.establishmentMember.create({
+          data: {
+            userId: user.id,
+            establishmentId: inv.establishmentId,
+            role: inv.role,
+          },
+        });
+      }
+    }
+
+    // Clean up used invitations
+    if (invitations.length > 0) {
+      await prisma.establishmentInvitation.deleteMany({
+        where: { email },
+      });
+    }
+  } catch (err) {
+    console.error("[verify-email] accept invitations failed:", err);
+  }
 }
 
 // --- Renvoyer l'email de vérification ---

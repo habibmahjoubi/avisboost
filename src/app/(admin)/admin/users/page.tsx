@@ -23,7 +23,11 @@ export default async function AdminUsersPage({
 }) {
   const params = await searchParams;
 
-  const where: Record<string, unknown> = { isAdmin: false };
+  // Only show users who OWN at least one establishment (not pure members)
+  const where: Record<string, unknown> = {
+    isAdmin: false,
+    memberships: { some: { role: "OWNER" } },
+  };
   if (params.plan) where.plan = params.plan;
   if (params.niche) where.niche = params.niche;
   if (params.status === "suspended") where.isSuspended = true;
@@ -35,31 +39,49 @@ export default async function AdminUsersPage({
     ];
   }
 
-  const users = await prisma.user.findMany({
+  const owners = await prisma.user.findMany({
     where,
     orderBy: { createdAt: "desc" },
     include: {
-      _count: {
-        select: { clients: true, reviewRequests: true },
+      memberships: {
+        where: { role: "OWNER" },
+        include: {
+          establishment: {
+            include: {
+              _count: { select: { members: true, clients: true, reviewRequests: true } },
+            },
+          },
+        },
       },
     },
   });
 
-  // CSV export data
-  const csvHeader = "Email,Établissement,Métier,Plan,Quota,Clients,Envois,Inscription";
-  const csvRows = users.map(
-    (u) =>
-      `"${u.email}","${u.businessName || ""}","${u.niche}","${u.plan}","${u.quotaUsed}/${u.monthlyQuota}","${u._count.clients}","${u._count.reviewRequests}","${u.createdAt.toISOString().slice(0, 10)}"`
+  // Flatten: one row per establishment
+  const rows = owners.flatMap((owner) =>
+    owner.memberships.map((m) => ({
+      owner,
+      establishment: m.establishment,
+      memberCount: m.establishment._count.members,
+      clientCount: m.establishment._count.clients,
+      requestCount: m.establishment._count.reviewRequests,
+    }))
+  );
+
+  // CSV export
+  const csvHeader = "Établissement,Propriétaire,Email,Métier,Plan,Quota,Membres,Clients,Envois,Inscription";
+  const csvRows = rows.map(
+    (r) =>
+      `"${r.establishment.name}","${r.owner.name || ""}","${r.owner.email}","${r.establishment.niche}","${r.owner.plan}","${r.owner.quotaUsed}/${r.owner.monthlyQuota}","${r.memberCount}","${r.clientCount}","${r.requestCount}","${r.owner.createdAt.toISOString().slice(0, 10)}"`
   );
   const csvData = [csvHeader, ...csvRows].join("\n");
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold">Utilisateurs</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">Établissements</h1>
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">
-            {users.length} compte{users.length !== 1 ? "s" : ""}
+            {rows.length} établissement{rows.length !== 1 ? "s" : ""} · {owners.length} propriétaire{owners.length !== 1 ? "s" : ""}
           </span>
           <ExportCsvButton data={csvData} />
         </div>
@@ -110,16 +132,19 @@ export default async function AdminUsersPage({
           <thead>
             <tr className="border-b border-border bg-muted/50">
               <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">
-                Utilisateur
+                Établissement
               </th>
               <th className="hidden md:table-cell text-left text-xs font-medium text-muted-foreground px-4 py-3">
-                Métier
+                Propriétaire
               </th>
               <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">
                 Plan
               </th>
               <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">
                 Quota
+              </th>
+              <th className="hidden sm:table-cell text-left text-xs font-medium text-muted-foreground px-4 py-3">
+                Membres
               </th>
               <th className="hidden sm:table-cell text-left text-xs font-medium text-muted-foreground px-4 py-3">
                 Clients
@@ -136,83 +161,89 @@ export default async function AdminUsersPage({
             </tr>
           </thead>
           <tbody>
-            {users.length === 0 ? (
+            {rows.length === 0 ? (
               <tr>
                 <td
-                  colSpan={8}
+                  colSpan={9}
                   className="px-4 py-8 text-center text-muted-foreground text-sm"
                 >
-                  Aucun utilisateur trouve
+                  Aucun établissement trouvé
                 </td>
               </tr>
             ) : (
-              users.map((user) => (
+              rows.map((row) => (
                 <tr
-                  key={user.id}
+                  key={row.establishment.id}
                   className={`border-b border-border last:border-0 ${
-                    user.isSuspended ? "opacity-50 bg-destructive/5" : ""
+                    row.owner.isSuspended ? "opacity-50 bg-destructive/5" : ""
                   }`}
                 >
                   <td className="px-4 py-3">
                     <Link
-                      href={`/admin/users/${user.id}`}
+                      href={`/admin/users/${row.owner.id}`}
                       className="hover:text-primary"
                     >
                       <p className="text-sm font-medium">
-                        {user.businessName || "Non configure"}
-                        {user.isSuspended && (
+                        {row.establishment.name}
+                        {row.owner.isSuspended && (
                           <span className="ml-1 px-1.5 py-0.5 bg-destructive/10 text-destructive text-[10px] rounded font-medium">
                             Suspendu
                           </span>
                         )}
-                        {user.trialEndsAt &&
-                          user.trialEndsAt > new Date() && (
+                        {row.owner.trialEndsAt &&
+                          row.owner.trialEndsAt > new Date() && (
                             <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-[10px] rounded font-medium">
                               Essai
                             </span>
                           )}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {user.email}
+                        {getNicheLabel(row.establishment.niche, row.establishment.customNiche)}
                       </p>
                     </Link>
                   </td>
-                  <td className="hidden md:table-cell px-4 py-3 text-sm">{getNicheLabel(user.niche, user.customNiche)}</td>
+                  <td className="hidden md:table-cell px-4 py-3">
+                    <p className="text-sm">{row.owner.name || row.owner.email}</p>
+                    <p className="text-xs text-muted-foreground">{row.owner.email}</p>
+                  </td>
                   <td className="px-4 py-3">
                     <ChangePlanForm
-                      userId={user.id}
-                      currentPlan={user.plan}
-                      currentQuota={user.monthlyQuota}
+                      userId={row.owner.id}
+                      currentPlan={row.owner.plan}
+                      currentQuota={row.owner.monthlyQuota}
                     />
                   </td>
                   <td className="px-4 py-3 text-sm">
                     <span
                       className={
-                        user.quotaUsed >= user.monthlyQuota
+                        row.owner.quotaUsed >= row.owner.monthlyQuota
                           ? "text-destructive font-medium"
                           : "text-muted-foreground"
                       }
                     >
-                      {user.quotaUsed}/{user.monthlyQuota}
+                      {row.owner.quotaUsed}/{row.owner.monthlyQuota}
                     </span>
                   </td>
                   <td className="hidden sm:table-cell px-4 py-3 text-sm text-muted-foreground">
-                    {user._count.clients}
+                    {row.memberCount}
                   </td>
                   <td className="hidden sm:table-cell px-4 py-3 text-sm text-muted-foreground">
-                    {user._count.reviewRequests}
+                    {row.clientCount}
+                  </td>
+                  <td className="hidden sm:table-cell px-4 py-3 text-sm text-muted-foreground">
+                    {row.requestCount}
                   </td>
                   <td className="hidden md:table-cell px-4 py-3 text-sm text-muted-foreground">
-                    {formatDate(user.createdAt)}
+                    {formatDate(row.owner.createdAt)}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap items-center justify-end gap-1">
-                      <ResetQuotaButton userId={user.id} />
+                      <ResetQuotaButton userId={row.owner.id} />
                       <SuspendButton
-                        userId={user.id}
-                        isSuspended={user.isSuspended}
+                        userId={row.owner.id}
+                        isSuspended={row.owner.isSuspended}
                       />
-                      <DeleteUserButton userId={user.id} />
+                      <DeleteUserButton userId={row.owner.id} />
                     </div>
                   </td>
                 </tr>

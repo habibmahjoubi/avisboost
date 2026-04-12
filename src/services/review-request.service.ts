@@ -18,11 +18,13 @@ export async function createReviewRequest({
   clientId,
   channel,
   delayHours,
+  establishmentId,
 }: {
   userId: string;
   clientId: string;
   channel: Channel;
   delayHours?: number;
+  establishmentId?: string;
 }) {
   // Transaction interactive : vérifications + création atomiques (anti race condition)
   const request = await prisma.$transaction(async (tx) => {
@@ -72,6 +74,7 @@ export async function createReviewRequest({
         data: {
           userId,
           clientId,
+          establishmentId: establishmentId || null,
           channel,
           scheduledAt,
           token: crypto.randomBytes(32).toString("hex"),
@@ -93,10 +96,23 @@ export async function createReviewRequest({
     const client = await prisma.client.findUniqueOrThrow({
       where: { id: clientId, userId },
     });
-    const nicheConfig = NICHE_CONFIGS[user.niche];
+    const establishment = establishmentId
+      ? await prisma.establishment.findUnique({ where: { id: establishmentId } })
+      : null;
+
+    const niche = establishment?.niche ?? user.niche;
+    const nicheConfig = NICHE_CONFIGS[niche];
+    const businessName = establishment?.name ?? user.businessName ?? "notre établissement";
+    const senderName = establishment?.senderName ?? user.senderName;
+    const replyToEmail = establishment?.replyToEmail ?? user.replyToEmail;
 
     const customTemplate = await prisma.template.findFirst({
-      where: { userId, niche: user.niche, channel },
+      where: {
+        userId,
+        niche,
+        channel,
+        ...(establishmentId ? { establishmentId } : {}),
+      },
       orderBy: { isDefault: "desc" },
     });
     const template = customTemplate
@@ -105,7 +121,7 @@ export async function createReviewRequest({
 
     const vars = {
       clientName: escapeHtml(client.name),
-      businessName: escapeHtml(user.businessName || "notre établissement"),
+      businessName: escapeHtml(businessName),
       link: absoluteUrl(`/review/${request.token}`),
     };
 
@@ -118,8 +134,8 @@ export async function createReviewRequest({
           to: client.email,
           subject: resolveTemplate(template.subject || nicheConfig.templates[channel].subject || "Votre avis compte", vars),
           html: sanitizeHtml(resolvedBody),
-          fromName: user.senderName || undefined,
-          replyTo: user.replyToEmail || undefined,
+          fromName: senderName || undefined,
+          replyTo: replyToEmail || undefined,
         });
       } else if (channel === "SMS" && client.phone) {
         await sendSms({
@@ -153,6 +169,7 @@ export async function processPendingRequests() {
     include: {
       user: true,
       client: true,
+      establishment: true,
     },
     take: 50,
   });
@@ -161,12 +178,21 @@ export async function processPendingRequests() {
 
   for (const request of pending) {
     try {
-      const { user, client } = request;
-      const nicheConfig = NICHE_CONFIGS[user.niche];
+      const { user, client, establishment } = request;
+      const niche = establishment?.niche ?? user.niche;
+      const nicheConfig = NICHE_CONFIGS[niche];
+      const businessName = establishment?.name ?? user.businessName ?? "notre établissement";
+      const senderName = establishment?.senderName ?? user.senderName;
+      const replyToEmail = establishment?.replyToEmail ?? user.replyToEmail;
 
-      // US15-16 - Check for custom template first (prefer default)
+      // US15-16 - Check for custom template first (prefer default), scoped by establishment
       const customTemplate = await prisma.template.findFirst({
-        where: { userId: user.id, niche: user.niche, channel: request.channel },
+        where: {
+          userId: user.id,
+          niche,
+          channel: request.channel,
+          ...(establishment ? { establishmentId: establishment.id } : {}),
+        },
         orderBy: { isDefault: "desc" },
       });
       const template = customTemplate
@@ -178,7 +204,7 @@ export async function processPendingRequests() {
 
       const vars = {
         clientName: escapeHtml(client.name),
-        businessName: escapeHtml(user.businessName || "notre établissement"),
+        businessName: escapeHtml(businessName),
         link: absoluteUrl(`/review/${request.token}`),
       };
 
@@ -190,8 +216,8 @@ export async function processPendingRequests() {
           to: client.email,
           subject: resolveTemplate(template.subject || nicheConfig.templates[request.channel].subject || "Votre avis compte", vars),
           html: sanitizeHtml(resolvedBody),
-          fromName: user.senderName || undefined,
-          replyTo: user.replyToEmail || undefined,
+          fromName: senderName || undefined,
+          replyTo: replyToEmail || undefined,
         });
       } else if (request.channel === "SMS" && client.phone) {
         await sendSms({
