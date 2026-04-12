@@ -21,6 +21,12 @@ function toWriteReviewUrl(url: string): string {
     return `https://search.google.com/local/writereview?placeid=${placeIdParam[1]}`;
   }
 
+  // Extraire place_id: depuis q= param
+  const placeIdInQuery = trimmed.match(/place_id:(ChIJ[a-zA-Z0-9_-]+)/);
+  if (placeIdInQuery) {
+    return `https://search.google.com/local/writereview?placeid=${placeIdInQuery[1]}`;
+  }
+
   // Conversion hex -> Place ID (protobuf encoding)
   const hexMatch =
     trimmed.match(/!1s0x([0-9a-f]+):0x([0-9a-f]+)/i) ||
@@ -53,6 +59,9 @@ function toWriteReviewUrl(url: string): string {
   if (trimmed.includes("g.page/r/")) {
     return `${trimmed.replace(/\/(review)?$/, "")}/review`;
   }
+
+  // Google Search URLs don't contain Place IDs
+  if (trimmed.includes("google.com/search")) return "";
 
   return trimmed;
 }
@@ -114,16 +123,21 @@ export function GooglePlaceField({
             </a>
           </div>
         ) : inputUrl ? (
-          <p className="text-warning">
-            <AlertTriangle className="w-3.5 h-3.5 inline mr-1" /> URL non reconnue. Collez une URL Google Maps de votre établissement.
-          </p>
+          <div className="bg-warning/10 border border-warning/20 rounded-lg p-2.5">
+            <p className="text-warning font-medium">
+              <AlertTriangle className="w-3.5 h-3.5 inline mr-1" />
+              {inputUrl.includes("google.com/search")
+                ? "URL de recherche Google détectée. Utilisez plutôt Google Maps (voir ci-dessous)."
+                : "URL non reconnue. Collez une URL Google Maps de votre établissement."}
+            </p>
+          </div>
         ) : null}
 
         <div className="text-muted-foreground">
           <p className="font-medium mb-1">Comment trouver votre lien :</p>
-          <ol className="list-decimal list-inside space-y-0.5">
+          <ol className="list-decimal list-inside space-y-1">
             <li>
-              Allez sur{" "}
+              Ouvrez{" "}
               <a
                 href="https://www.google.com/maps"
                 target="_blank"
@@ -132,11 +146,18 @@ export function GooglePlaceField({
               >
                 Google Maps
               </a>
+              {" "}dans votre navigateur
             </li>
-            <li>Cherchez le nom de votre établissement</li>
-            <li>Cliquez sur votre fiche</li>
-            <li>Copiez l'URL de la barre d'adresse et collez-la ici</li>
+            <li>Tapez le nom de votre établissement dans la barre de recherche</li>
+            <li>Cliquez sur votre fiche dans la liste des résultats à gauche</li>
+            <li>La fiche de votre établissement s&apos;affiche avec les détails, photos et avis</li>
+            <li>Cliquez sur <strong>Avis</strong> dans le menu de la fiche, puis sur <strong>Rédiger un avis</strong> — un pop-up de saisie d&apos;avis s&apos;ouvre</li>
+            <li><strong>Copiez l&apos;URL complète</strong> de la barre d&apos;adresse de votre navigateur et collez-la ici</li>
           </ol>
+          <p className="mt-2 text-[11px] bg-muted/50 rounded p-2">
+            L&apos;URL doit ressembler à : <span className="font-mono break-all">google.com/maps/place/Nom+Etablissement/...</span><br />
+            Ne copiez pas l&apos;URL depuis une recherche Google classique (<span className="font-mono">google.com/search?q=...</span>), elle ne contient pas les informations nécessaires.
+          </p>
         </div>
       </div>
     </div>

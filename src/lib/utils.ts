@@ -154,6 +154,12 @@ export function toGoogleWriteReviewUrl(url: string): string {
     return `https://search.google.com/local/writereview?placeid=${placeIdParam[1]}`;
   }
 
+  // Extraire place_id: depuis q= param (format Google Maps search)
+  const placeIdInQuery = trimmed.match(/place_id:(ChIJ[a-zA-Z0-9_-]+)/);
+  if (placeIdInQuery) {
+    return `https://search.google.com/local/writereview?placeid=${placeIdInQuery[1]}`;
+  }
+
   // Extraire hex depuis une URL Google Maps (!1s0x....:0x....)
   // ou Google Search (#lrd=0x....:0x....)
   const hexMatch =
@@ -169,6 +175,9 @@ export function toGoogleWriteReviewUrl(url: string): string {
     const clean = trimmed.replace(/\/(review)?$/, "");
     return `${clean}/review`;
   }
+
+  // Google Search URLs don't contain Place IDs — cannot convert
+  if (trimmed.includes("google.com/search")) return "";
 
   // URL non reconnue — rejeter si ce n'est pas un domaine Google
   if (!isGoogleUrl(trimmed)) return "";
