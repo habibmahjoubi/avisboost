@@ -529,6 +529,7 @@ export default async function HomePage() {
               <span className="text-xs text-muted-foreground">© {new Date().getFullYear()}</span>
             </div>
             <div className="flex items-center gap-5 text-xs text-muted-foreground">
+              <Link href="/blog" className="link-underline hover:text-foreground transition-colors">Blog</Link>
               <FaqButton />
               <Link href="/login" className="link-underline hover:text-foreground transition-colors">Connexion</Link>
               <Link href="/register" className="link-underline hover:text-foreground transition-colors">Inscription</Link>
